@@ -150,6 +150,134 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-android/Android-活动切换与数据传递" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/06/21/android/Android-活动切换与数据传递/">Android 活动切换与数据传递</a>
+    </h1>
+  
+
+        
+        <a href="/2017/06/21/android/Android-活动切换与数据传递/" class="archive-article-date">
+  	<time datetime="2017-06-21T12:43:01.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-06-21</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="活动间切换"><a href="#活动间切换" class="headerlink" title="活动间切换"></a>活动间切换</h2><p>MainActivity转到NormalActivity<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">startActivity(new Intent(this,NormalActivity.class));</div></pre></td></tr></table></figure></p>
+<h2 id="活动间切换并传递数据"><a href="#活动间切换并传递数据" class="headerlink" title="活动间切换并传递数据"></a>活动间切换并传递数据</h2><h3 id="1-gt-2"><a href="#1-gt-2" class="headerlink" title="1-&gt;2"></a>1-&gt;2</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">//MainActivity转到DataActivity并传递数据</div><div class="line">Intent intent=new Intent(this,DataActivity.class);</div><div class="line">Intent.putExtra(<span class="string">"check"</span>,((CheckBox)findViewById(R.id.data_checkbox)).isChecked());</div><div class="line">Intent.putExtra(<span class="string">"data"</span>,((EditView)findViewById(R.id.data_text)).getEditableText().toString());</div><div class="line">startActivity(intent);</div><div class="line"></div><div class="line">//DataActivity接收数据并输出</div><div class="line">Intent intent=getIntent();</div><div class="line"><span class="keyword">if</span>(intent.hasExtra(<span class="string">"check"</span>)&amp;&amp;intent.hasExtra(<span class="string">"data"</span>))&#123;</div><div class="line">  TextView text=(TextView)findViewById(R.id.data);</div><div class="line">  text.setText(String.format(</div><div class="line">    <span class="string">"Check: %s, data: %s"</span>,</div><div class="line">    intent.getBooleanExtra(<span class="string">"check"</span>,<span class="literal">false</span>),</div><div class="line">    intent.getStringExtra(<span class="string">"data"</span>)</div><div class="line">  ));</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="1-gt-2-gt-1"><a href="#1-gt-2-gt-1" class="headerlink" title="1-&gt;2-&gt;1"></a>1-&gt;2-&gt;1</h3><p>MainActivity转到ResultActivity 再将ResultActivity中的数据传回<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">private static final int DATA_REQUEST_CODE = 42;</div><div class="line">public void launchResult(View view)&#123;</div><div class="line">  startActivityForResult(new Intent(this,ResultActivity.class),DATA_REQUEST_CODE);</div><div class="line">&#125;</div><div class="line"></div><div class="line">//在ResultActivity关闭时 执行</div><div class="line">Intent intent = new Intent();</div><div class="line">intent.putExtra(<span class="string">"data"</span>,((EditText)findViewById(R.id.data)).getEditableText().toString());</div><div class="line"><span class="built_in">set</span>Result(Activity.RESULT_OK, intent);</div><div class="line">finish();</div><div class="line"></div><div class="line">//返回MainActivity后</div><div class="line">protected void onActivityResult(int requestCode, int resultCode, Intent data)</div><div class="line">&#123;</div><div class="line">        <span class="keyword">if</span> (requestCode != DATA_REQUEST_CODE || resultCode != Activity.RESULT_OK</div><div class="line">                || data == null || !data.hasExtra(<span class="string">"data"</span>))</div><div class="line">            <span class="built_in">return</span>;</div><div class="line"></div><div class="line">        String text = data.getStringExtra(<span class="string">"data"</span>);</div><div class="line">        TextView textView = (TextView)findViewById(R.id.result_text);</div><div class="line">        textView.setText(text);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="toast"><a href="#toast" class="headerlink" title="toast"></a>toast</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Toast toast = Toast.makeText(this, <span class="string">"Request was successful"</span>,Toast.LENGTH_LONG);</div><div class="line">toast.show();</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">android</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/06/21/android/Android-活动切换与数据传递/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
+    <article id="post-练手/算法题-排序" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/06/20/练手/算法题-排序/">算法题 排序</a>
+    </h1>
+  
+
+        
+        <a href="/2017/06/20/练手/算法题-排序/" class="archive-article-date">
+  	<time datetime="2017-06-20T12:49:05.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-06-20</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>用1，2，3，…,9组成3个三位数abc,def,ghi，每个数字恰好使用一次，要求abc:def:ghi=1:2:3。输出所有解</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#include&lt;iostream&gt;</span></div><div class="line">using namespace std;</div><div class="line">int <span class="function"><span class="title">main</span></span>() &#123;</div><div class="line">	char a[10];</div><div class="line">	int n,j,i;</div><div class="line">	<span class="keyword">for</span> (n = 123; n &lt; 330; ++n) &#123;</div><div class="line">		sprintf(a, <span class="string">"%d"</span>, n * 1000000 + n * 2 * 1000 + n * 3);</div><div class="line">		<span class="keyword">for</span> (j = 0, i = <span class="string">'1'</span>; i &lt;= <span class="string">'9'</span>; memchr(a, i++, 9) &amp;&amp; j++);</div><div class="line">		<span class="keyword">if</span> (j == 9)<span class="built_in">printf</span>(<span class="string">"%d %d %d\n"</span>, n, n * 2, n * 3);</div><div class="line">	&#125;</div><div class="line">	<span class="built_in">return</span> 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>用了sprintf和memchr</p>
+<p>函数 *memchr(const *s,char c,size_t n)<br>表示从头开始搜寻s所指的内存内容前n个字节直到发现第一个值为c的字节，则返回指向该字节的指针</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">C++练手题</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/06/20/练手/算法题-排序/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
     <article id="post-android/android-学习记录1-0" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -698,136 +826,6 @@
 
 
   
-    <article id="post-数据结构/pirme算法实例" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/05/17/数据结构/pirme算法实例/">pirme/Kruskal算法实例</a>
-    </h1>
-  
-
-        
-        <a href="/2017/05/17/数据结构/pirme算法实例/" class="archive-article-date">
-  	<time datetime="2017-05-16T23:37:04.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-05-17</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="Constructing-roads"><a href="#Constructing-roads" class="headerlink" title="Constructing roads"></a>Constructing roads</h2><p><strong>Problem Description</strong><br>There are N villages, which are numbered from 1 to N, and you should build some roads such that every two villages can connect to each other. We say two village A and B are connected, if and only if there is a road between A and B, or there exists a village C such that there is a road between A and C, and C and B are connected.<br>
-        
-          <a class="article-more-a" href="/2017/05/17/数据结构/pirme算法实例/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">C++练手题</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">算法</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/05/17/数据结构/pirme算法实例/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
-    <article id="post-数据结构/贪心算法相关" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/05/16/数据结构/贪心算法相关/">贪心算法相关</a>
-    </h1>
-  
-
-        
-        <a href="/2017/05/16/数据结构/贪心算法相关/" class="archive-article-date">
-  	<time datetime="2017-05-16T12:56:25.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-05-16</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="moving-tables"><a href="#moving-tables" class="headerlink" title="moving tables"></a>moving tables</h2><p><strong>Problem Description</strong><br>The famous ACM (Advanced Computer Maker) Company has rented a floor of a building whose shape is in the following figure.<br>
-        
-          <a class="article-more-a" href="/2017/05/16/数据结构/贪心算法相关/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">C++练手题</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">算法</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/05/16/数据结构/贪心算法相关/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/2/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/4/">Next &raquo;</a>
@@ -943,10 +941,6 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">PAT甲级</a>
-              </li>
-            
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">android</a>
               </li>
             
@@ -964,6 +958,10 @@ MathJax.Hub.Queue(function() {
             
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">数据结构</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">PAT甲级</a>
               </li>
             
               <li class="article-tag-list-item">
