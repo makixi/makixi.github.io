@@ -150,6 +150,73 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-android/Android-活动切换与数据传递" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/06/21/android/Android-活动切换与数据传递/">Android 活动切换与数据传递</a>
+    </h1>
+  
+
+        
+        <a href="/2017/06/21/android/Android-活动切换与数据传递/" class="archive-article-date">
+  	<time datetime="2017-06-21T12:43:01.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-06-21</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="活动间显式切换"><a href="#活动间显式切换" class="headerlink" title="活动间显式切换"></a>活动间显式切换</h2><p>MainActivity转到NormalActivity<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">startActivity(new Intent(this,NormalActivity.class));</div></pre></td></tr></table></figure></p>
+<h2 id="活动间显式切换并传递数据"><a href="#活动间显式切换并传递数据" class="headerlink" title="活动间显式切换并传递数据"></a>活动间显式切换并传递数据</h2><h3 id="1-gt-2"><a href="#1-gt-2" class="headerlink" title="1-&gt;2"></a>1-&gt;2</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">//MainActivity转到DataActivity并传递数据</div><div class="line">Intent intent=new Intent(this,DataActivity.class);</div><div class="line">Intent.putExtra(<span class="string">"check"</span>,((CheckBox)findViewById(R.id.data_checkbox)).isChecked());</div><div class="line">Intent.putExtra(<span class="string">"data"</span>,((EditView)findViewById(R.id.data_text)).getEditableText().toString());</div><div class="line">startActivity(intent);</div><div class="line"></div><div class="line">//DataActivity接收数据并输出</div><div class="line">Intent intent=getIntent();</div><div class="line"><span class="keyword">if</span>(intent.hasExtra(<span class="string">"check"</span>)&amp;&amp;intent.hasExtra(<span class="string">"data"</span>))&#123;</div><div class="line">  TextView text=(TextView)findViewById(R.id.data);</div><div class="line">  text.setText(String.format(</div><div class="line">    <span class="string">"Check: %s, data: %s"</span>,</div><div class="line">    intent.getBooleanExtra(<span class="string">"check"</span>,<span class="literal">false</span>),</div><div class="line">    intent.getStringExtra(<span class="string">"data"</span>)</div><div class="line">  ));</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="1-gt-2-gt-1"><a href="#1-gt-2-gt-1" class="headerlink" title="1-&gt;2-&gt;1"></a>1-&gt;2-&gt;1</h3><p>MainActivity转到ResultActivity 再将ResultActivity中的数据传回<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">private static final int DATA_REQUEST_CODE = 42;</div><div class="line">public void launchResult(View view)&#123;</div><div class="line">  startActivityForResult(new Intent(this,ResultActivity.class),DATA_REQUEST_CODE);</div><div class="line">&#125;</div><div class="line"></div><div class="line">//在ResultActivity关闭时 执行</div><div class="line">Intent intent = new Intent();</div><div class="line">intent.putExtra(<span class="string">"data"</span>,((EditText)findViewById(R.id.data)).getEditableText().toString());</div><div class="line"><span class="built_in">set</span>Result(Activity.RESULT_OK, intent);</div><div class="line">finish();</div><div class="line"></div><div class="line">//返回MainActivity后</div><div class="line">protected void onActivityResult(int requestCode, int resultCode, Intent data)</div><div class="line">&#123;</div><div class="line">        <span class="keyword">if</span> (requestCode != DATA_REQUEST_CODE || resultCode != Activity.RESULT_OK</div><div class="line">                || data == null || !data.hasExtra(<span class="string">"data"</span>))</div><div class="line">            <span class="built_in">return</span>;</div><div class="line"></div><div class="line">        String text = data.getStringExtra(<span class="string">"data"</span>);</div><div class="line">        TextView textView = (TextView)findViewById(R.id.result_text);</div><div class="line">        textView.setText(text);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="toast"><a href="#toast" class="headerlink" title="toast"></a>toast</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Toast toast = Toast.makeText(this, <span class="string">"Request was successful"</span>,Toast.LENGTH_LONG);</div><div class="line">toast.show();</div></pre></td></tr></table></figure>
+<h3 id="检测键盘回车"><a href="#检测键盘回车" class="headerlink" title="检测键盘回车"></a>检测键盘回车</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">input=(EditText)findViewById(R.id.input);</div><div class="line">input.setOnKeyListener(new View.<span class="function"><span class="title">OnKeyListener</span></span>() &#123;</div><div class="line">      @Override</div><div class="line">      public boolean onKey(View view, int i, KeyEvent keyEvent) &#123;</div><div class="line">        <span class="keyword">if</span>(i==KeyEvent.KEYCODE_ENTER&amp;&amp; keyEvent.getAction()==KeyEvent.ACTION_DOWN)</div><div class="line">        &#123;</div><div class="line">            //处理按下回车键要做的事</div><div class="line">        &#125;</div><div class="line">        <span class="built_in">return</span> <span class="literal">false</span>;</div><div class="line">    &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">android</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/06/21/android/Android-活动切换与数据传递/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
     <article id="post-练手/算法题-排序" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -760,71 +827,6 @@
 
 
   
-    <article id="post-数据结构/并查集相关练习题" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/05/15/数据结构/并查集相关练习题/">并查集相关练习题</a>
-    </h1>
-  
-
-        
-        <a href="/2017/05/15/数据结构/并查集相关练习题/" class="archive-article-date">
-  	<time datetime="2017-05-15T04:49:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-05-15</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="HDOJ-1272-小希的迷宫"><a href="#HDOJ-1272-小希的迷宫" class="headerlink" title="HDOJ.1272 小希的迷宫"></a>HDOJ.1272 小希的迷宫</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#include&lt;iostream&gt;</span></div><div class="line">using namespace std;</div><div class="line"><span class="comment">#define MAX 100100</span></div><div class="line">int bin[MAX];</div><div class="line">bool vis[MAX];</div><div class="line">bool flag;</div><div class="line">int find(int x) &#123;</div><div class="line">	int r = x;</div><div class="line">	<span class="keyword">while</span> (r != bin[r])r = bin[r];</div><div class="line">	<span class="built_in">return</span> r;</div><div class="line">&#125;</div><div class="line">void merge(int x, int y) &#123;</div><div class="line">	int fx = find(x);</div><div class="line">	int fy = find(y);</div><div class="line">	<span class="keyword">if</span> (fx == fy)flag = <span class="literal">false</span>;</div><div class="line">	<span class="keyword">if</span> (fx != fy)bin[fx] = fy;</div><div class="line">&#125;</div><div class="line">int <span class="function"><span class="title">main</span></span>() &#123;</div><div class="line">	int a,b;</div><div class="line">	<span class="keyword">while</span> (cin &gt;&gt; a &gt;&gt; b) &#123;</div><div class="line">		flag = <span class="literal">true</span>;</div><div class="line">		<span class="keyword">if</span> (a == -1 &amp;&amp; b == -1)<span class="built_in">break</span>;</div><div class="line">		<span class="keyword">if</span> (a == 0 &amp;&amp; b == 0) &#123;</div><div class="line">			cout &lt;&lt; <span class="string">"Yes"</span> &lt;&lt; endl;</div><div class="line">			<span class="built_in">continue</span>;</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">for</span> (int i = 1; i &lt;= 100000; i++)</div><div class="line">		&#123;</div><div class="line">			bin[i] = i;</div><div class="line">			vis[i] = <span class="literal">false</span>;</div><div class="line">		&#125;</div><div class="line">		vis[a] = <span class="literal">true</span>; vis[b] = <span class="literal">true</span>;</div><div class="line">		merge(a, b);</div><div class="line">		<span class="keyword">while</span> (cin &gt;&gt; a &gt;&gt; b) &#123;</div><div class="line">			<span class="keyword">if</span> (a == 0 &amp;&amp; b == 0)<span class="built_in">break</span>;</div><div class="line">			vis[a] = <span class="literal">true</span>; vis[b] = <span class="literal">true</span>;</div><div class="line">			merge(a, b);</div><div class="line">		&#125;</div><div class="line">		int cnt = 0;</div><div class="line">		<span class="keyword">for</span> (int i = 1; i &lt;= 100000; ++i) &#123;</div><div class="line">			<span class="keyword">if</span> (vis[i] &amp;&amp; bin[i] == i)cnt++;</div><div class="line">			<span class="keyword">if</span> (cnt &gt; 1) &#123;</div><div class="line">				flag = <span class="literal">false</span>; <span class="built_in">break</span>;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">if</span> (!flag)cout &lt;&lt; <span class="string">"No"</span> &lt;&lt; endl;</div><div class="line">		<span class="keyword">else</span> cout &lt;&lt; <span class="string">"Yes"</span> &lt;&lt; endl;</div><div class="line">	&#125;</div><div class="line">	<span class="built_in">return</span> 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-        
-          <a class="article-more-a" href="/2017/05/15/数据结构/并查集相关练习题/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">C++练手题</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">算法</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/05/15/数据结构/并查集相关练习题/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/8/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="page-number" href="/page/8/">8</a><span class="page-number current">9</span><a class="page-number" href="/page/10/">10</a><a class="page-number" href="/page/11/">11</a><span class="space">&hellip;</span><a class="page-number" href="/page/14/">14</a><a class="extend next" rel="next" href="/page/10/">Next &raquo;</a>
@@ -936,11 +938,31 @@ MathJax.Hub.Queue(function() {
           <ul class="article-tag-list" q-show="showTags">
             
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">C++练手题</a>
+              </li>
+            
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">PAT甲级</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">C++练手题</a>
+                <a href="javascript:void(0)" class="js-tag color5">组合数学</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">逻辑</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">android</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Java</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Android</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -949,18 +971,6 @@ MathJax.Hub.Queue(function() {
             
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">DFS</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Android</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Java</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">android</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -976,15 +986,15 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+              </li>
+            
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">数据结构</a>
               </li>
             
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">排序</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -996,6 +1006,10 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">HDOJ</a>
+              </li>
+            
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">HTML</a>
               </li>
             
@@ -1004,15 +1018,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">HDOJ</a>
+                <a href="javascript:void(0)" class="js-tag color4">错题集</a>
               </li>
             
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">js</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">错题集</a>
               </li>
             
             <div class="clearfix"></div>
