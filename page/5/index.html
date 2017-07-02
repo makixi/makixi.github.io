@@ -150,6 +150,183 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-PAT/PAT-advanced-1010-Radix" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/06/26/PAT/PAT-advanced-1010-Radix/">PAT advanced 1010 Radix</a>
+    </h1>
+  
+
+        
+        <a href="/2017/06/26/PAT/PAT-advanced-1010-Radix/" class="archive-article-date">
+  	<time datetime="2017-06-26T13:24:22.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-06-26</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#include&lt;iostream&gt;</span></div><div class="line"><span class="comment">#include&lt;string&gt;</span></div><div class="line">const long long int LLMAX = 0x7fffffffffffffff;</div><div class="line">using namespace std;</div><div class="line">int char2int(char c) &#123;</div><div class="line">	<span class="keyword">if</span> (isdigit(c)) <span class="built_in">return</span> c - <span class="string">'0'</span>;</div><div class="line">	<span class="keyword">if</span> (islower(c)) <span class="built_in">return</span> c - <span class="string">'a'</span> + 10;</div><div class="line">&#125;</div><div class="line">long long str2int(const string &amp; str, long long radix)</div><div class="line">&#123;</div><div class="line">	long long num = 0;</div><div class="line">	<span class="keyword">for</span> (long long i = 0; i&lt;str.size(); i++)</div><div class="line">	&#123;</div><div class="line">		num = num*radix + char2int(str[i]);</div><div class="line">		<span class="keyword">if</span> (num &lt; 0)</div><div class="line">			<span class="built_in">return</span> LLMAX;</div><div class="line">	&#125;</div><div class="line">	<span class="built_in">return</span> num;</div><div class="line">&#125;</div><div class="line">long long find_lower(string str) &#123;</div><div class="line">	long long max = -1;</div><div class="line">	<span class="keyword">for</span> (long long i = 0; i&lt;str.size(); ++i) &#123;</div><div class="line">		long long t = char2int(str[i]);</div><div class="line">		<span class="keyword">if</span> (t&gt;max) max = t;</div><div class="line">	&#125;</div><div class="line">	<span class="built_in">return</span> max;</div><div class="line">&#125;</div><div class="line">int <span class="function"><span class="title">main</span></span>() &#123;</div><div class="line">	string n1, n2;</div><div class="line">	long long tag, radix;</div><div class="line">	cin &gt;&gt; n1 &gt;&gt; n2 &gt;&gt; tag &gt;&gt; radix;</div><div class="line">	<span class="keyword">if</span> (tag == 2) &#123;</div><div class="line">		string temp = n1;</div><div class="line">		n1 = n2;</div><div class="line">		n2 = temp;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">if</span> (n1 == n2 &amp;&amp; n1 == <span class="string">"0"</span>) &#123;</div><div class="line">		cout &lt;&lt; <span class="string">"1"</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">else</span> &#123;</div><div class="line">		long long result1 = str2int(n1, radix);</div><div class="line">		long long lower = find_lower(n2) + 1;</div><div class="line">		long long upper = result1&gt;lower ? result1 : lower;</div><div class="line">		long long l = lower, r = upper;</div><div class="line">		long long result2, mid;</div><div class="line">		<span class="keyword">while</span> (l&lt;r) &#123;</div><div class="line">			mid = (l + r) / 2;</div><div class="line">			result2 = str2int(n2, mid);</div><div class="line">			<span class="keyword">if</span> (result2&lt;result1)l = mid + 1;</div><div class="line">			<span class="keyword">else</span> r = mid;</div><div class="line">		&#125;</div><div class="line">		result2 = str2int(n2, r);</div><div class="line">		<span class="keyword">if</span> (result2 == result1) cout &lt;&lt; r &lt;&lt; endl;</div><div class="line">		<span class="keyword">else</span> cout &lt;&lt; <span class="string">"Impossible"</span> &lt;&lt; endl;</div><div class="line">	&#125;</div><div class="line">	<span class="built_in">return</span> 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">PAT甲级</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/06/26/PAT/PAT-advanced-1010-Radix/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
+    <article id="post-PAT/PAT-advanced-1009-Product-of-Polynomials" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/06/26/PAT/PAT-advanced-1009-Product-of-Polynomials/">PAT advanced 1009 Product of Polynomials</a>
+    </h1>
+  
+
+        
+        <a href="/2017/06/26/PAT/PAT-advanced-1009-Product-of-Polynomials/" class="archive-article-date">
+  	<time datetime="2017-06-26T13:24:10.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-06-26</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#include&lt;iostream&gt;</span></div><div class="line">using namespace std;</div><div class="line"><span class="comment">#define MAX 2001</span></div><div class="line">int <span class="function"><span class="title">main</span></span>() &#123;</div><div class="line">	<span class="built_in">float</span> a[1001]=&#123;0.0&#125;,b[1001]=&#123;0.0&#125;,c[MAX]=&#123;0.0&#125;;</div><div class="line">	int k,l,count=0;</div><div class="line">	cin &gt;&gt; k;</div><div class="line">	<span class="keyword">for</span> (int i = 0; i &lt; k; i++)</div><div class="line">	&#123;</div><div class="line">		int temp;</div><div class="line">		<span class="built_in">float</span> tvalue;</div><div class="line">		cin &gt;&gt; temp&gt;&gt; tvalue;</div><div class="line">		a[temp]+=tvalue;</div><div class="line">	&#125;</div><div class="line">	cin &gt;&gt; l;</div><div class="line">	<span class="keyword">for</span> (int i = 0; i &lt; l; i++)</div><div class="line">	&#123;</div><div class="line">		int temp;</div><div class="line">		<span class="built_in">float</span> tvalue;</div><div class="line">		cin &gt;&gt; temp &gt;&gt; tvalue;</div><div class="line">		b[temp]+=tvalue;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">for</span> (int i = 0; i &lt; 1001; i++) &#123;</div><div class="line">		<span class="keyword">for</span> (int j = 0; j &lt; 1001; j++) &#123;</div><div class="line">			<span class="keyword">if</span> (a[i] &amp;&amp; b[j])&#123;</div><div class="line">			c[i+j] += a[i] * b[j];</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">for</span> (int i = 0; i &lt; MAX; i++) &#123;</div><div class="line">			<span class="keyword">if</span> (c[i])&#123;</div><div class="line">			++count;</div><div class="line">			&#125;</div><div class="line">	&#125;</div><div class="line">	cout&lt;&lt;count;</div><div class="line">	<span class="keyword">if</span>(count) cout&lt;&lt;<span class="string">" "</span>;</div><div class="line">	<span class="keyword">for</span> (int i = MAX; i &gt;=0; i--) &#123;</div><div class="line">		<span class="keyword">if</span> (c[i]) &#123;</div><div class="line">		<span class="built_in">printf</span>(<span class="string">"%d %.1f"</span>, i, c[i]);</div><div class="line">		--count;</div><div class="line">		<span class="keyword">if</span>(count&gt;0) cout&lt;&lt;<span class="string">" "</span>;&#125;</div><div class="line"></div><div class="line">	&#125;</div><div class="line">	<span class="built_in">return</span> 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">PAT甲级</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/06/26/PAT/PAT-advanced-1009-Product-of-Polynomials/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
+    <article id="post-PAT/PAT-advanced-1008-Elevator" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/06/26/PAT/PAT-advanced-1008-Elevator/">PAT advanced 1008 Elevator</a>
+    </h1>
+  
+
+        
+        <a href="/2017/06/26/PAT/PAT-advanced-1008-Elevator/" class="archive-article-date">
+  	<time datetime="2017-06-26T13:21:39.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-06-26</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#include&lt;iostream&gt;</span></div><div class="line">using namespace std;</div><div class="line"></div><div class="line">int <span class="function"><span class="title">main</span></span>() &#123;</div><div class="line">	int n,sum=0;</div><div class="line">	cin &gt;&gt; n;</div><div class="line">	int *a;</div><div class="line">	a = (int *)malloc(n * sizeof(int));</div><div class="line">	<span class="keyword">for</span> (int i = 0; i &lt; n; i++) &#123;</div><div class="line">		cin &gt;&gt; a[i];</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">if</span>(n&gt;0)</div><div class="line">	sum += 6 * a[0]+5;</div><div class="line">	<span class="keyword">for</span> (int i = 1; i &lt; n; i++) &#123;</div><div class="line">		<span class="keyword">if</span> (a[i] &gt; a[i - 1])sum += 6 * (a[i] - a[i - 1]);</div><div class="line">		<span class="keyword">if</span> (a[i] &lt; a[i - 1]) sum += 4 * (a[i - 1] - a[i]);</div><div class="line">		sum += 5;</div><div class="line">	&#125;</div><div class="line">	cout &lt;&lt; sum;</div><div class="line">	<span class="built_in">return</span> 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">PAT甲级</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/06/26/PAT/PAT-advanced-1008-Elevator/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
     <article id="post-PAT/PAT-advanced-1007-Maximum-Subsequence-Sum" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -568,219 +745,9 @@
 
 
   
-    <article id="post-android/Android-ListView相关" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/06/26/android/Android-ListView相关/">Android ListView\Spinner\GridView</a>
-    </h1>
-  
-
-        
-        <a href="/2017/06/26/android/Android-ListView相关/" class="archive-article-date">
-  	<time datetime="2017-06-26T01:30:28.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-06-26</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="Adapter"><a href="#Adapter" class="headerlink" title="Adapter"></a>Adapter</h2><p><img src="https://github.com/makixi/makixi.github.io/raw/master/img/adapter.jpg" alt="Adapter"></p>
-<ul>
-<li>BaseAdapter是一个抽象类，继承它需要实现较多的方法，所以也就具有较高的灵活性；</li>
-<li>ArrayAdapter支持泛型操作，最为简单，只能展示一行字。</li>
-<li>SimpleAdapter有最好的扩充性，可以自定义出各种效果。</li>
-<li>SimpleCursorAdapter可以适用于简单的纯文字型ListView，它需要Cursor的字段和UI的id对应起来。如需要实现更复杂的UI也可以重写其他方法。可以认为是SimpleAdapter对数据库的简单结合，可以方便地把数据库的内容以列表的形式展示出来。</li>
-</ul>
-<h3 id="ArrayAdapter"><a href="#ArrayAdapter" class="headerlink" title="ArrayAdapter"></a>ArrayAdapter</h3><p>初始化<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">private ArrayList&lt;ClaaName&gt; name = new ArrayList&lt;&gt;();</div><div class="line">private ArrayAdapter&lt;ClassName&gt; adapter;</div><div class="line">public void onCreate(Bundle savedInstanceState) &#123;</div><div class="line">        super.onCreate(savedInstanceState);</div><div class="line">        <span class="built_in">set</span>ContentView(R.layout.activity_list_view);</div><div class="line"></div><div class="line">        //this,布局文件，数据源</div><div class="line">        adapter=new ArrayAdapter&lt;&gt;(this,android.R.layout.simple_list_item_1,items);</div><div class="line"></div><div class="line">        /*</div><div class="line">        list=(ListView)findViewById(R.id.list);</div><div class="line">        list.setAdapter(adapter</div><div class="line">        */</div><div class="line">        <span class="built_in">set</span>ListAdapter(adapter);   //extends ListActivity时用</div><div class="line"></div><div class="line">        */</div><div class="line">        list.setOnItemClickListener(new AdapterView.<span class="function"><span class="title">OnItemClickListener</span></span>() &#123;</div><div class="line">            @Override</div><div class="line">            public void onItemClick(AdapterView&lt;?&gt; adapterView, View view, int position, long id) &#123;</div><div class="line"></div><div class="line">            &#125;</div><div class="line">        &#125;);</div><div class="line">        */</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>基本操作<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">public void showDetails(View view) &#123;</div><div class="line">        Object selectedObject=spinner.getSelectedItem();</div><div class="line">        <span class="keyword">if</span>(selectedObject==null||!(selectedObject instanceof Mobile))</div><div class="line">            <span class="built_in">return</span>;</div><div class="line">        ClassName newname=(ClassName)selectedObject;</div><div class="line">        String message=newname.getInfo();</div><div class="line">        info.setText(message);</div><div class="line">&#125;</div><div class="line"></div><div class="line">public void addItem(View view) &#123;</div><div class="line">        name.add(...);</div><div class="line">        adapter.notifyDataSetChanged();</div><div class="line">&#125;</div><div class="line"></div><div class="line">public void removeItem(View view) &#123;</div><div class="line">        <span class="keyword">if</span> (name.size() &lt; 1)</div><div class="line">            <span class="built_in">return</span>;</div><div class="line">        name.remove(0);</div><div class="line">        adapter.notifyDataSetChanged();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h2 id="Spinner"><a href="#Spinner" class="headerlink" title="Spinner"></a>Spinner</h2><p>初始化<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">private ArrayList&lt;ClassName&gt; name = new ArrayList&lt;&gt;();</div><div class="line">private ArrayAdapter&lt;ClassName&gt; adapter;</div><div class="line">private Spinner spinner;</div><div class="line"></div><div class="line">@Override</div><div class="line">protected void onCreate(Bundle savedInstanceState) &#123;</div><div class="line">    super.onCreate(savedInstanceState);</div><div class="line">    <span class="built_in">set</span>ContentView(R.layout.activity_spinner);</div><div class="line"></div><div class="line">    spinner = (Spinner)findViewById(R.id.spinner);</div><div class="line">    adapter = new ArrayAdapter&lt;&gt;(this, android.R.layout.simple_list_item_1, people);</div><div class="line">    spinner.setAdapter(adapter);</div><div class="line">    /*</div><div class="line">    spinner.setOnItemSelectedListener(new AdapterView.<span class="function"><span class="title">OnItemSelectedListener</span></span>() &#123;</div><div class="line">        @Override</div><div class="line">        public void onItemSelected(AdapterView&lt;?&gt; parent, View view, int position, long id) &#123;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        @Override</div><div class="line">        public void onNothingSelected(AdapterView&lt;?&gt; parent) &#123;</div><div class="line">        &#125;</div><div class="line">    &#125;);</div><div class="line">     */</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h2 id="GridView"><a href="#GridView" class="headerlink" title="GridView"></a>GridView</h2><p>java方面的操作和listview差不多</p>
-<p>下面是xml里面的设置<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">android:numColumns=<span class="string">"auto_fit"</span>         &lt;!--列数设置为自动--&gt;</div><div class="line">android:columnWidth=<span class="string">"90dp"</span>，           &lt;!--每列的宽度，也就是Item的宽度--&gt;</div><div class="line">android:stretchMode=<span class="string">"columnWidth"</span>       &lt;!--缩放与列宽大小同步--&gt;</div><div class="line">android:verticalSpacing=<span class="string">"10dp"</span>            &lt;!--垂直边距--&gt;</div><div class="line">android:horizontalSpacing=<span class="string">"10dp"</span>          &lt;!--水平边距--&gt;</div></pre></td></tr></table></figure></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Android</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/06/26/android/Android-ListView相关/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
-    <article id="post-算法/算法-回溯法" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/06/25/算法/算法-回溯法/">算法 回溯法</a>
-    </h1>
-  
-
-        
-        <a href="/2017/06/25/算法/算法-回溯法/" class="archive-article-date">
-  	<time datetime="2017-06-25T12:14:59.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-06-25</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="N皇后"><a href="#N皇后" class="headerlink" title="N皇后"></a>N皇后</h2><p>老题目，大家都懂的<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#include&lt;iostream&gt;</span></div><div class="line">using namespace std;</div><div class="line"><span class="comment">#define MAX 10</span></div><div class="line">int n, cnt;</div><div class="line">int a[11][11];</div><div class="line">int res[11];</div><div class="line">bool judge(int row, int col,int k) &#123;</div><div class="line">	<span class="keyword">if</span> (a[row][col])<span class="built_in">return</span> <span class="literal">false</span>;</div><div class="line">	<span class="keyword">for</span> (int i = 1; i &lt; row; ++i)</div><div class="line">		<span class="keyword">if</span> (a[i][col])<span class="built_in">return</span> <span class="literal">false</span>;</div><div class="line">	<span class="keyword">for</span> (int i = row - 1, j = col - 1; i &gt; 0 &amp;&amp; j &gt; 0; --i, --j)</div><div class="line">		<span class="keyword">if</span> (a[i][j])<span class="built_in">return</span> <span class="literal">false</span>;</div><div class="line">	<span class="keyword">for</span> (int i = row - 1, j = col + 1; i &gt; 0 &amp;&amp; j &lt;= k; --i, ++j)</div><div class="line">		<span class="keyword">if</span> (a[i][j])<span class="built_in">return</span> <span class="literal">false</span>;</div><div class="line">	<span class="built_in">return</span> <span class="literal">true</span>;</div><div class="line">&#125;</div><div class="line">int dfs(int row, int col, int k) &#123;</div><div class="line">	<span class="keyword">if</span> (row &gt; k) &#123;</div><div class="line">		cnt++;</div><div class="line">		<span class="built_in">return</span> 1;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">if</span> (judge(row, col, k))a[row][col] = 1;</div><div class="line">	<span class="keyword">else</span> <span class="built_in">return</span> 0;</div><div class="line">	a[row][col] = 1;</div><div class="line">	<span class="keyword">for</span> (int i = 1; i &lt;= k; ++i) &#123;</div><div class="line">		<span class="keyword">if</span> (dfs(row + 1, i, k) == 1)<span class="built_in">break</span>;</div><div class="line">	&#125;</div><div class="line">	a[row][col] = 0;</div><div class="line">	<span class="built_in">return</span> 0;</div><div class="line">&#125;</div><div class="line">int <span class="function"><span class="title">main</span></span>() &#123;</div><div class="line">	<span class="keyword">for</span> (int i = 1; i &lt;= MAX; ++i) &#123;</div><div class="line">		cnt = 0;</div><div class="line">		fill(a[0], a[0] + 11 * 11, 0);</div><div class="line">		<span class="keyword">for</span> (int j = 1; j &lt;= i; ++j)</div><div class="line">			dfs(1, j, i);</div><div class="line">		res[i] = cnt;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">while</span> (cin &gt;&gt; n&amp;&amp;n) &#123;</div><div class="line">		cout &lt;&lt; res[n] &lt;&lt; endl;</div><div class="line">	&#125;</div><div class="line">	<span class="built_in">return</span> 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h2 id="素数环"><a href="#素数环" class="headerlink" title="素数环"></a>素数环</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#include&lt;iostream&gt;</span></div><div class="line">using namespace std;</div><div class="line">int flag[21], num[21];//0单元不用</div><div class="line">int n;</div><div class="line">int prime_num[10] = &#123; 2,3,5,7,11,13,17,19,23,29 &#125;;</div><div class="line"></div><div class="line">bool is_prime(int n) &#123;</div><div class="line">	<span class="keyword">for</span> (int i = 0; i &lt; 10; ++i) &#123;</div><div class="line">		<span class="keyword">if</span> (n == prime_num[i])<span class="built_in">return</span> 1;</div><div class="line">	&#125;</div><div class="line">	<span class="built_in">return</span> 0;</div><div class="line">&#125;</div><div class="line"></div><div class="line">void <span class="function"><span class="title">print_num</span></span>() &#123;</div><div class="line">	<span class="keyword">for</span> (int i = 1; i &lt; n; ++i) &#123;</div><div class="line">		cout &lt;&lt; num[i]&lt;&lt;<span class="string">" "</span>;</div><div class="line">	&#125;</div><div class="line">	cout &lt;&lt; num[n] &lt;&lt; endl;</div><div class="line">&#125;</div><div class="line"></div><div class="line">int dfs(int pre, int post, int index) &#123;</div><div class="line">	<span class="keyword">if</span> (!is_prime(pre + post))<span class="built_in">return</span> 0;</div><div class="line">	num[index] = post;</div><div class="line">	<span class="keyword">if</span> (index == n&amp;&amp;is_prime(post + 1)) &#123;</div><div class="line">		print_num();</div><div class="line">		<span class="built_in">return</span> 1;</div><div class="line">	&#125;</div><div class="line">	flag[post] = 1;</div><div class="line">	<span class="keyword">for</span> (int i = 2; i &lt;= n; ++i) &#123;</div><div class="line">		<span class="keyword">if</span> (!flag[i] &amp;&amp; dfs(post, i, index + 1))<span class="built_in">break</span>;</div><div class="line">	&#125;</div><div class="line">	flag[post] = 0;</div><div class="line">	<span class="built_in">return</span> 0;</div><div class="line">&#125;</div><div class="line"></div><div class="line">int <span class="function"><span class="title">main</span></span>() &#123;</div><div class="line">	<span class="keyword">while</span> (cin &gt;&gt; n) &#123;</div><div class="line">		<span class="keyword">for</span> (int i = 1; i &lt;= n; ++i) &#123;</div><div class="line">			num[i] = i;</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">for</span> (int i = 2; i &lt;= n; ++i) &#123;</div><div class="line">			dfs(1, i, 2);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	<span class="built_in">return</span> 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h2 id="困难的串"><a href="#困难的串" class="headerlink" title="困难的串"></a>困难的串</h2><p>如果一个字符串包含两个相邻的重复子串，则称它是“容易的串”，其他串称为“困难的串”。例如，BB、ABCDACABCAB、ABCDABCD都是容易的，而D、DC、ABDAB、CBABCBA都是困难的。<br>输入正整数n和L，输出由前L个字符组成的、字典序第k小的困难的串。例如，当L=3时，前7个困难的串分别为：A、AB、ABA、ABAC、ABACA、ABACAB、ABACABA。输入保证答案不超过80个字符。<br><strong>样例输入</strong><br>7 3<br>30 3<br><strong>样例输出</strong><br>ABACABA<br>ABACABCACBABCABACABCACBACABA</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#include&lt;iostream&gt;</span></div><div class="line">using namespace std;</div><div class="line">int S[100];</div><div class="line">int n,L;</div><div class="line">void <span class="built_in">print</span>(int cur) &#123;</div><div class="line">	<span class="keyword">for</span> (int i = 0; i &lt; cur; ++i)</div><div class="line">		<span class="built_in">printf</span>(<span class="string">"%c"</span>, <span class="string">'A'</span> + S[i]);</div><div class="line">	cout &lt;&lt; endl;</div><div class="line">&#125;</div><div class="line">int dfs(int cur) &#123;</div><div class="line">	<span class="keyword">if</span> (cur == n) &#123;//第n小</div><div class="line">		<span class="built_in">print</span>(cur);</div><div class="line">		<span class="built_in">return</span> 0;</div><div class="line">	&#125;</div><div class="line">	bool equal, flag;</div><div class="line">	<span class="keyword">for</span> (int i = 0; i &lt; L; ++i) &#123;//L个字符</div><div class="line">		S[cur] = i;</div><div class="line">		flag = 1;</div><div class="line">		<span class="keyword">for</span> (int j = 1; j * 2 &lt;= cur + 1; ++j) &#123;</div><div class="line">			equal = 1;</div><div class="line">			<span class="keyword">for</span> (int k = 0; k &lt; j; ++k)    //检查前一半和后一半是不是一样</div><div class="line">				<span class="keyword">if</span> (S[cur - k] != S[cur - k - j]) &#123;   //只要有一个元素不一样，就不是简单的串</div><div class="line">					equal = 0; <span class="built_in">break</span>;</div><div class="line">				&#125;</div><div class="line">			<span class="keyword">if</span> (equal) &#123; flag = 0; <span class="built_in">break</span>; &#125;</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">if</span> (flag)</div><div class="line">			<span class="keyword">if</span> (!dfs(cur + 1))</div><div class="line">				<span class="built_in">return</span> 0;</div><div class="line">	&#125;</div><div class="line">	<span class="built_in">return</span> 1;</div><div class="line">&#125;</div><div class="line">int <span class="function"><span class="title">main</span></span>() &#123;</div><div class="line">	<span class="keyword">while</span> (cin &gt;&gt; n &gt;&gt; L) &#123;</div><div class="line">		fill(S, S + 100, 0);</div><div class="line">		dfs(0);</div><div class="line">	&#125;</div><div class="line">	<span class="built_in">return</span> 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h2 id="带宽"><a href="#带宽" class="headerlink" title="带宽"></a>带宽</h2><p>给出一个n（n≤8）个结点的图G和一个结点的排列，定义结点i的带宽b(i)为i和相邻结点在排列中的最远距离，而所有b(i)的最大值就是整个图的带宽。 给定图G，求出让带宽最小的结点排列。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#include &lt;iostream&gt;  </span></div><div class="line"><span class="comment">#include &lt;stdio.h&gt;  </span></div><div class="line"><span class="comment">#include &lt;string.h&gt;  </span></div><div class="line">using namespace std;  </div><div class="line">char str[100];  </div><div class="line">int g[30][30],visit[30],ans,number;  </div><div class="line">int prt[10];  </div><div class="line">void dfs(int steps, int seq[])&#123;  </div><div class="line">    <span class="keyword">if</span>(steps == number)&#123;//满足个数  </div><div class="line">        int maxv = 0;  </div><div class="line">        <span class="keyword">for</span>(int i=0;i&lt;number;i++)//进行寻找本次排列的带宽  </div><div class="line">            <span class="keyword">for</span>(int j=i+1;j&lt;number;j++)  </div><div class="line">                <span class="keyword">if</span>(g[seq[i]][seq[j]]) maxv = max(maxv,j-i);  </div><div class="line">        <span class="keyword">if</span>(ans &gt; maxv)&#123;//保留最大值  </div><div class="line">            ans = maxv;  </div><div class="line">            <span class="keyword">for</span>(int i=0;i&lt;number;i++) prt[i] = seq[i];//保存序列  </div><div class="line">        &#125;  </div><div class="line">        <span class="built_in">return</span>;  </div><div class="line">    &#125;  </div><div class="line">    <span class="keyword">for</span>(int i=0;i&lt;26;i++)&#123;  </div><div class="line">        <span class="keyword">if</span>(visit[i])&#123;  </div><div class="line">            int ok = 1;  </div><div class="line">            <span class="keyword">for</span>(int j=0;j&lt;steps;j++)//判断当前结点与之前的结点距离，如果大于当前最优值，就无需再递归排列了，剪枝  </div><div class="line">                <span class="keyword">if</span>(g[i][seq[j]])//存在边  </div><div class="line">                    <span class="keyword">if</span>(steps-j &gt; ans)&#123;ok = 0;<span class="built_in">break</span>;&#125;//如果大于最优解即跳出  </div><div class="line">            <span class="keyword">if</span>(ok)&#123;  </div><div class="line">                seq[steps] = i;  </div><div class="line">                visit[i] = 0;  </div><div class="line">                dfs(steps+1,seq);  </div><div class="line">                visit[i] = 1;  </div><div class="line">            &#125;  </div><div class="line">        &#125;  </div><div class="line">    &#125;  </div><div class="line"><span class="built_in">return</span> ;&#125;  </div><div class="line">int <span class="function"><span class="title">main</span></span>()  </div><div class="line">&#123;  </div><div class="line">    <span class="keyword">while</span>(scanf(<span class="string">"%s"</span>,str)!=EOF &amp;&amp; str[0] != <span class="string">'#'</span>)&#123;  </div><div class="line">        int i=0;  </div><div class="line">        memset(g,0,sizeof(g));  </div><div class="line">        memset(visit,0,sizeof(visit));  </div><div class="line">        <span class="keyword">while</span>(str[i]!=<span class="string">'\0'</span>)&#123;//处理输入，用二维数组g表示出来图  </div><div class="line">            <span class="keyword">if</span>(str[i] == <span class="string">':'</span>)&#123;  </div><div class="line">                int s = str[i-1] - <span class="string">'A'</span>;  </div><div class="line">                visit[s] = 1;  </div><div class="line">                i++;  </div><div class="line">                <span class="keyword">while</span>(str[i] != <span class="string">';'</span> &amp;&amp; str[i] != <span class="string">'\0'</span>)&#123;  </div><div class="line">                    g[s][str[i] - <span class="string">'A'</span>] = 1;  </div><div class="line">                    g[str[i] - <span class="string">'A'</span>][s] = 1;  </div><div class="line">                    visit[str[i] - <span class="string">'A'</span>] = 1;  </div><div class="line">                    i++;  </div><div class="line">                &#125;  </div><div class="line">            &#125;  </div><div class="line">            <span class="keyword">else</span> i++;  </div><div class="line">        &#125;  </div><div class="line">        number = 0;  </div><div class="line">        <span class="keyword">for</span>(int i=0;i&lt;26;i++) <span class="keyword">if</span>(visit[i]) number++;//计算结点个数  </div><div class="line">        ans = 99999999;  </div><div class="line">        int temp[10];  </div><div class="line">        dfs(0,temp);  </div><div class="line">        <span class="keyword">for</span>(int i=0;i&lt;number;i++) <span class="built_in">printf</span>(<span class="string">"%c "</span>,prt[i]+<span class="string">'A'</span>);  </div><div class="line">        <span class="built_in">printf</span>(<span class="string">"-&gt; %d\n"</span>,ans);  </div><div class="line">    &#125;  </div><div class="line"><span class="built_in">return</span> 0;&#125;</div></pre></td></tr></table></figure></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">C++练手题</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">DFS</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">算法</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/06/25/算法/算法-回溯法/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
-    <article id="post-算法/子集生成算法" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/06/25/算法/子集生成算法/">子集生成算法</a>
-    </h1>
-  
-
-        
-        <a href="/2017/06/25/算法/子集生成算法/" class="archive-article-date">
-  	<time datetime="2017-06-25T08:31:25.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-06-25</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="增量构造法"><a href="#增量构造法" class="headerlink" title="增量构造法"></a>增量构造法</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">void print_subset(int n, int* A, int cur) &#123;</div><div class="line">	<span class="keyword">for</span> (int i = 0; i &lt; cur; ++i)</div><div class="line">		cout &lt;&lt; A[i] &lt;&lt; <span class="string">" "</span>;      //打印当前集合</div><div class="line">	cout &lt;&lt; endl;</div><div class="line">	int s = cur ? A[cur - 1] + 1 : 0;      //确定当前元素的最小可能值</div><div class="line">	<span class="keyword">for</span> (int i = s; i &lt; n; ++i) &#123;</div><div class="line">		A[cur] = i;</div><div class="line">		print_subset(n, A, cur + 1);        //递归构造子集</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h2 id="位向量法"><a href="#位向量法" class="headerlink" title="位向量法"></a>位向量法</h2><p>集合B中元素B[i]=1时说明第i个元素在集合A中<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">void print_subset(int n, int* B, int cur) &#123;</div><div class="line">	<span class="keyword">if</span> (cur == n) &#123;</div><div class="line">		<span class="keyword">for</span> (int i = 0; i &lt; cur; ++i)</div><div class="line">			<span class="keyword">if</span> (B[i]) cout &lt;&lt; i &lt;&lt; <span class="string">" "</span>;</div><div class="line">		cout &lt;&lt; endl;</div><div class="line">		<span class="built_in">return</span>;</div><div class="line">	&#125;</div><div class="line">	B[cur] = 1;      //选第cur个元素</div><div class="line">	print_subset(n, B, cur + 1);</div><div class="line">	B[cur] = 0;      //不选第cur个元素</div><div class="line">	print_subset(n, B, cur + 1);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h2 id="二进制法"><a href="#二进制法" class="headerlink" title="二进制法"></a>二进制法</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">void print_subset(int n, int s) &#123;</div><div class="line">	<span class="keyword">for</span> (int i = 0; i &lt; n; ++i)</div><div class="line">		<span class="keyword">if</span> (s&amp;(1 &lt;&lt; i))cout &lt;&lt; i &lt;&lt; <span class="string">" "</span>;</div><div class="line">	cout &lt;&lt; endl;</div><div class="line">&#125;</div><div class="line"><span class="keyword">for</span> (int i = 0; i &lt; (1 &lt;&lt; n); ++i)</div><div class="line">		print_subset(n, i);</div></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">C++</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">算法</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/06/25/算法/子集生成算法/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/4/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><a class="extend next" rel="next" href="/page/6/">Next &raquo;</a>
+      <a class="extend prev" rel="prev" href="/page/4/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/14/">14</a><a class="extend next" rel="next" href="/page/6/">Next &raquo;</a>
     </nav>
   
 
@@ -905,6 +872,18 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">C++</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">算法</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">数据结构</a>
+              </li>
+            
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Android</a>
               </li>
             
@@ -917,27 +896,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">C++</a>
-              </li>
-            
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">STL</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">数据结构</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">算法</a>
-              </li>
-            
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">随笔</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">排序</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -949,6 +912,14 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">排序</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">HDOJ</a>
+              </li>
+            
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">HTML</a>
               </li>
             
@@ -957,15 +928,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">HDOJ</a>
+                <a href="javascript:void(0)" class="js-tag color4">错题集</a>
               </li>
             
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">js</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">错题集</a>
               </li>
             
             <div class="clearfix"></div>
