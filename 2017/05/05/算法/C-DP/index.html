@@ -15,7 +15,7 @@
 <meta property="og:url" content="http://makixi.github.io/2017/05/05/算法/C-DP/index.html">
 <meta property="og:site_name" content="Maki">
 <meta property="og:description" content="定义动态规划与分治法类似，都是通过组合子问题求解原问题。分治法是将原问题分为互不相交 的子问题，递归的求解子问题，再将它们组合起来，求出原问题的解。与之相反，动态规划应用于子问题重叠的情况，即不同的子问题具有公共的子子问题，动态规划算法对每个子子问题只求解一次，将其解保存在表格中，从而不用每次求解该子子问题时都要反复计算。">
-<meta property="og:updated_time" content="2017-06-25T06:12:31.988Z">
+<meta property="og:updated_time" content="2017-07-04T01:11:13.660Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="C++ DP">
 <meta name="twitter:description" content="定义动态规划与分治法类似，都是通过组合子问题求解原问题。分治法是将原问题分为互不相交 的子问题，递归的求解子问题，再将它们组合起来，求出原问题的解。与之相反，动态规划应用于子问题重叠的情况，即不同的子问题具有公共的子子问题，动态规划算法对每个子子问题只求解一次，将其解保存在表格中，从而不用每次求解该子子问题时都要反复计算。">
@@ -187,7 +187,7 @@
 <h2 id="01背包问题"><a href="#01背包问题" class="headerlink" title="01背包问题"></a>01背包问题</h2><p>01背包的状态转换方程 f[i,j] = Max{ f[i-1,j-Wi]+Pi( j &gt;= Wi ),  f[i-1,j] }<br>f[i,j]表示在前i件物品中选择若干件放在承重为 j 的背包中，可以取得的最大价值。<br>Pi表示第i件物品的价值。<br>决策：为了背包中物品总价值最大化，第 i件物品应该放入背包中吗 ？</p>
 <p>题目描述：<br>有编号分别为a,b,c,d,e的五件物品，它们的重量分别是2,2,6,5,4，它们的价值分别是6,3,5,4,6，现在给你个承重为10的背包，如何让背包里装入的物品具有最大的价值总和？</p>
 <p>根据01背包的状态转换方程，需要考察两个值，<br>一个是f[i-1,j],对于这个例子来说就是b8的值9，另一个是f[i-1,j-Wi]+Pi；<br>在这里，<br> f[i-1,j]表示我有一个承重为8的背包，当只有物品b,c,d,e四件可选时，这个背包能装入的最大价值<br>f[i-1,j-Wi]表示我有一个承重为6的背包（等于当前背包承重减去物品a的重量），当只有物品b,c,d,e四件可选时，这个背包能装入的最大价值<br>f[i-1,j-Wi]就是指单元格b6,值为9，Pi指的是a物品的价值，即6<br>由于f[i-1,j-Wi]+Pi = 9 + 6 = 15 大于f[i-1,j] = 9，所以物品a应该放入承重为8的背包</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div></pre></td><td class="code"><pre><div class="line">int V[200][200];//前i个物品装入容量为j的背包中获得的最大价值</div><div class="line">int max(int a,int b)</div><div class="line">&#123;</div><div class="line">   a&gt;=b?<span class="built_in">return</span> a:<span class="built_in">return</span> b;</div><div class="line">&#125;</div><div class="line"></div><div class="line">int KnapSack(int n,int w[],int v[],int x[],int C)</div><div class="line">&#123;</div><div class="line">    int i,j;</div><div class="line">    <span class="keyword">for</span>(i=0;i&lt;=n;i++)</div><div class="line">        V[i][0]=0;</div><div class="line">    <span class="keyword">for</span>(j=0;j&lt;=C;j++)</div><div class="line">        V[0][j]=0;</div><div class="line">    <span class="keyword">for</span>(i=0;i&lt;=n-1;i++)</div><div class="line">        <span class="keyword">for</span>(j=0;j&lt;=C;j++)</div><div class="line">            <span class="keyword">if</span>(j&lt;w[i])</div><div class="line">                V[i][j]=V[i-1][j];</div><div class="line">            <span class="keyword">else</span></div><div class="line">                V[i][j]=max(V[i-1][j],V[i-1][j-w[i]]+v[i]);</div><div class="line">            j=C;</div><div class="line">            <span class="keyword">for</span>(i=n-1;i&gt;=0;i--)</div><div class="line">            &#123;</div><div class="line">                <span class="keyword">if</span>(V[i][j]&gt;V[i-1][j])</div><div class="line">                &#123;</div><div class="line">                x[i]=1;</div><div class="line">                j=j-w[i];</div><div class="line">                &#125;</div><div class="line">            <span class="keyword">else</span></div><div class="line">                x[i]=0;</div><div class="line">            &#125;</div><div class="line">            <span class="built_in">printf</span>(<span class="string">"选中的物品是:\n"</span>);</div><div class="line">            <span class="keyword">for</span>(i=0;i&lt;n;i++)</div><div class="line">                <span class="built_in">printf</span>(<span class="string">"%d "</span>,x[i]);</div><div class="line">            <span class="built_in">printf</span>(<span class="string">"\n"</span>);</div><div class="line">        <span class="built_in">return</span> V[n-1][C];</div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line">void <span class="function"><span class="title">main</span></span>()</div><div class="line">&#123;</div><div class="line">    int s;//获得的最大价值</div><div class="line">    int w[15];//物品的重量</div><div class="line">    int v[15];//物品的价值</div><div class="line">    int x[15];//物品的选取状态</div><div class="line">    int n,i;</div><div class="line">    int C;//背包最大容量</div><div class="line">    n=5;</div><div class="line">    <span class="built_in">printf</span>(<span class="string">"请输入背包的最大容量:\n"</span>);</div><div class="line">    scanf(<span class="string">"%d"</span>,&amp;C);</div><div class="line"></div><div class="line">    <span class="built_in">printf</span>(<span class="string">"输入物品数:\n"</span>);</div><div class="line">    scanf(<span class="string">"%d"</span>,&amp;n);</div><div class="line">    <span class="built_in">printf</span>(<span class="string">"请分别输入物品的重量:\n"</span>);</div><div class="line">    <span class="keyword">for</span>(i=0;i&lt;n;i++)</div><div class="line">        scanf(<span class="string">"%d"</span>,&amp;w[i]);</div><div class="line"></div><div class="line">    <span class="built_in">printf</span>(<span class="string">"请分别输入物品的价值:\n"</span>);</div><div class="line">    <span class="keyword">for</span>(i=0;i&lt;n;i++)</div><div class="line">        scanf(<span class="string">"%d"</span>,&amp;v[i]);</div><div class="line"></div><div class="line">    s=KnapSack(n,w,v,x,C);</div><div class="line"></div><div class="line">    <span class="built_in">printf</span>(<span class="string">"最大物品价值为:\n"</span>);</div><div class="line">    <span class="built_in">printf</span>(<span class="string">"%d\n"</span>,s);</div><div class="line"></div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div></pre></td><td class="code"><pre><div class="line">int V[200][200];//前i个物品装入容量为j的背包中获得的最大价值</div><div class="line">int max(int a,int b)</div><div class="line">&#123;</div><div class="line">   a&gt;=b?<span class="built_in">return</span> a:<span class="built_in">return</span> b;</div><div class="line">&#125;</div><div class="line"></div><div class="line">int KnapSack(int n,int w[],int v[],int x[],int C)</div><div class="line">&#123;</div><div class="line">    int i,j;</div><div class="line">    <span class="keyword">for</span>(i=0;i&lt;=n;i++)</div><div class="line">        V[i][0]=0;</div><div class="line">    <span class="keyword">for</span>(j=0;j&lt;=C;j++)</div><div class="line">        V[0][j]=0;</div><div class="line">    <span class="keyword">for</span>(i=0;i&lt;=n-1;i++)</div><div class="line">        <span class="keyword">for</span>(j=0;j&lt;=C;j++)</div><div class="line">            <span class="keyword">if</span>(j&lt;w[i])</div><div class="line">                V[i][j]=V[i-1][j];</div><div class="line">            <span class="keyword">else</span></div><div class="line">                V[i][j]=max(V[i-1][j],V[i-1][j-w[i]]+v[i]);</div><div class="line">    j=C;</div><div class="line">    <span class="keyword">for</span>(i=n-1;i&gt;=0;i--)</div><div class="line">    &#123;</div><div class="line">        <span class="keyword">if</span>(V[i][j]&gt;V[i-1][j])</div><div class="line">        &#123;</div><div class="line">          x[i]=1;</div><div class="line">          j=j-w[i];</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">else</span></div><div class="line">          x[i]=0;</div><div class="line">    &#125;</div><div class="line">    <span class="built_in">printf</span>(<span class="string">"选中的物品是:\n"</span>);</div><div class="line">    <span class="keyword">for</span>(i=0;i&lt;n;i++)</div><div class="line">        <span class="built_in">printf</span>(<span class="string">"%d "</span>,x[i]);</div><div class="line">    <span class="built_in">printf</span>(<span class="string">"\n"</span>);</div><div class="line">    <span class="built_in">return</span> V[n-1][C];</div><div class="line">&#125;</div><div class="line"></div><div class="line">void <span class="function"><span class="title">main</span></span>()</div><div class="line">&#123;</div><div class="line">    int s;//获得的最大价值</div><div class="line">    int w[15];//物品的重量</div><div class="line">    int v[15];//物品的价值</div><div class="line">    int x[15];//物品的选取状态</div><div class="line">    int n,i;</div><div class="line">    int C;//背包最大容量</div><div class="line">    n=5;</div><div class="line">    <span class="built_in">printf</span>(<span class="string">"请输入背包的最大容量:\n"</span>);</div><div class="line">    scanf(<span class="string">"%d"</span>,&amp;C);</div><div class="line"></div><div class="line">    <span class="built_in">printf</span>(<span class="string">"输入物品数:\n"</span>);</div><div class="line">    scanf(<span class="string">"%d"</span>,&amp;n);</div><div class="line">    <span class="built_in">printf</span>(<span class="string">"请分别输入物品的重量:\n"</span>);</div><div class="line">    <span class="keyword">for</span>(i=0;i&lt;n;i++)</div><div class="line">        scanf(<span class="string">"%d"</span>,&amp;w[i]);</div><div class="line"></div><div class="line">    <span class="built_in">printf</span>(<span class="string">"请分别输入物品的价值:\n"</span>);</div><div class="line">    <span class="keyword">for</span>(i=0;i&lt;n;i++)</div><div class="line">        scanf(<span class="string">"%d"</span>,&amp;v[i]);</div><div class="line"></div><div class="line">    s=KnapSack(n,w,v,x,C);</div><div class="line"></div><div class="line">    <span class="built_in">printf</span>(<span class="string">"最大物品价值为:\n"</span>);</div><div class="line">    <span class="built_in">printf</span>(<span class="string">"%d\n"</span>,s);</div><div class="line"></div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
 
       
 
@@ -439,7 +439,7 @@ MathJax.Hub.Queue(function() {
           <ul class="article-tag-list" q-show="showTags">
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">PAT甲级</a>
+                <a href="javascript:void(0)" class="js-tag color3">算法</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -447,7 +447,7 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">算法</a>
+                <a href="javascript:void(0)" class="js-tag color1">PAT甲级</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -467,10 +467,6 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">android</a>
-              </li>
-            
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">C++</a>
               </li>
             
@@ -479,11 +475,15 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+                <a href="javascript:void(0)" class="js-tag color3">android</a>
               </li>
             
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">数据结构</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -503,6 +503,14 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">HTML</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">操作系统</a>
+              </li>
+            
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">错题集</a>
               </li>
             
@@ -516,14 +524,6 @@ MathJax.Hub.Queue(function() {
             
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">逻辑</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">操作系统</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">HTML</a>
               </li>
             
             <div class="clearfix"></div>
