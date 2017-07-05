@@ -221,7 +221,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2017/07/05/Android-Uri/">Android Uri</a>
+      <a class="article-title" href="/2017/07/05/Android-Uri/">Android Uri及对于权限的相关操作</a>
     </h1>
   
 
@@ -246,6 +246,14 @@
 <h2 id="发短信"><a href="#发短信" class="headerlink" title="发短信"></a>发短信</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Uri smsUri = Uri.parse(<span class="string">"tel:100861"</span>);</div><div class="line"><span class="built_in">return</span>It = new Intent(Intent.ACTION_VIEW, smsUri);</div><div class="line"><span class="built_in">return</span>It.putExtra(<span class="string">"sms_body"</span>, <span class="string">"yyyy"</span>);</div><div class="line"><span class="built_in">return</span>It.setType(<span class="string">"vnd.android-dir/mms-sms"</span>);</div></pre></td></tr></table></figure>
 <h2 id="直接发邮件"><a href="#直接发邮件" class="headerlink" title="直接发邮件"></a>直接发邮件</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">Uri smsToUri = Uri.parse(<span class="string">"smsto://100861"</span>);</div><div class="line"><span class="built_in">return</span>It = new Intent(Intent.ACTION_SENDTO, smsToUri);</div><div class="line"><span class="built_in">return</span>It.putExtra(<span class="string">"sms_body"</span>, <span class="string">"yyyy"</span>);</div></pre></td></tr></table></figure>
 <h2 id="发彩信"><a href="#发彩信" class="headerlink" title="发彩信"></a>发彩信</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">Uri mmsUri = Uri.parse(<span class="string">"content://media/external/images/media/23"</span>);</div><div class="line"><span class="built_in">return</span>It = new Intent(Intent.ACTION_SEND);</div><div class="line"><span class="built_in">return</span>It.putExtra(<span class="string">"sms_body"</span>, <span class="string">"yyyy"</span>);</div><div class="line"><span class="built_in">return</span>It.putExtra(Intent.EXTRA_STREAM, mmsUri);</div><div class="line"><span class="built_in">return</span>It.setType(<span class="string">"image/png"</span>);</div></pre></td></tr></table></figure>
+<h2 id="相关操作-这里都以sms为例"><a href="#相关操作-这里都以sms为例" class="headerlink" title="相关操作 这里都以sms为例"></a>相关操作 这里都以sms为例</h2><ul>
+<li><p>ContextCompat.checkSelfPermission()<br>检查应用是否拥有该权限，被授权返回值为PERMISSION_GRANTED，否则返回PERMISSION_DENIED</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span>(ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS)== PackageManager.PERMISSION_GRANTED)</div><div class="line">...</div></pre></td></tr></table></figure>
+</li>
+<li><p>ActivityCompat.requestPermissions()<br>将弹出请求授权对话框，这个方法在M之前版本调用，OnRequestPermissionsResultCallback 直接被调用，带着正确的 PERMISSION_GRANTED或者 PERMISSION_DENIED</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">ActivityCompat.requestPermissions(</div><div class="line">                    this,</div><div class="line">                    new String[]&#123;Manifest.permission.SEND_SMS&#125;,</div><div class="line">                    SMS_REQUEST_CODE</div><div class="line">            );</div><div class="line"></div><div class="line">@Override</div><div class="line">public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) &#123;</div><div class="line">      <span class="keyword">if</span>(requestCode!=SMS_REQUEST_CODE)</div><div class="line">          <span class="built_in">return</span>;</div><div class="line">      <span class="keyword">if</span>(grantResults.length&gt;0&amp;&amp;grantResults[0]==PackageManager.PERMISSION_GRANTED)&#123;</div><div class="line">          sendSms();</div><div class="line">      &#125;<span class="keyword">else</span>&#123;</div><div class="line">          Toast.makeText(this,<span class="string">"You must grant the SMS permission to send texts"</span>,Toast.LENGTH_SHORT).show();</div><div class="line">      &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ul>
 
       
 
@@ -999,27 +1007,7 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Java</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">android</a>
-              </li>
-            
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">C++</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">STL</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">数据结构</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1027,7 +1015,23 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">动态规划</a>
+                <a href="javascript:void(0)" class="js-tag color5">Java</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">STL</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">数据结构</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">android</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1039,11 +1043,19 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">动态规划</a>
+              </li>
+            
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">HDOJ</a>
               </li>
             
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">操作系统</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">HTML</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1060,10 +1072,6 @@ MathJax.Hub.Queue(function() {
             
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">js</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">HTML</a>
               </li>
             
             <div class="clearfix"></div>
