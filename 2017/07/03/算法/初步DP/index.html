@@ -9,14 +9,14 @@
   <title>初步DP | Maki</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="数字三角形有一个由非负整数组成的三角形，第一行只有一个数，除了最下行之外每个数的左下方和右下方各有一个数如图所示从第一行的数开始，每次可以往左下或右下走一格，直到走到最下行，把沿途经过的数全部加起来，如何走才能使这个和尽量大？12345678910111213141516171819#include&amp;lt;iostream&amp;gt;#include&amp;lt;algorithm&amp;gt;using nam">
-<meta name="keywords" content="C++练手题,算法">
+<meta name="keywords" content="算法,C++练手题">
 <meta property="og:type" content="article">
 <meta property="og:title" content="初步DP">
 <meta property="og:url" content="http://makixi.github.io/2017/07/03/算法/初步DP/index.html">
 <meta property="og:site_name" content="Maki">
 <meta property="og:description" content="数字三角形有一个由非负整数组成的三角形，第一行只有一个数，除了最下行之外每个数的左下方和右下方各有一个数如图所示从第一行的数开始，每次可以往左下或右下走一格，直到走到最下行，把沿途经过的数全部加起来，如何走才能使这个和尽量大？12345678910111213141516171819#include&amp;lt;iostream&amp;gt;#include&amp;lt;algorithm&amp;gt;using nam">
 <meta property="og:image" content="https://github.com/makixi/makixi.github.io/raw/master/img/%E5%88%B7%E9%A2%98%E4%B8%93%E7%94%A8%E5%9B%BE/liurujia3.png">
-<meta property="og:updated_time" content="2017-07-04T07:52:22.199Z">
+<meta property="og:updated_time" content="2017-07-06T05:27:37.165Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="初步DP">
 <meta name="twitter:description" content="数字三角形有一个由非负整数组成的三角形，第一行只有一个数，除了最下行之外每个数的左下方和右下方各有一个数如图所示从第一行的数开始，每次可以往左下或右下走一格，直到走到最下行，把沿途经过的数全部加起来，如何走才能使这个和尽量大？12345678910111213141516171819#include&amp;lt;iostream&amp;gt;#include&amp;lt;algorithm&amp;gt;using nam">
@@ -180,7 +180,7 @@
 <h2 id="递归结构中的动态规划"><a href="#递归结构中的动态规划" class="headerlink" title="递归结构中的动态规划"></a>递归结构中的动态规划</h2><h3 id="最优矩阵链乘"><a href="#最优矩阵链乘" class="headerlink" title="最优矩阵链乘"></a>最优矩阵链乘</h3><p>一个n*m矩阵由n行m列共n*m个数排列而成。两个矩阵A和B可以相乘当且仅当A的列数等于B的行数。一个n*m的矩阵乘以一个m*p的矩阵等于一个n*p的矩阵，运算量为mnp。<br>矩阵乘法不满足分配律，但满足结合律。因此a*b*c即可以按顺序(a*b)*c进行，也可以按a*(b*c)来进行。假设a、b、c分别是2*3，3*4，4*5的，则(a*b)*c的运算量为2*3*4+2*4*5=64，a*(b*c)的运算量为3*4*5+2*3*5=90。显然第一种个顺序节省运算量。<br>给出n个矩阵组成的序列，设计一种方法把它们依次乘起来，使得总的运算量尽量小。假设第i个矩阵Ai是p(i-1)*pi的。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#include&lt;iostream&gt;</span></div><div class="line"><span class="comment">#include&lt;algorithm&gt;</span></div><div class="line">using namespace std;</div><div class="line"><span class="comment">#define MAXNUM 110</span></div><div class="line">int d[MAXNUM][MAXNUM], num[MAXNUM];</div><div class="line">int n;</div><div class="line"></div><div class="line">int dp(int a, int b) &#123;</div><div class="line">	<span class="keyword">if</span> (d[a][b] &gt; 0)<span class="built_in">return</span> d[a][b];</div><div class="line">	<span class="keyword">if</span> (a == b)<span class="built_in">return</span> 0;</div><div class="line">	//即i=a</div><div class="line">	int M<span class="keyword">in</span> = dp(a + 1, b) + num[a - 1] * num[a] * num[b];</div><div class="line">	<span class="keyword">for</span> (int i = a + 1; i &lt; b; ++i)</div><div class="line">		M<span class="keyword">in</span> = min(M<span class="keyword">in</span>, dp(a, i) + dp(i + 1, b) + num[a - 1] * num[i] * num[b]);</div><div class="line">	d[a][b] = M<span class="keyword">in</span>;</div><div class="line">	<span class="built_in">return</span> d[a][b];</div><div class="line">&#125;</div><div class="line"></div><div class="line">int <span class="function"><span class="title">main</span></span>() &#123;</div><div class="line">	memset(d, -1, sizeof(d));</div><div class="line">	cin &gt;&gt; n;</div><div class="line">	<span class="keyword">for</span> (int i = 0; i &lt;= n; ++i)</div><div class="line">		cin &gt;&gt; num[i];</div><div class="line">	cout &lt;&lt; dp(1,n);</div><div class="line">	<span class="built_in">return</span> 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <h3 id="最优三角剖分"><a href="#最优三角剖分" class="headerlink" title="最优三角剖分"></a>最优三角剖分</h3><p>对于一个n个顶点的凸多边形，多很多种方法可以对它进行三角剖分，即用n-3条互不相交的对角线把凸多边形分成n-2个三角形。为每个三角形规定一个权函数f(i,j,k)(如三角形的周长或3个顶点的权和)，求所有三角形权和最大的方案。<br>书上没有标准输入输出，我也不知道权函数具体是怎样<br>就给出一个DP思路：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">//k枚举 i+1,i+2...j-1</div><div class="line">f(i,j)=max(f(i,k)+f(k,j)+w(i,j,k))</div></pre></td></tr></table></figure></p>
 <h3 id="树的最大独立集"><a href="#树的最大独立集" class="headerlink" title="树的最大独立集"></a>树的最大独立集</h3><p>对于一棵n个结点的无根树，选出尽量多的结点，使得任何两个结点均不相邻（称为最大独立集），然后输入n-1条无向边，输出一个最大独立集（如果有多解，则任意输出一组）。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#include &lt;iostream&gt;</span></div><div class="line"><span class="comment">#include &lt;vector&gt;</span></div><div class="line"><span class="comment">#include&lt;algorithm&gt;</span></div><div class="line">using namespace std;</div><div class="line"></div><div class="line"><span class="comment">#define maxn 100</span></div><div class="line">vector&lt;int&gt; v[maxn];</div><div class="line">int d[maxn], s[maxn], gs[maxn];</div><div class="line">int dfs(int n, int fa)</div><div class="line">&#123;</div><div class="line">	<span class="keyword">for</span> (int i = 0; i &lt; v[n].size(); i++)</div><div class="line">	&#123;</div><div class="line">		int m = v[n][i];</div><div class="line">		<span class="keyword">if</span> (m != fa)dfs(m, n);</div><div class="line">		s[n] += d[m];</div><div class="line">		<span class="keyword">if</span> (fa != -1)</div><div class="line">			gs[fa] += d[m];</div><div class="line">	&#125;</div><div class="line">	d[n] = max(s[n], gs[n] + 1);</div><div class="line">	<span class="built_in">return</span> d[n];</div><div class="line">&#125;</div><div class="line">int <span class="function"><span class="title">main</span></span>()</div><div class="line">&#123;</div><div class="line">	int n;</div><div class="line">	<span class="keyword">while</span> (cin &gt;&gt; n)</div><div class="line">	&#123;</div><div class="line">		<span class="keyword">for</span> (int i = 0; i &lt; n; i++)</div><div class="line">			v[i].clear();</div><div class="line">		<span class="keyword">for</span> (int i = 0; i &lt; n - 1; i++)</div><div class="line">		&#123;</div><div class="line">			int a, b;</div><div class="line">			cin &gt;&gt; a &gt;&gt; b;;</div><div class="line">			v[a].push_back(b);</div><div class="line">			v[b].push_back(a);</div><div class="line">		&#125;</div><div class="line">		memset(d, 0, sizeof(d));</div><div class="line">		memset(s, 0, sizeof(s));</div><div class="line">		memset(gs, 0, sizeof(gs));</div><div class="line">		cout &lt;&lt; dfs(0, -1) &lt;&lt; endl;</div><div class="line">	&#125;</div><div class="line">	<span class="built_in">return</span> 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h2 id="集合上的动态规划"><a href="#集合上的动态规划" class="headerlink" title="集合上的动态规划"></a>集合上的动态规划</h2><h3 id="最优配对问题"><a href="#最优配对问题" class="headerlink" title="最优配对问题"></a>最优配对问题</h3><p>空间里有n个点P0,P0,…,P(n-1)，你的任务是把它们配成n/2对（n是偶数），使得每个点恰好在一个点对中。所有点对中两点的距离之和应尽量小。n&lt;=20<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#include&lt;iostream&gt;</span></div><div class="line"><span class="comment">#include&lt;algorithm&gt;</span></div><div class="line">using namespace std;</div><div class="line"><span class="comment">#define MAXNUM 22</span></div><div class="line"><span class="comment">#define INF 1e10</span></div><div class="line">int  n,d[1&lt;&lt;MAXNUM],S;</div><div class="line"></div><div class="line">struct Node&#123;</div><div class="line">	int x, y, z;</div><div class="line">&#125;node[MAXNUM];</div><div class="line"></div><div class="line">double dis(Node &amp;a, Node &amp;b)&#123;</div><div class="line">	<span class="built_in">return</span> sqrt((double)(a.x - b.x)*(a.x - b.x) + (a.y - b.y)*(a.y - b.y) + (a.z - b.z)*(a.z - b.z));</div><div class="line">&#125;</div><div class="line"></div><div class="line">void <span class="function"><span class="title">dp</span></span>()&#123;</div><div class="line">	int i;</div><div class="line">	<span class="keyword">for</span> (int s = 1; s&lt;S; s++)&#123;</div><div class="line">		d[s] = INF;</div><div class="line">		<span class="keyword">for</span> (i = n - 1; i &gt;= 0; i--)</div><div class="line">			<span class="keyword">if</span> (s &amp; 1 &lt;&lt; i)</div><div class="line">				<span class="built_in">break</span>;</div><div class="line">		<span class="keyword">for</span> (int j = i - 1; j &gt;= 0; j--)</div><div class="line">			<span class="keyword">if</span> (s &amp; 1 &lt;&lt; j)</div><div class="line">				d[s] = min(d[s], dis(node[i], node[j]) + d[s ^ (1 &lt;&lt; i) ^ (1 &lt;&lt; j)]);</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">int <span class="function"><span class="title">main</span></span>() &#123;</div><div class="line">	cin &gt;&gt; n;</div><div class="line">	<span class="keyword">for</span> (int i = 0; i &lt; n; ++i)</div><div class="line">		cin &gt;&gt; node[i].x &gt;&gt; node[i].y &gt;&gt; node[i].z;</div><div class="line">	d[0] = 0; S = 1 &lt;&lt; n;</div><div class="line">	dp();</div><div class="line">	<span class="built_in">printf</span>(<span class="string">"%.3lf\n"</span>, d[S - 1]);</div><div class="line">	<span class="built_in">return</span> 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="集合上的动态规划"><a href="#集合上的动态规划" class="headerlink" title="集合上的动态规划"></a>集合上的动态规划</h2><h3 id="最优配对问题"><a href="#最优配对问题" class="headerlink" title="最优配对问题"></a>最优配对问题</h3><p>空间里有n个点P0,P0,…,P(n-1)，你的任务是把它们配成n/2对（n是偶数），使得每个点恰好在一个点对中。所有点对中两点的距离之和应尽量小。n&lt;=20<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#include&lt;iostream&gt;</span></div><div class="line"><span class="comment">#include&lt;algorithm&gt;</span></div><div class="line">using namespace std;</div><div class="line"><span class="comment">#define MAXNUM 22</span></div><div class="line"><span class="comment">#define INF 1e10</span></div><div class="line">int  n,d[1&lt;&lt;MAXNUM],S;</div><div class="line"></div><div class="line">struct Node&#123;</div><div class="line">	int x, y, z;</div><div class="line">&#125;node[MAXNUM];</div><div class="line"></div><div class="line">double dis(Node &amp;a, Node &amp;b)&#123;</div><div class="line">	<span class="built_in">return</span> sqrt((double)(a.x - b.x)*(a.x - b.x) + (a.y - b.y)*(a.y - b.y) + (a.z - b.z)*(a.z - b.z));</div><div class="line">&#125;</div><div class="line"></div><div class="line">void <span class="function"><span class="title">dp</span></span>()&#123;</div><div class="line">	int i;</div><div class="line">	<span class="keyword">for</span> (int s = 1; s&lt;S; s++)&#123;</div><div class="line">		d[s] = INF;</div><div class="line">		<span class="keyword">for</span> (i = n - 1; i &gt;= 0; i--)</div><div class="line">			<span class="keyword">if</span> (s &amp; 1 &lt;&lt; i)</div><div class="line">				<span class="built_in">break</span>;</div><div class="line">		<span class="keyword">for</span> (int j = i - 1; j &gt;= 0; j--)</div><div class="line">			//S与&#123;j&#125;的交集不为空</div><div class="line">			<span class="keyword">if</span> (s &amp; 1 &lt;&lt; j)</div><div class="line">				d[s] = min(d[s], dis(node[i], node[j]) + d[s ^ (1 &lt;&lt; i) ^ (1 &lt;&lt; j)]);</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">int <span class="function"><span class="title">main</span></span>() &#123;</div><div class="line">	cin &gt;&gt; n;</div><div class="line">	<span class="keyword">for</span> (int i = 0; i &lt; n; ++i)</div><div class="line">		cin &gt;&gt; node[i].x &gt;&gt; node[i].y &gt;&gt; node[i].z;</div><div class="line">	d[0] = 0; S = 1 &lt;&lt; n;</div><div class="line">	dp();</div><div class="line">	<span class="built_in">printf</span>(<span class="string">"%.3lf\n"</span>, d[S - 1]);</div><div class="line">	<span class="built_in">return</span> 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 
       
 
@@ -220,11 +220,11 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">C++练手题</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">算法</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">算法</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">C++练手题</a>
         		</li>
       		
 		</ul>
@@ -428,11 +428,7 @@ MathJax.Hub.Queue(function() {
           <ul class="article-tag-list" q-show="showTags">
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Android</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+                <a href="javascript:void(0)" class="js-tag color3">算法</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -444,11 +440,15 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Dijkstra</a>
+              </li>
+            
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">DFS</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Dijkstra</a>
+                <a href="javascript:void(0)" class="js-tag color3">Android</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -464,15 +464,15 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">数据结构</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">算法</a>
-              </li>
-            
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">STL</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">数据结构</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -492,7 +492,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">js</a>
+                <a href="javascript:void(0)" class="js-tag color5">操作系统</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">HTML</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -500,7 +504,7 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">操作系统</a>
+                <a href="javascript:void(0)" class="js-tag color3">js</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -509,10 +513,6 @@ MathJax.Hub.Queue(function() {
             
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">逻辑</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">HTML</a>
               </li>
             
             <div class="clearfix"></div>
