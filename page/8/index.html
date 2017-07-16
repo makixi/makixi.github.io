@@ -156,6 +156,70 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-PAT/PAT-advanced-1007-Maximum-Subsequence-Sum" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/06/26/PAT/PAT-advanced-1007-Maximum-Subsequence-Sum/">PAT advanced 1007 Maximum Subsequence Sum</a>
+    </h1>
+  
+
+        
+        <a href="/2017/06/26/PAT/PAT-advanced-1007-Maximum-Subsequence-Sum/" class="archive-article-date">
+  	<time datetime="2017-06-26T13:20:13.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-06-26</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Given a sequence of K integers { N1, N2, …, NK }. A continuous subsequence is defined to be { Ni, Ni+1, …, Nj } where 1 &lt;= i &lt;= j &lt;= K. The Maximum Subsequence is the continuous subsequence which has the largest sum of its elements. For example, given sequence { -2, 11, -4, 13, -5, -2 }, its maximum subsequence is { 11, -4, 13 } with the largest sum being 20.</p>
+<p>Now you are supposed to find the largest sum, together with the first and the last numbers of the maximum subsequence.</p>
+<p><strong>Input Specification:</strong><br>Each input file contains one test case. Each case occupies two lines. The first line contains a positive integer K (&lt;= 10000). The second line contains K numbers, separated by a space.</p>
+<p><strong>Output Specification:</strong><br>For each test case, output in one line the largest sum, together with the first and the last numbers of the maximum subsequence. The numbers must be separated by one space, but there must be no extra space at the end of a line. In case that the maximum subsequence is not unique, output the one with the smallest indices i and j (as shown by the sample case). If all the K numbers are negative, then its maximum sum is defined to be 0, and you are supposed to output the first and the last numbers of the whole sequence.</p>
+<p><strong>Sample Input:</strong><br>10<br>-10 1 2 3 4 -5 -23 3 7 -21<br><strong>Sample Output:</strong><br>10 1 4<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#include&lt;iostream&gt;</span></div><div class="line">using namespace std;</div><div class="line"></div><div class="line">int <span class="function"><span class="title">main</span></span>() &#123;</div><div class="line">	int k,maxsum=-999999999,max=-999999999;</div><div class="line">	int begin, end;</div><div class="line">	cin &gt;&gt; k;</div><div class="line">	int *a;</div><div class="line">	a = (int *)malloc(k * sizeof(int));</div><div class="line">	<span class="keyword">for</span> (int i = 0; i &lt; k; i++)</div><div class="line">		cin &gt;&gt; a[i];</div><div class="line">	<span class="keyword">for</span> (int i = 0; i &lt; k; i++) &#123;</div><div class="line">		int sum = 0;</div><div class="line">		<span class="keyword">if</span> (a[i] &gt; max) max = a[i];</div><div class="line">		<span class="keyword">for</span> (int j = i ; j &lt; k; j++) &#123;</div><div class="line">			sum += a[j];</div><div class="line">			<span class="keyword">if</span> (sum &gt; maxsum) &#123; maxsum = sum; begin = a[i]; end = a[j]; &#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">if</span> (max &lt; 0) cout &lt;&lt; <span class="string">"0 "</span> &lt;&lt; a[0] &lt;&lt; <span class="string">" "</span> &lt;&lt; a[k - 1];</div><div class="line">	<span class="keyword">else</span></div><div class="line">	cout &lt;&lt; maxsum &lt;&lt; <span class="string">" "</span> &lt;&lt; begin &lt;&lt; <span class="string">" "</span> &lt;&lt; end;</div><div class="line">	<span class="built_in">return</span> 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>当然啦下面的代码不是针对PAT这道题，只是对于maximum subsequence的算法又有新的想法了<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">int maxsum(int *A, int x, int y) &#123;</div><div class="line">	int i, m, v, L, R, Max;</div><div class="line">	<span class="keyword">if</span> (y - x == 1)<span class="built_in">return</span> A[x];</div><div class="line">	m = x + (y - x) / 2;</div><div class="line">	Max = max(maxsum(A, x, m),maxsum(A, m, y));</div><div class="line">	v = 0; L = A[m - 1];</div><div class="line">	<span class="keyword">for</span> (i = m - 1; i &gt;= x; i--) &#123;</div><div class="line">		v += A[i]; L = max(L, v);</div><div class="line">	&#125;</div><div class="line">	v = 0; R = A[m];</div><div class="line">	<span class="keyword">for</span> (i = m; i &lt; y; ++i) &#123;</div><div class="line">		v += A[i]; R = max(R, v);</div><div class="line">	&#125;</div><div class="line">	<span class="built_in">return</span> max(Max, L + R);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">PAT甲级</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/06/26/PAT/PAT-advanced-1007-Maximum-Subsequence-Sum/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
     <article id="post-PAT/PAT-advanced-1006-Sign-In-and-Sign-Out" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -653,11 +717,11 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">C++练手题</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">算法</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">算法</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">C++练手题</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
@@ -737,70 +801,6 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2017/06/25/算法/子集生成算法/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
-    <article id="post-练手/求全排列——next-permutation的应用" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/06/25/练手/求全排列——next-permutation的应用/">求全排列——next_permutation的应用</a>
-    </h1>
-  
-
-        
-        <a href="/2017/06/25/练手/求全排列——next-permutation的应用/" class="archive-article-date">
-  	<time datetime="2017-06-25T07:52:41.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-06-25</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>在STL中，除了next_permutation外。还有一个函数prev_permutation.<br>分别是求下一个和上一个的排列组合<br>如果没有下一个/上一个序列，就返回flase</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#include&lt;iostream&gt;</span></div><div class="line"><span class="comment">#include&lt;algorithm&gt;</span></div><div class="line">using namespace std;</div><div class="line">int <span class="function"><span class="title">main</span></span>() &#123;</div><div class="line">	int n, p[10];</div><div class="line">	cin &gt;&gt; n;</div><div class="line">	<span class="keyword">for</span> (int i = 0; i &lt; n; ++i)</div><div class="line">		scanf(<span class="string">"%d"</span>, &amp;p[i]);</div><div class="line">	sort(p, p + n);</div><div class="line">	<span class="keyword">do</span> &#123;</div><div class="line">		<span class="keyword">for</span> (int i = 0; i &lt; n; ++i)</div><div class="line">			cout &lt;&lt; p[i] &lt;&lt; <span class="string">" "</span>;</div><div class="line">		cout &lt;&lt; endl;</div><div class="line">	&#125; <span class="keyword">while</span> (next_permutation(p, p + n));</div><div class="line">	<span class="built_in">return</span> 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">C++练手题</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">STL</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/06/25/练手/求全排列——next-permutation的应用/">展开全文 >></a>
         </p>
       
 
@@ -926,7 +926,7 @@ MathJax.Hub.Queue(function() {
           <ul class="article-tag-list" q-show="showTags">
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">C++练手题</a>
+                <a href="javascript:void(0)" class="js-tag color3">算法</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -934,7 +934,23 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">算法</a>
+                <a href="javascript:void(0)" class="js-tag color2">C++练手题</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Android</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Java</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">SQL</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">android</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -966,19 +982,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Android</a>
+                <a href="javascript:void(0)" class="js-tag color4">C++</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">SQL</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Java</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">android</a>
+                <a href="javascript:void(0)" class="js-tag color4">STL</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -986,15 +994,7 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">C++</a>
-              </li>
-            
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">数据结构</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">STL</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1010,19 +1010,19 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">HTML</a>
-              </li>
-            
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">操作系统</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">js</a>
+                <a href="javascript:void(0)" class="js-tag color5">HTML</a>
               </li>
             
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">错题集</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">js</a>
               </li>
             
               <li class="article-tag-list-item">
