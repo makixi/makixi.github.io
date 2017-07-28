@@ -156,6 +156,74 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-PAT/PAT-advanced-1098-Insertion-or-Heap-Sort-25" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/04/29/PAT/PAT-advanced-1098-Insertion-or-Heap-Sort-25/">PAT advanced 1098.Insertion or Heap Sort(25)</a>
+    </h1>
+  
+
+        
+        <a href="/2017/04/29/PAT/PAT-advanced-1098-Insertion-or-Heap-Sort-25/" class="archive-article-date">
+  	<time datetime="2017-04-29T05:43:33.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-04-29</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong>According to Wikipedia:</strong></p>
+<p><strong>Insertion sort iterates</strong>, consuming one input element each repetition, and growing a sorted output list. Each iteration, insertion sort removes one element from the input data, finds the location it belongs within the sorted list, and inserts it there. It repeats until no input elements remain.</p>
+<p><strong>Heap sort</strong> divides its input into a sorted and an unsorted region, and it iteratively shrinks the unsorted region by extracting the largest element and moving that to the sorted region. it involves the use of a heap data structure rather than a linear-time search to find the maximum.</p>
+<p>Now given the initial sequence of integers, together with a sequence which is a result of several iterations of some sorting method, can you tell which sorting method we are using?</p>
+<p><strong>Input Specification:</strong></p>
+<p>Each input file contains one test case. For each case, the first line gives a positive integer N (&lt;=100). Then in the next line, N integers are given as the initial sequence. The last line contains the partially sorted sequence of the N numbers. It is assumed that the target sequence is always ascending. All the numbers in a line are separated by a space.</p>
+<p><strong>Output Specification:</strong></p>
+<p>For each test case, print in the first line either “Insertion Sort” or “Heap Sort” to indicate the method used to obtain the partial result. Then run this method for one more iteration and output in the second line the resuling sequence. It is guaranteed that the answer is unique for each test case. All the numbers in a line must be separated by a space, and there must be no extra space at the end of the line.</p>
+<p><strong>Sample Input 1:</strong><br>10<br>3 1 2 8 7 5 9 4 6 0<br>1 2 3 7 8 5 9 4 6 0<br><strong>Sample Output 1:</strong><br>Insertion Sort<br>1 2 3 5 7 8 9 4 6 0<br><strong>Sample Input 2:</strong><br>10<br>3 1 2 8 7 5 9 4 6 0<br>6 4 5 1 0 3 2 7 8 9<br><strong>Sample Output 2:</strong><br>Heap Sort<br>5 4 3 1 0 2 6 7 8 9</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#include&lt;iostream&gt;</span></div><div class="line"><span class="comment">#include&lt;algorithm&gt;</span></div><div class="line">using namespace std;</div><div class="line">int *origin, *now;</div><div class="line"></div><div class="line">void DownAdjust(int low, int high) &#123;</div><div class="line">	int i = 0, j = i * 2+1;</div><div class="line">	<span class="keyword">while</span> (j &lt;= high) &#123;</div><div class="line">		<span class="keyword">if</span> (j + 1 &lt;= high&amp;&amp;now[j] &lt; now[j+1])j += 1;</div><div class="line">		<span class="keyword">if</span> (now[i] &lt; now[j]) &#123;</div><div class="line">			swap(now[i], now[j]);</div><div class="line">			i = j; j = i * 2+1;</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">else</span> <span class="built_in">break</span>;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line">int <span class="function"><span class="title">main</span></span>() &#123;</div><div class="line">	int n;</div><div class="line">	cin &gt;&gt; n;</div><div class="line">	origin = new int[n];</div><div class="line">	now = new int[n];</div><div class="line">	<span class="keyword">for</span> (int i = 0; i &lt; n; ++i) cin &gt;&gt; origin[i];</div><div class="line">	<span class="keyword">for</span> (int i = 0; i &lt; n; ++i) cin &gt;&gt; now[i];</div><div class="line">	int i, j;</div><div class="line">	<span class="keyword">for</span> (i = 0; i &lt; n - 1 &amp;&amp; now[i] &lt;= now[i + 1]; ++i);</div><div class="line">	<span class="keyword">for</span> (j = i + 1; origin[j] == now[j] &amp;&amp; j &lt; n; ++j);</div><div class="line">	<span class="keyword">if</span> (j == n) &#123;</div><div class="line">		cout &lt;&lt; <span class="string">"Insertion Sort"</span> &lt;&lt; endl;</div><div class="line">		sort(now, now + i + 2);</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">else</span> &#123;</div><div class="line">		cout &lt;&lt; <span class="string">"Heap Sort"</span> &lt;&lt; endl;</div><div class="line">		int p = n;</div><div class="line">		<span class="keyword">while</span> (p &gt;= 2 &amp;&amp; now[p-1] &gt;= now[p - 2])p--; //从后面找到第一个无序的点</div><div class="line">		swap(now[0], now[p-1]);</div><div class="line">		DownAdjust(1, p - 2);</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">for</span> (i = 0; i &lt; n-1; ++i)</div><div class="line">		cout &lt;&lt; now[i] &lt;&lt; <span class="string">" "</span>;</div><div class="line">	cout &lt;&lt; now[n - 1];</div><div class="line">	<span class="built_in">return</span> 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">PAT甲级</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/04/29/PAT/PAT-advanced-1098-Insertion-or-Heap-Sort-25/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
     <article id="post-HDOJ/HDOJ-Rescue" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -574,11 +642,11 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">错题集</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">js</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">js</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">错题集</a>
         		</li>
       		
 		</ul>
@@ -766,93 +834,9 @@
 
 
   
-    <article id="post-数据结构/排序" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/26/数据结构/排序/">排序</a>
-    </h1>
-  
-
-        
-        <a href="/2017/04/26/数据结构/排序/" class="archive-article-date">
-  	<time datetime="2017-04-26T11:16:41.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-04-26</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="冒泡排序"><a href="#冒泡排序" class="headerlink" title="冒泡排序"></a>冒泡排序</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">void Bubble_Sort(ElemType A[],int N)</div><div class="line">&#123;</div><div class="line">  <span class="keyword">for</span>(p=N-1;P&gt;=0;P--)&#123;</div><div class="line">    flag=0;</div><div class="line">    <span class="keyword">for</span>(i=0;i&lt;P;i++) /*一趟冒泡*/</div><div class="line">    &#123;</div><div class="line">      <span class="keyword">if</span>(A[i]&gt;A[i+1])</div><div class="line">      &#123;</div><div class="line">        Swap(A[i],A[i+1]);</div><div class="line">        flag=1;  /*表示发生了交换*/</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">if</span>(flag==0) <span class="built_in">break</span>; /*全程无交换，表示已经有序*/</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>最坏情况 $O(N^2)$</p>
-<h2 id="插入排序"><a href="#插入排序" class="headerlink" title="插入排序"></a>插入排序</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">void InsertionSort( ElementType A[], int N )</div><div class="line">&#123; /* 插入排序 */</div><div class="line">     int P, i;</div><div class="line">     ElementType Tmp;</div><div class="line"></div><div class="line">     <span class="keyword">for</span> ( P=1; P&lt;N; P++ ) &#123;</div><div class="line">         Tmp = A[P]; /* 取出未排序序列中的第一个元素*/</div><div class="line">         <span class="keyword">for</span> ( i=P; i&gt;0 &amp;&amp; A[i-1]&gt;Tmp; i-- )</div><div class="line">             A[i] = A[i-1]; /*依次与已排序序列中元素比较并右移*/</div><div class="line">         A[i] = Tmp; /* 放进合适的位置 */</div><div class="line">     &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>时间复杂度 $O(N^2)$</p>
-<h2 id="时间复杂度下界"><a href="#时间复杂度下界" class="headerlink" title="时间复杂度下界"></a>时间复杂度下界</h2><p>任意N个不同元素组成的序列平均具有N(N-1)/4个逆序对</p>
-<h2 id="希尔排序"><a href="#希尔排序" class="headerlink" title="希尔排序"></a>希尔排序</h2><p>通过比较相距一定间隔的元素来工作，各趟比较所用的距离随着算法的进行而减小。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">void ShellSort( ElementType A[], int N )</div><div class="line">&#123; /* 希尔排序 - 用Sedgewick增量序列 */</div><div class="line">     int Si, D, P, i;</div><div class="line">     ElementType Tmp;</div><div class="line">     /* 这里只列出一小部分增量 */</div><div class="line">     int Sedgewick[] = &#123;929, 505, 209, 109, 41, 19, 5, 1, 0&#125;;</div><div class="line"></div><div class="line">     <span class="keyword">for</span> ( Si=0; Sedgewick[Si]&gt;=N; Si++ )</div><div class="line">         ; /* 初始的增量Sedgewick[Si]不能超过待排序列长度 */</div><div class="line"></div><div class="line">     <span class="keyword">for</span> ( D=Sedgewick[Si]; D&gt;0; D=Sedgewick[++Si] )</div><div class="line">         <span class="keyword">for</span> ( P=D; P&lt;N; P++ ) &#123; /* 插入排序*/</div><div class="line">             Tmp = A[P];</div><div class="line">             <span class="keyword">for</span> ( i=P; i&gt;=D &amp;&amp; A[i-D]&gt;Tmp; i-=D )</div><div class="line">                 A[i] = A[i-D];</div><div class="line">             A[i] = Tmp;</div><div class="line">         &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>使用希尔增量时希尔排序的最坏情况运行时间 $O(N^2)$</p>
-<h3 id="Hibbard增量序列"><a href="#Hibbard增量序列" class="headerlink" title="Hibbard增量序列"></a>Hibbard增量序列</h3><p>$D_{k}=2^k-1$——相邻元素互质<br>最坏情形运行时间为 $O(N^{\frac{2}{3}})$<br>猜想： $O(N^{\frac{5}{4}})$</p>
-<h3 id="Sedgewick增量序列"><a href="#Sedgewick增量序列" class="headerlink" title="Sedgewick增量序列"></a>Sedgewick增量序列</h3><p>$-9<em>4^i-9</em>2^i+1$ 或 $4^i-3*2^i+1$<br>最坏情形运行时间为 $O(N^{\frac{4}{3}})$<br>猜想： $O(N^{\frac{7}{6}})$</p>
-<h2 id="堆排序"><a href="#堆排序" class="headerlink" title="堆排序"></a>堆排序</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line">void Swap( ElementType *a, ElementType *b )</div><div class="line">&#123;</div><div class="line">     ElementType t = *a; *a = *b; *b = t;</div><div class="line">&#125;</div><div class="line"></div><div class="line">void PercDown( ElementType A[], int p, int N )</div><div class="line">&#123; /* 改编代码4.24的PercDown( MaxHeap H, int p )    */</div><div class="line">  /* 将N个元素的数组中以A[p]为根的子堆调整为最大堆 */</div><div class="line">    int Parent, Child;</div><div class="line">    ElementType X;</div><div class="line"></div><div class="line">    X = A[p]; /* 取出根结点存放的值 */</div><div class="line">    <span class="keyword">for</span>( Parent=p; (Parent*2+1)&lt;N; Parent=Child ) &#123;</div><div class="line">        Child = Parent * 2 + 1;</div><div class="line">        <span class="keyword">if</span>( (Child!=N-1) &amp;&amp; (A[Child]&lt;A[Child+1]) )</div><div class="line">            Child++;  /* Child指向左右子结点的较大者 */</div><div class="line">        <span class="keyword">if</span>( X &gt;= A[Child] ) <span class="built_in">break</span>; /* 找到了合适位置 */</div><div class="line">        <span class="keyword">else</span>  /* 下滤X */</div><div class="line">            A[Parent] = A[Child];</div><div class="line">    &#125;</div><div class="line">    A[Parent] = X;</div><div class="line">&#125;</div><div class="line"></div><div class="line">void HeapSort( ElementType A[], int N )</div><div class="line">&#123; /* 堆排序 */</div><div class="line">     int i;</div><div class="line"></div><div class="line">     <span class="keyword">for</span> ( i=N/2-1; i&gt;=0; i-- )/* 建立最大堆 */</div><div class="line">         PercDown( A, i, N );</div><div class="line"></div><div class="line">     <span class="keyword">for</span> ( i=N-1; i&gt;0; i-- ) &#123;</div><div class="line">         /* 删除最大堆顶 */</div><div class="line">         Swap( &amp;A[0], &amp;A[i] ); /* 见代码7.1 */</div><div class="line">         PercDown( A, 0, i );</div><div class="line">     &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h2 id="归并排序"><a href="#归并排序" class="headerlink" title="归并排序"></a>归并排序</h2><h3 id="递归算法"><a href="#递归算法" class="headerlink" title="递归算法"></a>递归算法</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div></pre></td><td class="code"><pre><div class="line">/* 归并排序 - 递归实现 */</div><div class="line"></div><div class="line">/* L = 左边起始位置, R = 右边起始位置, RightEnd = 右边终点位置*/</div><div class="line">void Merge( ElementType A[], ElementType TmpA[], int L, int R, int RightEnd )</div><div class="line">&#123; /* 将有序的A[L]~A[R-1]和A[R]~A[RightEnd]归并成一个有序序列 */</div><div class="line">     int LeftEnd, NumElements, Tmp;</div><div class="line">     int i;</div><div class="line"></div><div class="line">     LeftEnd = R - 1; /* 左边终点位置 */</div><div class="line">     Tmp = L;         /* 有序序列的起始位置 */</div><div class="line">     NumElements = RightEnd - L + 1;</div><div class="line"></div><div class="line">     <span class="keyword">while</span>( L &lt;= LeftEnd &amp;&amp; R &lt;= RightEnd ) &#123;</div><div class="line">         <span class="keyword">if</span> ( A[L] &lt;= A[R] )</div><div class="line">             TmpA[Tmp++] = A[L++]; /* 将左边元素复制到TmpA */</div><div class="line">         <span class="keyword">else</span></div><div class="line">             TmpA[Tmp++] = A[R++]; /* 将右边元素复制到TmpA */</div><div class="line">     &#125;</div><div class="line"></div><div class="line">     <span class="keyword">while</span>( L &lt;= LeftEnd )</div><div class="line">         TmpA[Tmp++] = A[L++]; /* 直接复制左边剩下的 */</div><div class="line">     <span class="keyword">while</span>( R &lt;= RightEnd )</div><div class="line">         TmpA[Tmp++] = A[R++]; /* 直接复制右边剩下的 */</div><div class="line"></div><div class="line">     <span class="keyword">for</span>( i = 0; i &lt; NumElements; i++, RightEnd -- )</div><div class="line">         A[RightEnd] = TmpA[RightEnd]; /* 将有序的TmpA[]复制回A[] */</div><div class="line">&#125;</div><div class="line"></div><div class="line">void Msort( ElementType A[], ElementType TmpA[], int L, int RightEnd )</div><div class="line">&#123; /* 核心递归排序函数 */</div><div class="line">     int Center;</div><div class="line"></div><div class="line">     <span class="keyword">if</span> ( L &lt; RightEnd ) &#123;</div><div class="line">          Center = (L+RightEnd) / 2;</div><div class="line">          Msort( A, TmpA, L, Center );              /* 递归解决左边 */</div><div class="line">          Msort( A, TmpA, Center+1, RightEnd );     /* 递归解决右边 */</div><div class="line">          Merge( A, TmpA, L, Center+1, RightEnd );  /* 合并两段有序序列 */</div><div class="line">     &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">void MergeSort( ElementType A[], int N )</div><div class="line">&#123; /* 归并排序 */</div><div class="line">     ElementType *TmpA;</div><div class="line">     TmpA = (ElementType *)malloc(N*sizeof(ElementType));</div><div class="line"></div><div class="line">     <span class="keyword">if</span> ( TmpA != NULL ) &#123;</div><div class="line">          Msort( A, TmpA, 0, N-1 );</div><div class="line">          free( TmpA );</div><div class="line">     &#125;</div><div class="line">     <span class="keyword">else</span> <span class="built_in">printf</span>( <span class="string">"空间不足"</span> );</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>时间复杂度$O(NlogN)$</p>
-<hr>
-<h3 id="非递归算法"><a href="#非递归算法" class="headerlink" title="非递归算法"></a>非递归算法</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line">/* 归并排序 - 循环实现 */</div><div class="line">/* 这里Merge函数在递归版本中给出 */</div><div class="line"></div><div class="line">/* length = 当前有序子列的长度*/</div><div class="line">void Merge_pass( ElementType A[], ElementType TmpA[], int N, int length )</div><div class="line">&#123; /* 两两归并相邻有序子列 */</div><div class="line">     int i, j;</div><div class="line"></div><div class="line">     <span class="keyword">for</span> ( i=0; i &lt;= N-2*length; i += 2*length )</div><div class="line">         Merge( A, TmpA, i, i+length, i+2*length-1 );</div><div class="line">     <span class="keyword">if</span> ( i+length &lt; N ) /* 归并最后2个子列*/</div><div class="line">         Merge( A, TmpA, i, i+length, N-1);</div><div class="line">     <span class="keyword">else</span> /* 最后只剩1个子列*/</div><div class="line">         <span class="keyword">for</span> ( j = i; j &lt; N; j++ ) TmpA[j] = A[j];</div><div class="line">&#125;</div><div class="line"></div><div class="line">void Merge_Sort( ElementType A[], int N )</div><div class="line">&#123;</div><div class="line">     int length;</div><div class="line">     ElementType *TmpA;</div><div class="line"></div><div class="line">     length = 1; /* 初始化子序列长度*/</div><div class="line">     TmpA = malloc( N * sizeof( ElementType ) );</div><div class="line">     <span class="keyword">if</span> ( TmpA != NULL ) &#123;</div><div class="line">          <span class="keyword">while</span>( length &lt; N ) &#123;</div><div class="line">              Merge_pass( A, TmpA, N, length );</div><div class="line">              length *= 2;</div><div class="line">              Merge_pass( TmpA, A, N, length );</div><div class="line">              length *= 2;</div><div class="line">          &#125;</div><div class="line">          free( TmpA );</div><div class="line">     &#125;</div><div class="line">     <span class="keyword">else</span> <span class="built_in">printf</span>( <span class="string">"空间不足"</span> );</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h2 id="快速排序"><a href="#快速排序" class="headerlink" title="快速排序"></a>快速排序</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line">/* 快速排序 - 直接调用库函数 */</div><div class="line"></div><div class="line"><span class="comment">#include &lt;stdlib.h&gt;</span></div><div class="line"></div><div class="line">/*---------------简单整数排序--------------------*/</div><div class="line">int compare(const void *a, const void *b)</div><div class="line">&#123; /* 比较两整数。非降序排列 */</div><div class="line">    <span class="built_in">return</span> (*(int*)a - *(int*)b);</div><div class="line">&#125;</div><div class="line">/* 调用接口 */</div><div class="line">qsort(A, N, sizeof(int), compare);</div><div class="line">/*---------------简单整数排序--------------------*/</div><div class="line"></div><div class="line"></div><div class="line">/*--------------- 一般情况下，对结构体Node中的某键值key排序 ---------------*/</div><div class="line">struct Node &#123;</div><div class="line">    int key1, key2;</div><div class="line">&#125; A[MAXN];</div><div class="line"></div><div class="line">int compare2keys(const void *a, const void *b)</div><div class="line">&#123; /* 比较两种键值：按key1非升序排列；如果key1相等，则按key2非降序排列 */</div><div class="line">    int k;</div><div class="line">    <span class="keyword">if</span> ( ( (const struct Node*)a) -&gt;key1 &lt; ( (const struct Node* ) b )-&gt;key1 )</div><div class="line">        k = 1;</div><div class="line">    <span class="keyword">else</span> <span class="keyword">if</span> ( ( (const struct Node*)a) -&gt;key1 &gt; ( (const struct Node* ) b )-&gt;key1 )</div><div class="line">        k = -1;</div><div class="line">    <span class="keyword">else</span> &#123;      /* 如果key1相等 */</div><div class="line">        <span class="keyword">if</span> ( ( (const struct Node*)a ) -&gt;key2 &lt; ( (const struct Node* ) b )-&gt;key2 )</div><div class="line">            k = -1;</div><div class="line">        <span class="keyword">else</span></div><div class="line">            k = 1;</div><div class="line">    &#125;</div><div class="line">    <span class="built_in">return</span> k;</div><div class="line">&#125;</div><div class="line">/* 调用接口 */</div><div class="line">qsort(A, N, sizeof(struct Node), compare2keys);</div><div class="line">/*--------------- 一般情况下，对结构体Node中的某键值key排序 ---------------*/</div></pre></td></tr></table></figure>
-<h2 id="表排序"><a href="#表排序" class="headerlink" title="表排序"></a>表排序</h2><h3 id="间接排序"><a href="#间接排序" class="headerlink" title="间接排序"></a>间接排序</h3><p>定义一个指针数组作为“表”（table）<br><img src="https://github.com/makixi/makixi.github.io/raw/master/img/tablesort.png" alt="表排序"></p>
-<h3 id="物理排序"><a href="#物理排序" class="headerlink" title="物理排序"></a>物理排序</h3><p>N个数字的排序由若干个独立的环组成<br>如何判断一个环结束：每访问一个空位i后，就令table[i]=i。当发现table[i]==i时，环就结束了。</p>
-<h2 id="基数排序"><a href="#基数排序" class="headerlink" title="基数排序"></a>基数排序</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div></pre></td><td class="code"><pre><div class="line">/* 基数排序 - 主位优先 */</div><div class="line"></div><div class="line">/* 假设元素最多有MaxDigit个关键字，基数全是同样的Radix */</div><div class="line"></div><div class="line"><span class="comment">#define MaxDigit 4</span></div><div class="line"><span class="comment">#define Radix 10</span></div><div class="line"></div><div class="line">/* 桶元素结点 */</div><div class="line">typedef struct Node *PtrToNode;</div><div class="line">struct Node&#123;</div><div class="line">    int key;</div><div class="line">    PtrToNode next;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">/* 桶头结点 */</div><div class="line">struct HeadNode &#123;</div><div class="line">    PtrToNode head, tail;</div><div class="line">&#125;;</div><div class="line">typedef struct HeadNode Bucket[Radix];</div><div class="line"></div><div class="line">int GetDigit ( int X, int D )</div><div class="line">&#123; /* 默认次位D=1, 主位D&lt;=MaxDigit */</div><div class="line">    int d, i;</div><div class="line"></div><div class="line">    <span class="keyword">for</span> (i=1; i&lt;=D; i++) &#123;</div><div class="line">        d = X%Radix;</div><div class="line">        X /= Radix;</div><div class="line">    &#125;</div><div class="line">    <span class="built_in">return</span> d;</div><div class="line">&#125;</div><div class="line"></div><div class="line">void MSD( ElementType A[], int L, int R, int D )</div><div class="line">&#123; /* 核心递归函数: 对A[L]...A[R]的第D位数进行排序 */</div><div class="line">     int Di, i, j;</div><div class="line">     Bucket B;</div><div class="line">     PtrToNode tmp, p, List = NULL;</div><div class="line">     <span class="keyword">if</span> (D==0) <span class="built_in">return</span>; /* 递归终止条件 */</div><div class="line"></div><div class="line">     <span class="keyword">for</span> (i=0; i&lt;Radix; i++) /* 初始化每个桶为空链表 */</div><div class="line">         B[i].head = B[i].tail = NULL;</div><div class="line">     <span class="keyword">for</span> (i=L; i&lt;=R; i++) &#123; /* 将原始序列逆序存入初始链表List */</div><div class="line">         tmp = (PtrToNode)malloc(sizeof(struct Node));</div><div class="line">         tmp-&gt;key = A[i];</div><div class="line">         tmp-&gt;next = List;</div><div class="line">         List = tmp;</div><div class="line">     &#125;</div><div class="line">     /* 下面是分配的过程 */</div><div class="line">     p = List;</div><div class="line">     <span class="keyword">while</span> (p) &#123;</div><div class="line">         Di = GetDigit(p-&gt;key, D); /* 获得当前元素的当前位数字 */</div><div class="line">         /* 从List中摘除 */</div><div class="line">         tmp = p; p = p-&gt;next;</div><div class="line">         /* 插入B[Di]号桶 */</div><div class="line">         <span class="keyword">if</span> (B[Di].head == NULL) B[Di].tail = tmp;</div><div class="line">         tmp-&gt;next = B[Di].head;</div><div class="line">         B[Di].head = tmp;</div><div class="line">     &#125;</div><div class="line">     /* 下面是收集的过程 */</div><div class="line">     i = j = L; /* i, j记录当前要处理的A[]的左右端下标 */</div><div class="line">     <span class="keyword">for</span> (Di=0; Di&lt;Radix; Di++) &#123; /* 对于每个桶 */</div><div class="line">         <span class="keyword">if</span> (B[Di].head) &#123; /* 将非空的桶整桶倒入A[], 递归排序 */</div><div class="line">             p = B[Di].head;</div><div class="line">             <span class="keyword">while</span> (p) &#123;</div><div class="line">                 tmp = p;</div><div class="line">                 p = p-&gt;next;</div><div class="line">                 A[j++] = tmp-&gt;key;</div><div class="line">                 free(tmp);</div><div class="line">             &#125;</div><div class="line">             /* 递归对该桶数据排序, 位数减1 */</div><div class="line">             MSD(A, i, j-1, D-1);</div><div class="line">             i = j; /* 为下一个桶对应的A[]左端 */</div><div class="line">         &#125;</div><div class="line">     &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">void MSDRadixSort( ElementType A[], int N )</div><div class="line">&#123; /* 统一接口 */</div><div class="line">    MSD(A, 0, N-1, MaxDigit);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h3 id="桶排序"><a href="#桶排序" class="headerlink" title="桶排序"></a>桶排序</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div></pre></td><td class="code"><pre><div class="line">/* 基数排序 - 次位优先 */</div><div class="line"></div><div class="line">/* 假设元素最多有MaxDigit个关键字，基数全是同样的Radix */</div><div class="line"><span class="comment">#define MaxDigit 4</span></div><div class="line"><span class="comment">#define Radix 10</span></div><div class="line"></div><div class="line">/* 桶元素结点 */</div><div class="line">typedef struct Node *PtrToNode;</div><div class="line">struct Node &#123;</div><div class="line">    int key;</div><div class="line">    PtrToNode next;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">/* 桶头结点 */</div><div class="line">struct HeadNode &#123;</div><div class="line">    PtrToNode head, tail;</div><div class="line">&#125;;</div><div class="line">typedef struct HeadNode Bucket[Radix];</div><div class="line"></div><div class="line">int GetDigit ( int X, int D )</div><div class="line">&#123; /* 默认次位D=1, 主位D&lt;=MaxDigit */</div><div class="line">    int d, i;</div><div class="line"></div><div class="line">    <span class="keyword">for</span> (i=1; i&lt;=D; i++) &#123;</div><div class="line">        d = X % Radix;</div><div class="line">        X /= Radix;</div><div class="line">    &#125;</div><div class="line">    <span class="built_in">return</span> d;</div><div class="line">&#125;</div><div class="line"></div><div class="line">void LSDRadixSort( ElementType A[], int N )</div><div class="line">&#123; /* 基数排序 - 次位优先 */</div><div class="line">     int D, Di, i;</div><div class="line">     Bucket B;</div><div class="line">     PtrToNode tmp, p, List = NULL;</div><div class="line"></div><div class="line">     <span class="keyword">for</span> (i=0; i&lt;Radix; i++) /* 初始化每个桶为空链表 */</div><div class="line">         B[i].head = B[i].tail = NULL;</div><div class="line">     <span class="keyword">for</span> (i=0; i&lt;N; i++) &#123; /* 将原始序列逆序存入初始链表List */</div><div class="line">         tmp = (PtrToNode)malloc(sizeof(struct Node));</div><div class="line">         tmp-&gt;key = A[i];</div><div class="line">         tmp-&gt;next = List;</div><div class="line">         List = tmp;</div><div class="line">     &#125;</div><div class="line">     /* 下面开始排序 */</div><div class="line">     <span class="keyword">for</span> (D=1; D&lt;=MaxDigit; D++) &#123; /* 对数据的每一位循环处理 */</div><div class="line">         /* 下面是分配的过程 */</div><div class="line">         p = List;</div><div class="line">         <span class="keyword">while</span> (p) &#123;</div><div class="line">             Di = GetDigit(p-&gt;key, D); /* 获得当前元素的当前位数字 */</div><div class="line">             /* 从List中摘除 */</div><div class="line">             tmp = p; p = p-&gt;next;</div><div class="line">             /* 插入B[Di]号桶尾 */</div><div class="line">             tmp-&gt;next = NULL;</div><div class="line">             <span class="keyword">if</span> (B[Di].head == NULL)</div><div class="line">                 B[Di].head = B[Di].tail = tmp;</div><div class="line">             <span class="keyword">else</span> &#123;</div><div class="line">                 B[Di].tail-&gt;next = tmp;</div><div class="line">                 B[Di].tail = tmp;</div><div class="line">             &#125;</div><div class="line">         &#125;</div><div class="line">         /* 下面是收集的过程 */</div><div class="line">         List = NULL;</div><div class="line">         <span class="keyword">for</span> (Di=Radix-1; Di&gt;=0; Di--) &#123; /* 将每个桶的元素顺序收集入List */</div><div class="line">             <span class="keyword">if</span> (B[Di].head) &#123; /* 如果桶不为空 */</div><div class="line">                 /* 整桶插入List表头 */</div><div class="line">                 B[Di].tail-&gt;next = List;</div><div class="line">                 List = B[Di].head;</div><div class="line">                 B[Di].head = B[Di].tail = NULL; /* 清空桶 */</div><div class="line">             &#125;</div><div class="line">         &#125;</div><div class="line">     &#125;</div><div class="line">     /* 将List倒入A[]并释放空间 */</div><div class="line">     <span class="keyword">for</span> (i=0; i&lt;N; i++) &#123;</div><div class="line">        tmp = List;</div><div class="line">        List = List-&gt;next;</div><div class="line">        A[i] = tmp-&gt;key;</div><div class="line">        free(tmp);</div><div class="line">     &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>主位优先<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div></pre></td><td class="code"><pre><div class="line">/* 基数排序 - 主位优先 */</div><div class="line"></div><div class="line">/* 假设元素最多有MaxDigit个关键字，基数全是同样的Radix */</div><div class="line"></div><div class="line"><span class="comment">#define MaxDigit 4</span></div><div class="line"><span class="comment">#define Radix 10</span></div><div class="line"></div><div class="line">/* 桶元素结点 */</div><div class="line">typedef struct Node *PtrToNode;</div><div class="line">struct Node&#123;</div><div class="line">    int key;</div><div class="line">    PtrToNode next;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">/* 桶头结点 */</div><div class="line">struct HeadNode &#123;</div><div class="line">    PtrToNode head, tail;</div><div class="line">&#125;;</div><div class="line">typedef struct HeadNode Bucket[Radix];</div><div class="line"></div><div class="line">int GetDigit ( int X, int D )</div><div class="line">&#123; /* 默认次位D=1, 主位D&lt;=MaxDigit */</div><div class="line">    int d, i;</div><div class="line"></div><div class="line">    <span class="keyword">for</span> (i=1; i&lt;=D; i++) &#123;</div><div class="line">        d = X%Radix;</div><div class="line">        X /= Radix;</div><div class="line">    &#125;</div><div class="line">    <span class="built_in">return</span> d;</div><div class="line">&#125;</div><div class="line"></div><div class="line">void MSD( ElementType A[], int L, int R, int D )</div><div class="line">&#123; /* 核心递归函数: 对A[L]...A[R]的第D位数进行排序 */</div><div class="line">     int Di, i, j;</div><div class="line">     Bucket B;</div><div class="line">     PtrToNode tmp, p, List = NULL;</div><div class="line">     <span class="keyword">if</span> (D==0) <span class="built_in">return</span>; /* 递归终止条件 */</div><div class="line"></div><div class="line">     <span class="keyword">for</span> (i=0; i&lt;Radix; i++) /* 初始化每个桶为空链表 */</div><div class="line">         B[i].head = B[i].tail = NULL;</div><div class="line">     <span class="keyword">for</span> (i=L; i&lt;=R; i++) &#123; /* 将原始序列逆序存入初始链表List */</div><div class="line">         tmp = (PtrToNode)malloc(sizeof(struct Node));</div><div class="line">         tmp-&gt;key = A[i];</div><div class="line">         tmp-&gt;next = List;</div><div class="line">         List = tmp;</div><div class="line">     &#125;</div><div class="line">     /* 下面是分配的过程 */</div><div class="line">     p = List;</div><div class="line">     <span class="keyword">while</span> (p) &#123;</div><div class="line">         Di = GetDigit(p-&gt;key, D); /* 获得当前元素的当前位数字 */</div><div class="line">         /* 从List中摘除 */</div><div class="line">         tmp = p; p = p-&gt;next;</div><div class="line">         /* 插入B[Di]号桶 */</div><div class="line">         <span class="keyword">if</span> (B[Di].head == NULL) B[Di].tail = tmp;</div><div class="line">         tmp-&gt;next = B[Di].head;</div><div class="line">         B[Di].head = tmp;</div><div class="line">     &#125;</div><div class="line">     /* 下面是收集的过程 */</div><div class="line">     i = j = L; /* i, j记录当前要处理的A[]的左右端下标 */</div><div class="line">     <span class="keyword">for</span> (Di=0; Di&lt;Radix; Di++) &#123; /* 对于每个桶 */</div><div class="line">         <span class="keyword">if</span> (B[Di].head) &#123; /* 将非空的桶整桶倒入A[], 递归排序 */</div><div class="line">             p = B[Di].head;</div><div class="line">             <span class="keyword">while</span> (p) &#123;</div><div class="line">                 tmp = p;</div><div class="line">                 p = p-&gt;next;</div><div class="line">                 A[j++] = tmp-&gt;key;</div><div class="line">                 free(tmp);</div><div class="line">             &#125;</div><div class="line">             /* 递归对该桶数据排序, 位数减1 */</div><div class="line">             MSD(A, i, j-1, D-1);</div><div class="line">             i = j; /* 为下一个桶对应的A[]左端 */</div><div class="line">         &#125;</div><div class="line">     &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">void MSDRadixSort( ElementType A[], int N )</div><div class="line">&#123; /* 统一接口 */</div><div class="line">    MSD(A, 0, N-1, MaxDigit);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h2 id="比较"><a href="#比较" class="headerlink" title="比较"></a>比较</h2><p><img src="https://github.com/makixi/makixi.github.io/raw/master/img/sortanalysis.png" alt="sortanalysis"><br>选堆快希不稳 选堆归基不变</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">数据结构</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">排序</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/04/26/数据结构/排序/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/21/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/20/">20</a><a class="page-number" href="/page/21/">21</a><span class="page-number current">22</span>
+      <a class="extend prev" rel="prev" href="/page/21/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/20/">20</a><a class="page-number" href="/page/21/">21</a><span class="page-number current">22</span><a class="page-number" href="/page/23/">23</a><a class="extend next" rel="next" href="/page/23/">Next &raquo;</a>
     </nav>
   
 
@@ -969,11 +953,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Dijkstra</a>
+                <a href="javascript:void(0)" class="js-tag color4">DFS</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">DFS</a>
+                <a href="javascript:void(0)" class="js-tag color4">Dijkstra</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -989,11 +973,27 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">HDOJ</a>
+                <a href="javascript:void(0)" class="js-tag color5">OpenJudge</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">STL</a>
+                <a href="javascript:void(0)" class="js-tag color4">POJ</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">DP</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">枚举</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">位</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">HDOJ</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1001,11 +1001,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">算法</a>
+                <a href="javascript:void(0)" class="js-tag color4">STL</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">DP</a>
+                <a href="javascript:void(0)" class="js-tag color3">算法</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1029,19 +1029,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">OpenJudge</a>
+                <a href="javascript:void(0)" class="js-tag color4">C++</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">POJ</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">枚举</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">位</a>
+                <a href="javascript:void(0)" class="js-tag color5">数据结构</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1049,11 +1041,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Java</a>
+                <a href="javascript:void(0)" class="js-tag color4">SQL</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">SQL</a>
+                <a href="javascript:void(0)" class="js-tag color5">Java</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1061,15 +1053,7 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">C++</a>
-              </li>
-            
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">随笔</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">数据结构</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1081,19 +1065,19 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">HTML</a>
-              </li>
-            
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">操作系统</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">错题集</a>
+                <a href="javascript:void(0)" class="js-tag color5">HTML</a>
               </li>
             
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">js</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">错题集</a>
               </li>
             
               <li class="article-tag-list-item">
