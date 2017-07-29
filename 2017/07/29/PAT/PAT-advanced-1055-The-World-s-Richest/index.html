@@ -15,7 +15,7 @@
 <meta property="og:url" content="http://makixi.github.io/2017/07/29/PAT/PAT-advanced-1055-The-World-s-Richest/index.html">
 <meta property="og:site_name" content="Maki">
 <meta property="og:description" content="Forbes magazine publishes every year its list of billionaires based on the annual ranking of the world’s wealthiest people. Now you are supposed to simulate this job, but concentrate only on the peopl">
-<meta property="og:updated_time" content="2017-07-29T02:01:45.312Z">
+<meta property="og:updated_time" content="2017-07-29T02:50:16.344Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="PAT advanced 1055 The World's Richest">
 <meta name="twitter:description" content="Forbes magazine publishes every year its list of billionaires based on the annual ranking of the world’s wealthiest people. Now you are supposed to simulate this job, but concentrate only on the peopl">
@@ -181,7 +181,8 @@
 <p><strong>Output Specification:</strong><br>For each query, first print in a line “Case #X:” where X is the query number starting from 1. Then output the M richest people with their ages in the range [Amin, Amax]. Each person’s information occupies a line, in the format<br>Name Age Net_Worth<br>The outputs must be in non-increasing order of the net worths. In case there are equal worths, it must be in non-decreasing order of the ages. If both worths and ages are the same, then the output must be in non-decreasing alphabetical order of the names. It is guaranteed that there is no two persons share all the same of the three pieces of information. In case no one is found, output “None”.</p>
 <p><strong>Sample Input:</strong><br>12 4<br>Zoe_Bill 35 2333<br>Bob_Volk 24 5888<br>Anny_Cin 95 999999<br>Williams 30 -22<br>Cindy 76 76000<br>Alice 18 88888<br>Joe_Mike 32 3222<br>Michael 5 300000<br>Rosemary 40 5888<br>Dobby 24 5888<br>Billy 24 5888<br>Nobody 5 0<br>4 15 45<br>4 30 35<br>4 5 95<br>1 45 50</p>
 <p><strong>Sample Output:</strong><br>Case #1:<br>Alice 18 88888<br>Billy 24 5888<br>Bob_Volk 24 5888<br>Dobby 24 5888<br>Case #2:<br>Joe_Mike 32 3222<br>Zoe_Bill 35 2333<br>Williams 30 -22<br>Case #3:<br>Anny_Cin 95 999999<br>Michael 5 300000<br>Alice 18 88888<br>Cindy 76 76000<br>Case #4:<br>None</p>
-<p>给定年龄范围输出结果<br>因为m<100 所以res向量大小不用超过100（而且超过100的话第二个测试点超时="" <figure="" class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cstring&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;vector&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;algorithm&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">node</span>&#123;</span></div><div class="line">	<span class="keyword">char</span> name[<span class="number">10</span>];</div><div class="line">	<span class="keyword">int</span> age;</div><div class="line">	<span class="keyword">int</span> net;</div><div class="line">&#125;;</div><div class="line"><span class="built_in">vector</span>&lt;node&gt; total;</div><div class="line"><span class="built_in">vector</span>&lt;node&gt; res;</div><div class="line"><span class="function"><span class="keyword">bool</span> <span class="title">cmp</span><span class="params">(node a,node b)</span></span>&#123;</div><div class="line">	<span class="keyword">if</span>(a.net!=b.net)<span class="keyword">return</span> a.net&gt;b.net;</div><div class="line">	<span class="keyword">if</span>(a.age!=b.age)<span class="keyword">return</span> a.age&lt;b.age;</div><div class="line">	<span class="keyword">return</span> (<span class="built_in">strcmp</span>(a.name,b.name)&lt;<span class="number">0</span>);</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</div><div class="line">	<span class="keyword">int</span> n,k,m,amin,amax;</div><div class="line">	<span class="built_in">scanf</span>(<span class="string">"%d%d"</span>,&amp;n,&amp;k);</div><div class="line">	total.resize(n);</div><div class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;n;++i)</div><div class="line">		<span class="built_in">scanf</span>(<span class="string">"%s%d%d"</span>,&amp;total[i].name,&amp;total[i].age,&amp;total[i].net);</div><div class="line">	sort(total.begin(),total.end(),cmp);</div><div class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=k;++i)&#123;</div><div class="line">		res.clear();</div><div class="line">		<span class="built_in">scanf</span>(<span class="string">"%d%d%d"</span>,&amp;m,&amp;amin,&amp;amax);</div><div class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;total.size()&amp;&amp;res.size()&lt;m;++j)</div><div class="line">			<span class="keyword">if</span>(total[j].age&gt;=amin&amp;&amp;total[j].age&lt;=amax)</div><div class="line">				res.push_back(total[j]);</div><div class="line">		<span class="built_in">printf</span>(<span class="string">"Case #%d:\n"</span>,i);</div><div class="line">		<span class="keyword">if</span>(!res.size())<span class="built_in">printf</span>(<span class="string">"None\n"</span>);</div><div class="line">		<span class="keyword">else</span></div><div class="line">			<span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;m&amp;&amp;j&lt;res.size();++j)</div><div class="line">				<span class="built_in">printf</span>(<span class="string">"%s %d %d\n"</span>,res[j].name,res[j].age,res[j].net);</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></100></p>
+<p>给定年龄范围输出结果<br>因为m&lt;100<br>所以res向量大小不用超过100（而且超过100的话第二个测试点超时</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cstring&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;vector&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;algorithm&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">node</span>&#123;</span></div><div class="line">	<span class="keyword">char</span> name[<span class="number">10</span>];</div><div class="line">	<span class="keyword">int</span> age;</div><div class="line">	<span class="keyword">int</span> net;</div><div class="line">&#125;;</div><div class="line"><span class="built_in">vector</span>&lt;node&gt; total;</div><div class="line"><span class="built_in">vector</span>&lt;node&gt; res;</div><div class="line"><span class="function"><span class="keyword">bool</span> <span class="title">cmp</span><span class="params">(node a,node b)</span></span>&#123;</div><div class="line">	<span class="keyword">if</span>(a.net!=b.net)<span class="keyword">return</span> a.net&gt;b.net;</div><div class="line">	<span class="keyword">if</span>(a.age!=b.age)<span class="keyword">return</span> a.age&lt;b.age;</div><div class="line">	<span class="keyword">return</span> (<span class="built_in">strcmp</span>(a.name,b.name)&lt;<span class="number">0</span>);</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</div><div class="line">	<span class="keyword">int</span> n,k,m,amin,amax;</div><div class="line">	<span class="built_in">scanf</span>(<span class="string">"%d%d"</span>,&amp;n,&amp;k);</div><div class="line">	total.resize(n);</div><div class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;n;++i)</div><div class="line">		<span class="built_in">scanf</span>(<span class="string">"%s%d%d"</span>,&amp;total[i].name,&amp;total[i].age,&amp;total[i].net);</div><div class="line">	sort(total.begin(),total.end(),cmp);</div><div class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=k;++i)&#123;</div><div class="line">		res.clear();</div><div class="line">		<span class="built_in">scanf</span>(<span class="string">"%d%d%d"</span>,&amp;m,&amp;amin,&amp;amax);</div><div class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;total.size()&amp;&amp;res.size()&lt;m;++j)</div><div class="line">			<span class="keyword">if</span>(total[j].age&gt;=amin&amp;&amp;total[j].age&lt;=amax)</div><div class="line">				res.push_back(total[j]);</div><div class="line">		<span class="built_in">printf</span>(<span class="string">"Case #%d:\n"</span>,i);</div><div class="line">		<span class="keyword">if</span>(!res.size())<span class="built_in">printf</span>(<span class="string">"None\n"</span>);</div><div class="line">		<span class="keyword">else</span></div><div class="line">			<span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;m&amp;&amp;j&lt;res.size();++j)</div><div class="line">				<span class="built_in">printf</span>(<span class="string">"%s %d %d\n"</span>,res[j].name,res[j].age,res[j].net);</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 
       
 
@@ -301,8 +302,8 @@
     </a>
   
   
-    <a href="/2020/06/26/PAT甲级题解-总结/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">PAT甲级题解 总结</div>
+    <a href="/2017/07/29/PAT-advanced-1056-Mice-and-Rice/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">PAT advanced 1056 Mice and Rice</div>
       <i class="icon-circle-right"></i>
     </a>
   
@@ -461,11 +462,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Dijkstra</a>
+                <a href="javascript:void(0)" class="js-tag color5">01背包</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">01背包</a>
+                <a href="javascript:void(0)" class="js-tag color4">Dijkstra</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -473,11 +474,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">组合数学</a>
+                <a href="javascript:void(0)" class="js-tag color1">Floyd</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Floyd</a>
+                <a href="javascript:void(0)" class="js-tag color5">组合数学</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -493,15 +494,15 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">OpenJudge</a>
+              </li>
+            
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">POJ</a>
               </li>
             
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">枚举</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">OpenJudge</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -513,11 +514,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">SQL</a>
+                <a href="javascript:void(0)" class="js-tag color5">Java</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Java</a>
+                <a href="javascript:void(0)" class="js-tag color4">SQL</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -529,11 +530,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+                <a href="javascript:void(0)" class="js-tag color5">数据结构</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">数据结构</a>
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -553,15 +554,15 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">逻辑</a>
-              </li>
-            
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">错题集</a>
               </li>
             
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">js</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">逻辑</a>
               </li>
             
             <div class="clearfix"></div>
