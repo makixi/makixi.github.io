@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="Maki">
 <meta property="og:description" content="There is a public bike service in Hangzhou City which provides great convenience to the tourists from all over the world. One may rent a bike at any station and return it to any other stations in the">
 <meta property="og:image" content="https://github.com/makixi/makixi.github.io/raw/master/img/patadvance1018.png">
-<meta property="og:updated_time" content="2017-05-06T00:42:47.161Z">
+<meta property="og:updated_time" content="2017-08-02T05:38:50.998Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="PAT advanced 1018.Public Bike Management(30)">
 <meta name="twitter:description" content="There is a public bike service in Hangzhou City which provides great convenience to the tourists from all over the world. One may rent a bike at any station and return it to any other stations in the">
@@ -191,7 +191,7 @@
 <p>For each test case, print your results in one line. First output the number of bikes that PBMC must send. Then after one space, output the path in the format: 0-&gt;S1-&gt;…-&gt;Sp. Finally after another space, output the number of bikes that we must take back to PBMC after the condition of Sp is adjusted to perfect.</p>
 <p>Note that if such a path is not unique, output the one that requires minimum number of bikes that we must take back to PBMC. The judge’s data guarantee that such a path is unique.</p>
 <p><strong>Sample Input:</strong><br>10 3 3 5<br>6 7 0<br>0 1 1<br>0 2 1<br>0 3 3<br>1 3 1<br>2 3 1<br><strong>Sample Output:</strong><br>3 0-&gt;2-&gt;3 0</p>
-<p>算法用了迪杰斯特拉以及DFS<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#include&lt;iostream&gt;</span></div><div class="line"><span class="comment">#include&lt;vector&gt;</span></div><div class="line"><span class="comment">#include&lt;algorithm&gt;</span></div><div class="line">using namespace std;</div><div class="line"><span class="comment">#define MAX 99999999</span></div><div class="line">int cmax, n, sp, m;</div><div class="line">int minNeed = MAX, minBack = MAX;</div><div class="line">int weight[510],e[510][510],dis[510];</div><div class="line">bool vis[510];</div><div class="line">vector&lt;int&gt; pre[510];</div><div class="line">vector&lt;int&gt; path,temppath;</div><div class="line">void dfs(int v) &#123;</div><div class="line">    <span class="keyword">if</span>(v == 0) &#123;</div><div class="line">        temppath.push_back(v);</div><div class="line">        int need = 0, back = 0;</div><div class="line">        <span class="keyword">for</span>(int i = temppath.size() - 1; i &gt;= 0; i--) &#123;</div><div class="line">            int id = temppath[i];</div><div class="line">            <span class="keyword">if</span>(weight[id] &gt; 0) &#123;</div><div class="line">                back += weight[id];</div><div class="line">            &#125; <span class="keyword">else</span> &#123;</div><div class="line">                <span class="keyword">if</span>(back &gt; (0 - weight[id])) &#123;</div><div class="line">                    back += weight[id];</div><div class="line">                &#125; <span class="keyword">else</span> &#123;</div><div class="line">                    need += ( (0 - weight[id]) - back);</div><div class="line">                    back = 0;</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">if</span>(need &lt; minNeed) &#123;</div><div class="line">            minNeed = need;</div><div class="line">            minBack = back;</div><div class="line">            path = temppath;</div><div class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span>(need == minNeed &amp;&amp; back &lt; minBack) &#123;</div><div class="line">            minBack = back;</div><div class="line">            path = temppath;</div><div class="line">        &#125;</div><div class="line">        temppath.pop_back();</div><div class="line">        <span class="built_in">return</span> ;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">else</span></div><div class="line">	&#123;</div><div class="line">    temppath.push_back(v);</div><div class="line">    <span class="keyword">for</span>(int i = 0; i &lt; pre[v].size(); i++)</div><div class="line">     &#123;</div><div class="line">        dfs(pre[v][i]);</div><div class="line">	&#125;</div><div class="line">    temppath.pop_back();</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">int <span class="function"><span class="title">main</span></span>() &#123;</div><div class="line">	fill(e[0], e[0] + 510 * 510, MAX);</div><div class="line">	fill(dis, dis + 510, MAX);</div><div class="line">	cin &gt;&gt; cmax &gt;&gt; n &gt;&gt; sp &gt;&gt; m;</div><div class="line">	<span class="keyword">for</span> (int i = 1; i&lt;=n; ++i) &#123;</div><div class="line">		cin &gt;&gt; weight[i];</div><div class="line">		weight[i] = weight[i] - cmax / 2;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">for</span> (int i = 0; i &lt; m; ++i) &#123;</div><div class="line">		int a, b;</div><div class="line">		cin &gt;&gt; a &gt;&gt; b;</div><div class="line">		cin&gt;&gt; e[a][b];</div><div class="line">		e[b][a] = e[a][b];</div><div class="line">	&#125;</div><div class="line">	dis[0] = 0;</div><div class="line">	<span class="keyword">for</span> (int i = 0; i &lt;= n; ++i) &#123;</div><div class="line">		int u = -1, minn = MAX;</div><div class="line">		<span class="keyword">for</span> (int j = 0; j &lt;= n; ++j) &#123;</div><div class="line">			<span class="keyword">if</span> (vis[j] == <span class="literal">false</span> &amp;&amp; dis[j] &lt; minn) &#123;</div><div class="line">				minn = dis[j];</div><div class="line">				u = j;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">if</span> (u == -1) <span class="built_in">break</span>;</div><div class="line">		vis[u] = <span class="literal">true</span>;</div><div class="line">		<span class="keyword">for</span> (int j = 0; j &lt;= n; ++j) &#123;</div><div class="line">			<span class="keyword">if</span> (vis[j] == <span class="literal">false</span> &amp;&amp; e[u][j] != MAX) &#123;</div><div class="line">				<span class="keyword">if</span> (dis[j] &gt; dis[u] + e[u][j]) &#123;</div><div class="line">					dis[j] = dis[u] + e[u][j];</div><div class="line">					pre[j].clear();</div><div class="line">					pre[j].push_back(u);</div><div class="line">				&#125;</div><div class="line">				<span class="keyword">else</span> <span class="keyword">if</span> (dis[j] == dis[u] + e[u][j])</div><div class="line">					pre[j].push_back(u);</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	dfs(sp);</div><div class="line">    cout &lt;&lt; minNeed &lt;&lt; <span class="string">" 0"</span>;</div><div class="line">	<span class="keyword">for</span> (int i = path.size() - 2; i &gt;= 0; i--)</div><div class="line">		cout &lt;&lt; <span class="string">"-&gt;"</span> &lt;&lt; path[i];</div><div class="line">	cout &lt;&lt; <span class="string">" "</span> &lt;&lt; minBack;</div><div class="line">	<span class="built_in">return</span> 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#include&lt;iostream&gt;</span></div><div class="line"><span class="comment">#include&lt;vector&gt;</span></div><div class="line"><span class="comment">#include&lt;algorithm&gt;</span></div><div class="line">using namespace std;</div><div class="line"><span class="comment">#define MAX 99999999</span></div><div class="line">int cmax, n, sp, m;</div><div class="line">int minNeed = MAX, minBack = MAX;</div><div class="line">int weight[510],e[510][510],dis[510];</div><div class="line">bool vis[510];</div><div class="line">vector&lt;int&gt; pre[510];</div><div class="line">vector&lt;int&gt; path,temppath;</div><div class="line">void dfs(int v) &#123;</div><div class="line">    <span class="keyword">if</span>(v == 0) &#123;</div><div class="line">        temppath.push_back(v);</div><div class="line">        int need = 0, back = 0;</div><div class="line">        <span class="keyword">for</span>(int i = temppath.size() - 1; i &gt;= 0; i--) &#123;</div><div class="line">            int id = temppath[i];</div><div class="line">            <span class="keyword">if</span>(weight[id] &gt; 0) &#123;</div><div class="line">                back += weight[id];</div><div class="line">            &#125; <span class="keyword">else</span> &#123;</div><div class="line">                <span class="keyword">if</span>(back &gt; (0 - weight[id])) &#123;</div><div class="line">                    back += weight[id];</div><div class="line">                &#125; <span class="keyword">else</span> &#123;</div><div class="line">                    need += ( (0 - weight[id]) - back);</div><div class="line">                    back = 0;</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">if</span>(need &lt; minNeed) &#123;</div><div class="line">            minNeed = need;</div><div class="line">            minBack = back;</div><div class="line">            path = temppath;</div><div class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span>(need == minNeed &amp;&amp; back &lt; minBack) &#123;</div><div class="line">            minBack = back;</div><div class="line">            path = temppath;</div><div class="line">        &#125;</div><div class="line">        temppath.pop_back();</div><div class="line">        <span class="built_in">return</span> ;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">else</span></div><div class="line">	&#123;</div><div class="line">    temppath.push_back(v);</div><div class="line">    <span class="keyword">for</span>(int i = 0; i &lt; pre[v].size(); i++)</div><div class="line">     &#123;</div><div class="line">        dfs(pre[v][i]);</div><div class="line">	&#125;</div><div class="line">    temppath.pop_back();</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">int <span class="function"><span class="title">main</span></span>() &#123;</div><div class="line">	fill(e[0], e[0] + 510 * 510, MAX);</div><div class="line">	fill(dis, dis + 510, MAX);</div><div class="line">	cin &gt;&gt; cmax &gt;&gt; n &gt;&gt; sp &gt;&gt; m;</div><div class="line">	<span class="keyword">for</span> (int i = 1; i&lt;=n; ++i) &#123;</div><div class="line">		cin &gt;&gt; weight[i];</div><div class="line">		weight[i] = weight[i] - cmax / 2;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">for</span> (int i = 0; i &lt; m; ++i) &#123;</div><div class="line">		int a, b;</div><div class="line">		cin &gt;&gt; a &gt;&gt; b;</div><div class="line">		cin&gt;&gt; e[a][b];</div><div class="line">		e[b][a] = e[a][b];</div><div class="line">	&#125;</div><div class="line">	dis[0] = 0;</div><div class="line">	<span class="keyword">for</span> (int i = 0; i &lt;= n; ++i) &#123;</div><div class="line">		int u = -1, minn = MAX;</div><div class="line">		<span class="keyword">for</span> (int j = 0; j &lt;= n; ++j) &#123;</div><div class="line">			<span class="keyword">if</span> (vis[j] == <span class="literal">false</span> &amp;&amp; dis[j] &lt; minn) &#123;</div><div class="line">				minn = dis[j];</div><div class="line">				u = j;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">if</span> (u == -1) <span class="built_in">break</span>;</div><div class="line">		vis[u] = <span class="literal">true</span>;</div><div class="line">		<span class="keyword">for</span> (int j = 0; j &lt;= n; ++j) &#123;</div><div class="line">			<span class="keyword">if</span> (vis[j] == <span class="literal">false</span> &amp;&amp; e[u][j] != MAX) &#123;</div><div class="line">				<span class="keyword">if</span> (dis[j] &gt; dis[u] + e[u][j]) &#123;</div><div class="line">					dis[j] = dis[u] + e[u][j];</div><div class="line">					pre[j].clear();</div><div class="line">					pre[j].push_back(u);</div><div class="line">				&#125;</div><div class="line">				<span class="keyword">else</span> <span class="keyword">if</span> (dis[j] == dis[u] + e[u][j])</div><div class="line">					pre[j].push_back(u);</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	dfs(sp);</div><div class="line">    cout &lt;&lt; minNeed &lt;&lt; <span class="string">" 0"</span>;</div><div class="line">	<span class="keyword">for</span> (int i = path.size() - 2; i &gt;= 0; i--)</div><div class="line">		cout &lt;&lt; <span class="string">"-&gt;"</span> &lt;&lt; path[i];</div><div class="line">	cout &lt;&lt; <span class="string">" "</span> &lt;&lt; minBack;</div><div class="line">	<span class="built_in">return</span> 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 
       
 
@@ -435,11 +435,11 @@ MathJax.Hub.Queue(function() {
           <ul class="article-tag-list" q-show="showTags">
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">C++练手题</a>
+                <a href="javascript:void(0)" class="js-tag color1">PAT甲级</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">PAT甲级</a>
+                <a href="javascript:void(0)" class="js-tag color2">C++练手题</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -451,19 +451,19 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">STL</a>
-              </li>
-            
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">DFS</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">算法</a>
+                <a href="javascript:void(0)" class="js-tag color4">STL</a>
               </li>
             
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">DP</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">算法</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -483,15 +483,15 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">组合数学</a>
+              </li>
+            
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">Floyd</a>
               </li>
             
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">BFS</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">组合数学</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -527,10 +527,6 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">android</a>
-              </li>
-            
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">SQL</a>
               </li>
             
@@ -543,11 +539,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+                <a href="javascript:void(0)" class="js-tag color3">android</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">树</a>
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -559,11 +555,7 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">操作系统</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">HTML</a>
+                <a href="javascript:void(0)" class="js-tag color2">树</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -575,7 +567,15 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">操作系统</a>
+              </li>
+            
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">逻辑</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">HTML</a>
               </li>
             
             <div class="clearfix"></div>
