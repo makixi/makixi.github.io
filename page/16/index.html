@@ -156,6 +156,72 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-PAT/PAT-advanced-1097-Deduplication-on-a-Linked-List" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/06/26/PAT/PAT-advanced-1097-Deduplication-on-a-Linked-List/">PAT advanced 1097 Deduplication on a Linked List</a>
+    </h1>
+  
+
+        
+        <a href="/2017/06/26/PAT/PAT-advanced-1097-Deduplication-on-a-Linked-List/" class="archive-article-date">
+  	<time datetime="2017-06-26T13:55:47.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-06-26</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Given a singly linked list L with integer keys, you are supposed to remove the nodes with duplicated absolute values of the keys. That is, for each value K, only the first node of which the value or absolute value of its key equals K will be kept. At the mean time, all the removed nodes must be kept in a separate list. For example, given L being 21→-15→-15→-7→15, you must output 21→-15→-7, and the removed list -15→15.</p>
+<p><strong>Input Specification:</strong><br>Each input file contains one test case. For each case, the first line contains the address of the first node, and a positive N (&lt;= 105) which is the total number of nodes. The address of a node is a 5-digit nonnegative integer, and NULL is represented by -1.<br>Then N lines follow, each describes a node in the format:</p>
+<ul>
+<li>Address Key Next<br>where Address is the position of the node, Key is an integer of which absolute value is no more than 104, and Next is the position of the next node.</li>
+</ul>
+<p><strong>Output Specification:</strong><br>For each case, output the resulting linked list first, then the removed list. Each node occupies a line, and is printed in the same format as in the input.</p>
+<p><strong>Sample Input:</strong><br>00100 5<br>99999 -7 87654<br>23854 -15 00000<br>87654 15 -1<br>00000 -15 99999<br>00100 21 23854<br><strong>Sample Output:</strong><br>00100 21 23854<br>23854 -15 99999<br>99999 -7 -1<br>00000 -15 87654<br>87654 15 -1</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#include &lt;cstdio&gt;</span></div><div class="line"><span class="comment">#include &lt;stdlib.h&gt;</span></div><div class="line"><span class="comment">#include &lt;algorithm&gt;</span></div><div class="line">using namespace std;</div><div class="line">const int maxn = 100000;</div><div class="line">struct NODE &#123;</div><div class="line">    int address;</div><div class="line">    int key;</div><div class="line">    int next;</div><div class="line">    int num;</div><div class="line">&#125;node[maxn];</div><div class="line">bool exist[maxn];</div><div class="line">int cmp1(NODE a, NODE b)&#123;</div><div class="line">    <span class="built_in">return</span> a.num &lt; b.num;</div><div class="line">&#125;</div><div class="line">int <span class="function"><span class="title">main</span></span>() &#123;</div><div class="line">    int begin, n, cnt1 = 0, cnt2 = 0, a;</div><div class="line">    scanf(<span class="string">"%d%d"</span>, &amp;begin, &amp;n);</div><div class="line">    <span class="keyword">for</span>(int i = 0; i &lt; maxn; i++) &#123;</div><div class="line">        node[i].num = 2 * maxn;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">for</span>(int i = 0; i &lt; n; i++) &#123;</div><div class="line">        scanf(<span class="string">"%d"</span>, &amp;a);</div><div class="line">        scanf(<span class="string">"%d%d"</span>, &amp;node[a].key, &amp;node[a].next);</div><div class="line">        node[a].address = a;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">for</span>(int i = begin; i != -1; i = node[i].next) &#123;</div><div class="line">        <span class="keyword">if</span>(exist[abs(node[i].key)] == <span class="literal">false</span>) &#123;</div><div class="line">            exist[abs(node[i].key)] = <span class="literal">true</span>;</div><div class="line">            node[i].num = cnt1;</div><div class="line">            cnt1++;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">else</span> &#123;</div><div class="line">            node[i].num = maxn + cnt2;</div><div class="line">            cnt2++;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    sort(node, node + maxn, cmp1);</div><div class="line">    int cnt = cnt1 + cnt2;</div><div class="line">    <span class="keyword">for</span>(int i = 0; i &lt; cnt; i++) &#123;</div><div class="line">        <span class="keyword">if</span>(i != cnt1 - 1 &amp;&amp; i != cnt - 1) &#123;</div><div class="line">            <span class="built_in">printf</span>(<span class="string">"%05d %d %05d\n"</span>, node[i].address, node[i].key, node[i+1].address);</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            <span class="built_in">printf</span>(<span class="string">"%05d %d -1\n"</span>, node[i].address, node[i].key);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="built_in">return</span> 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">PAT甲级</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/06/26/PAT/PAT-advanced-1097-Deduplication-on-a-Linked-List/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
     <article id="post-PAT/PAT-advanced-1092-To-Buy-or-Not-to-Buy" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -720,68 +786,6 @@
 
 
   
-    <article id="post-PAT/PAT-advanced-1027-Colors-in-Mars" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/06/26/PAT/PAT-advanced-1027-Colors-in-Mars/">PAT advanced 1027 Colors in Mars</a>
-    </h1>
-  
-
-        
-        <a href="/2017/06/26/PAT/PAT-advanced-1027-Colors-in-Mars/" class="archive-article-date">
-  	<time datetime="2017-06-26T13:27:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-06-26</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>People in Mars represent the colors in their computers in a similar way as the Earth people. That is, a color is represented by a 6-digit number, where the first 2 digits are for Red, the middle 2 digits for Green, and the last 2 digits for Blue. The only difference is that they use radix 13 (0-9 and A-C) instead of 16. Now given a color in three decimal numbers (each between 0 and 168), you are supposed to output their Mars RGB values.</p>
-<p><strong>Input</strong><br>Each input file contains one test case which occupies a line containing the three decimal color values.</p>
-<p><strong>Output</strong><br>For each test case you should output the Mars RGB value in the following format: first output “#”, then followed by a 6-digit number where all the English characters must be upper-cased. If a single color is only 1-digit long, you must print a “0” to the left.</p>
-<p><strong>Sample Input</strong><br>15 43 71<br><strong>Sample Output</strong><br>#123456<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#include&lt;iostream&gt;</span></div><div class="line">using namespace std;</div><div class="line">char radix[13]=&#123;<span class="string">'0'</span>,<span class="string">'1'</span>,<span class="string">'2'</span>,<span class="string">'3'</span>,<span class="string">'4'</span>,<span class="string">'5'</span>,<span class="string">'6'</span>,<span class="string">'7'</span>,<span class="string">'8'</span>,<span class="string">'9'</span>,<span class="string">'A'</span>,<span class="string">'B'</span>,<span class="string">'C'</span>&#125;;</div><div class="line">int <span class="function"><span class="title">main</span></span>()&#123;</div><div class="line">	int color[3];</div><div class="line">	<span class="keyword">for</span>(int i=0;i&lt;3;++i)</div><div class="line">		cin&gt;&gt;color[i];</div><div class="line">	cout&lt;&lt;<span class="string">"#"</span>;</div><div class="line">	<span class="keyword">for</span>(int i=0;i&lt;3;++i)</div><div class="line">		<span class="built_in">printf</span>(<span class="string">"%c%c"</span>,radix[color[i]/13],radix[color[i]%13]);</div><div class="line">	<span class="built_in">return</span> 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">PAT甲级</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/06/26/PAT/PAT-advanced-1027-Colors-in-Mars/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/15/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/14/">14</a><a class="page-number" href="/page/15/">15</a><span class="page-number current">16</span><a class="page-number" href="/page/17/">17</a><a class="page-number" href="/page/18/">18</a><span class="space">&hellip;</span><a class="page-number" href="/page/26/">26</a><a class="extend next" rel="next" href="/page/17/">Next &raquo;</a>
@@ -893,11 +897,11 @@ MathJax.Hub.Queue(function() {
           <ul class="article-tag-list" q-show="showTags">
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">C++练手题</a>
+                <a href="javascript:void(0)" class="js-tag color1">PAT甲级</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">PAT甲级</a>
+                <a href="javascript:void(0)" class="js-tag color2">C++练手题</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -905,11 +909,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">STL</a>
+                <a href="javascript:void(0)" class="js-tag color3">数学</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">数学</a>
+                <a href="javascript:void(0)" class="js-tag color4">STL</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -945,11 +949,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">组合数学</a>
+                <a href="javascript:void(0)" class="js-tag color1">Floyd</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Floyd</a>
+                <a href="javascript:void(0)" class="js-tag color5">组合数学</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -961,15 +965,15 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">OpenJudge</a>
-              </li>
-            
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">POJ</a>
               </li>
             
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">枚举</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">OpenJudge</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -981,11 +985,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Java</a>
+                <a href="javascript:void(0)" class="js-tag color4">SQL</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">SQL</a>
+                <a href="javascript:void(0)" class="js-tag color5">Java</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -997,11 +1001,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">数据结构</a>
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+                <a href="javascript:void(0)" class="js-tag color5">数据结构</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1025,11 +1029,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">js</a>
+                <a href="javascript:void(0)" class="js-tag color4">错题集</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">错题集</a>
+                <a href="javascript:void(0)" class="js-tag color3">js</a>
               </li>
             
               <li class="article-tag-list-item">
