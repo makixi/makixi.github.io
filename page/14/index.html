@@ -156,6 +156,70 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-android/Android-AsyncTask" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/07/03/android/Android-AsyncTask/">Android AsyncTask API</a>
+    </h1>
+  
+
+        
+        <a href="/2017/07/03/android/Android-AsyncTask/" class="archive-article-date">
+  	<time datetime="2017-07-03T01:43:26.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-03</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="AsyncTask基本操作"><a href="#AsyncTask基本操作" class="headerlink" title="AsyncTask基本操作"></a>AsyncTask基本操作</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">startTask</span><span class="params">(View view)</span> </span>&#123;</div><div class="line">        <span class="comment">//实现异步操作</span></div><div class="line">        <span class="comment">// 三个参数：启动任务执行的输入参数、后台任务执行的进度、后台计算结果的类型</span></div><div class="line">        <span class="keyword">new</span> AsyncTask&lt;Integer,Float,Integer&gt;()&#123;</div><div class="line"></div><div class="line">            <span class="comment">//在执行后台任务前做一些UI操作</span></div><div class="line">            <span class="meta">@Override</span></div><div class="line">            <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onPreExecute</span><span class="params">()</span> </span>&#123;</div><div class="line">                result.setText(<span class="string">"Task is starting"</span>);</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            <span class="comment">//内部执行后台任务</span></div><div class="line">            <span class="comment">//这里第一个integer（返回值）对应AsyncTask里的第三个参数</span></div><div class="line">            <span class="comment">//后一个integer对应AsyncTask里的第一个参数</span></div><div class="line">            <span class="comment">//并不运行在UI线程中，主要用于异步操作，不能对UI当中的空间进行设置和修改</span></div><div class="line">            <span class="comment">//可以调用publishProgress方法触发onProgressUpdate对UI操作</span></div><div class="line">            <span class="meta">@Override</span></div><div class="line">            <span class="function"><span class="keyword">protected</span> Integer <span class="title">doInBackground</span><span class="params">(Integer... strings)</span> </span>&#123;</div><div class="line">                <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">10</span>;++i)&#123;</div><div class="line">                    <span class="keyword">try</span> &#123;</div><div class="line">                        Thread.sleep(<span class="number">1000</span>);</div><div class="line">                        <span class="comment">//循环播放文字广告</span></div><div class="line">                        publishProgress(i / <span class="number">10.0f</span>);</div><div class="line">                    &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</div><div class="line">                        e.printStackTrace();</div><div class="line">                    &#125;</div><div class="line">                &#125;</div><div class="line">                <span class="keyword">return</span> <span class="number">50</span>+strings[<span class="number">0</span>];</div><div class="line">            &#125;</div><div class="line"></div><div class="line"></div><div class="line">            <span class="comment">//用于更新进度信息，可以对UI空间进行操作</span></div><div class="line">            <span class="comment">//Float对应AsyncTask第二个参数</span></div><div class="line">            <span class="comment">//在doInBackground方法当中，，每次调用publishProgress方法都会触发onProgressUpdate执行</span></div><div class="line">            <span class="meta">@Override</span></div><div class="line">            <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onProgressUpdate</span><span class="params">(Float... values)</span> </span>&#123;</div><div class="line">                result.setText(<span class="string">"progress: "</span>+values[<span class="number">0</span>]);</div><div class="line">            &#125;</div><div class="line"></div><div class="line"></div><div class="line">            <span class="comment">//float对应AsyncTask中第三个参数(接收doInBackground)</span></div><div class="line">            <span class="comment">//在doInBackground方法执行结束之后在运行，并且运行在UI线程当中 可以对UI空间进行设置</span></div><div class="line">            <span class="meta">@Override</span></div><div class="line">            <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onPostExecute</span><span class="params">(Integer s)</span> </span>&#123;</div><div class="line">                Toast.makeText(AsyncTaskActivity.<span class="keyword">this</span>,<span class="string">"Task finished:"</span>+s,Toast.LENGTH_SHORT).show();</div><div class="line">                result.setText(<span class="string">"Done: "</span>+s);</div><div class="line">            &#125;</div><div class="line">        &#125;.execute(<span class="number">42</span>);</div><div class="line">        <span class="comment">//↑执行一个异步任务，需要我们在代码中调用此方法，触发异步任务的执行。</span></div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<h3 id="使用HttpURLConnection发起POST-请求"><a href="#使用HttpURLConnection发起POST-请求" class="headerlink" title="使用HttpURLConnection发起POST 请求"></a>使用HttpURLConnection发起POST 请求</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> Vote <span class="title">performRequest</span><span class="params">(String postData)</span> <span class="keyword">throws</span> IOException</span>&#123;</div><div class="line">        <span class="comment">//建立连接</span></div><div class="line">        URL url=<span class="keyword">new</span> URL(ENDPOINT);</div><div class="line">        HttpURLConnection conn=(HttpURLConnection)url.openConnection();</div><div class="line">        <span class="comment">//设置连接属性</span></div><div class="line">        conn.setRequestMethod(<span class="string">"POST"</span>);      <span class="comment">//设置URL请求方法</span></div><div class="line">        conn.setDoOutput(<span class="keyword">true</span>);         <span class="comment">//使用URL链接进行输出</span></div><div class="line">        conn.setDoInput(<span class="keyword">true</span>);          <span class="comment">//使用URL链接进行输入</span></div><div class="line">        conn.setFixedLengthStreamingMode(postData.length());        <span class="comment">//设置流的固定长度</span></div><div class="line"></div><div class="line">        <span class="comment">//将POST数据写入服务器</span></div><div class="line">        BufferedOutputStream out=<span class="keyword">new</span> BufferedOutputStream(conn.getOutputStream());</div><div class="line">        OutputStreamWriter writer=<span class="keyword">new</span> OutputStreamWriter(out,<span class="string">"UTF-8"</span>);</div><div class="line">        writer.write(postData);</div><div class="line">        writer.flush();</div><div class="line">        writer.close();</div><div class="line">        out.close();</div><div class="line"></div><div class="line">        conn.connect();</div><div class="line"></div><div class="line">        <span class="keyword">int</span> responseCode=conn.getResponseCode();        <span class="comment">//获取URL响应状态码</span></div><div class="line">        <span class="keyword">if</span>(responseCode!=<span class="number">200</span>)&#123;          <span class="comment">//200 - 服务器成功返回网页</span></div><div class="line">            Log.e(TAG, <span class="string">"performRequest: Response code "</span> + responseCode);</div><div class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        InputStream in=conn.getInputStream();</div><div class="line">        BufferedReader reader=<span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(in,<span class="string">"UTF-8"</span>));</div><div class="line">        StringBuilder builder=<span class="keyword">new</span> StringBuilder();</div><div class="line"></div><div class="line">        String line;</div><div class="line">        <span class="keyword">while</span>((line=reader.readLine())!=<span class="keyword">null</span>)&#123;      <span class="comment">//读取不到数据时会返回null</span></div><div class="line">                builder.append(line);</div><div class="line">        &#125;</div><div class="line">        String data=builder.toString();</div><div class="line"></div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            JSONObject json=<span class="keyword">new</span> JSONObject(data);</div><div class="line">            <span class="keyword">int</span> yes = json.getInt(<span class="string">"yes"</span>);</div><div class="line">            <span class="keyword">int</span> no = json.getInt(<span class="string">"no"</span>);</div><div class="line">            <span class="keyword">return</span> <span class="keyword">new</span> Vote(yes, no);</div><div class="line">        &#125; <span class="keyword">catch</span> (JSONException e) &#123;</div><div class="line">            Log.e(TAG, <span class="string">"performRequest: JSON failed"</span>, e);</div><div class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Android</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/07/03/android/Android-AsyncTask/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
     <article id="post-PAT/PAT-advanced-1038-Recover-the-Smallest-Number" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -790,89 +854,9 @@
 
 
   
-    <article id="post-android/Android-ListView-image" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/06/28/android/Android-ListView-image/">Android ListView+image</a>
-    </h1>
-  
-
-        
-        <a href="/2017/06/28/android/Android-ListView-image/" class="archive-article-date">
-  	<time datetime="2017-06-28T09:29:48.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-06-28</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>扔了代码就跑~</p>
-<ul>
-<li><p>mobile_item.xml</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version="1.0" encoding="utf-8"?&gt;</div><div class="line"><span class="tag">&lt;<span class="name">LinearLayout</span></span></div><div class="line">    <span class="attr">xmlns:android</span>=<span class="string">"http://schemas.android.com/apk/res/android"</span></div><div class="line">    <span class="attr">android:orientation</span>=<span class="string">"vertical"</span></div><div class="line">    <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></div><div class="line">    <span class="attr">android:layout_height</span>=<span class="string">"match_parent"</span>&gt;</div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">ImageView</span></span></div><div class="line">        <span class="attr">android:id</span>=<span class="string">"@+id/mobile_image"</span></div><div class="line">        <span class="attr">android:layout_width</span>=<span class="string">"wrap_content"</span></div><div class="line">        <span class="attr">android:layout_height</span>=<span class="string">"wrap_content"</span> /&gt;</div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">TextView</span></span></div><div class="line">        <span class="attr">android:id</span>=<span class="string">"@+id/mobile_name"</span></div><div class="line">        <span class="attr">android:layout_width</span>=<span class="string">"wrap_content"</span></div><div class="line">        <span class="attr">android:layout_height</span>=<span class="string">"wrap_content"</span></div><div class="line">        <span class="attr">android:layout_gravity</span>=<span class="string">"center_vertical"</span></div><div class="line">        <span class="attr">android:layout_marginLeft</span>=<span class="string">"10dp"</span>/&gt;</div><div class="line"><span class="tag">&lt;/<span class="name">LinearLayout</span>&gt;</span></div></pre></td></tr></table></figure>
-</li>
-<li><p>activity_main.xml</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version="1.0" encoding="utf-8"?&gt;</div><div class="line"><span class="tag">&lt;<span class="name">LinearLayout</span> <span class="attr">xmlns:android</span>=<span class="string">"http://schemas.android.com/apk/res/android"</span></span></div><div class="line">    <span class="attr">xmlns:app</span>=<span class="string">"http://schemas.android.com/apk/res-auto"</span></div><div class="line">    <span class="attr">xmlns:tools</span>=<span class="string">"http://schemas.android.com/tools"</span></div><div class="line">    <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></div><div class="line">    <span class="attr">android:layout_height</span>=<span class="string">"match_parent"</span></div><div class="line">    <span class="attr">tools:context</span>=<span class="string">"com.example.makimum.listview.MainActivity"</span></div><div class="line">    <span class="attr">android:orientation</span>=<span class="string">"vertical"</span>&gt;</div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">Button</span></span></div><div class="line">        <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></div><div class="line">        <span class="attr">android:layout_height</span>=<span class="string">"wrap_content"</span></div><div class="line">        <span class="attr">android:text</span>=<span class="string">"Add"</span></div><div class="line">        <span class="attr">android:onClick</span>=<span class="string">"addItem"</span>/&gt;</div><div class="line">    <span class="tag">&lt;<span class="name">Button</span></span></div><div class="line">        <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></div><div class="line">        <span class="attr">android:layout_height</span>=<span class="string">"wrap_content"</span></div><div class="line">        <span class="attr">android:text</span>=<span class="string">"Remove"</span></div><div class="line">        <span class="attr">android:onClick</span>=<span class="string">"removeItem"</span>/&gt;</div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">ListView</span></span></div><div class="line">        <span class="attr">android:id</span>=<span class="string">"@+id/list_view"</span></div><div class="line">        <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></div><div class="line">        <span class="attr">android:layout_height</span>=<span class="string">"match_parent"</span>&gt;<span class="tag">&lt;/<span class="name">ListView</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;/<span class="name">LinearLayout</span>&gt;</span></div></pre></td></tr></table></figure>
-</li>
-<li><p>Mobile.Java</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Mobile</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> String name;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> imageId;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Mobile</span><span class="params">(String name,<span class="keyword">int</span> imageId)</span></span>&#123;</div><div class="line">        <span class="keyword">this</span>.name=name;</div><div class="line">        <span class="keyword">this</span>.imageId=imageId;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span></span>&#123;<span class="keyword">return</span> name;&#125;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getImageId</span><span class="params">()</span></span>&#123;<span class="keyword">return</span> imageId;&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
-<li><p>MainActivity.Java</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> com.example.makimum.listview;</div><div class="line"></div><div class="line"><span class="keyword">import</span> ...</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> <span class="keyword">extends</span> <span class="title">AppCompatActivity</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> List&lt;Mobile&gt; mobileList=<span class="keyword">new</span> ArrayList&lt;&gt;();</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</div><div class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</div><div class="line">        setContentView(R.layout.activity_main);</div><div class="line"></div><div class="line">        initMobiles();</div><div class="line">        MobileAdapter adapter=<span class="keyword">new</span> MobileAdapter(MainActivity.<span class="keyword">this</span>,R.layout.mobile_item,mobileList);</div><div class="line">        ListView listview=(ListView)findViewById(R.id.list_view);</div><div class="line">        listview.setAdapter(adapter);</div><div class="line">        listview.setOnItemClickListener(<span class="keyword">new</span> AdapterView.OnItemClickListener() &#123;</div><div class="line">            <span class="meta">@Override</span></div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onItemClick</span><span class="params">(AdapterView&lt;?&gt; adapterView, View view, <span class="keyword">int</span> i, <span class="keyword">long</span> l)</span> </span>&#123;</div><div class="line">                Mobile mobile=mobileList.get(i);</div><div class="line">                Toast.makeText(MainActivity.<span class="keyword">this</span>,mobile.getName(),Toast.LENGTH_SHORT).show();</div><div class="line">            &#125;</div><div class="line">        &#125;);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">initMobiles</span><span class="params">()</span></span>&#123;</div><div class="line">        mobileList.add(<span class="keyword">new</span> Mobile(<span class="string">"Apple "</span>,R.drawable.iphone));</div><div class="line">        mobileList.add(<span class="keyword">new</span> Mobile(<span class="string">"HUA WEI"</span>,R.drawable.huawei));</div><div class="line">        mobileList.add(<span class="keyword">new</span> Mobile(<span class="string">"SANGSUNG "</span>,R.drawable.sangsung));</div><div class="line">        mobileList.add(<span class="keyword">new</span> Mobile(<span class="string">"OPPO "</span>,R.drawable.oppo));</div><div class="line">        mobileList.add(<span class="keyword">new</span> Mobile(<span class="string">"VIVO "</span>,R.drawable.vivo));</div><div class="line">        mobileList.add(<span class="keyword">new</span> Mobile(<span class="string">"MI "</span>,R.drawable.mi));</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">removeItem</span><span class="params">(View view)</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span>(mobileList.size()&lt;<span class="number">1</span>)<span class="keyword">return</span>;</div><div class="line">        mobileList.remove(<span class="number">0</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addItem</span><span class="params">(View view)</span> </span>&#123;</div><div class="line">        mobileList.add(<span class="keyword">new</span> Mobile(<span class="string">"other"</span>,R.mipmap.ic_launcher));</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
-<li><p>MobileAdapter.Java</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MobileAdapter</span> <span class="keyword">extends</span> <span class="title">ArrayAdapter</span>&lt;<span class="title">Mobile</span>&gt;</span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> resourceId;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MobileAdapter</span><span class="params">(Context context, <span class="keyword">int</span> textViewResourceId, List&lt;Mobile&gt; objects)</span></span>&#123;</div><div class="line">        <span class="keyword">super</span>(context,textViewResourceId,objects);</div><div class="line">        resourceId=textViewResourceId;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> View <span class="title">getView</span><span class="params">(<span class="keyword">int</span> position, View convertView, ViewGroup parent)</span></span>&#123;</div><div class="line">        Mobile mobile=getItem(position);</div><div class="line">        View view;</div><div class="line">        <span class="keyword">if</span>(convertView==<span class="keyword">null</span>) &#123;</div><div class="line">            view = LayoutInflater.from(getContext()).inflate(resourceId, parent, <span class="keyword">false</span>);</div><div class="line">        &#125;<span class="keyword">else</span></div><div class="line">            view=convertView;</div><div class="line">        ImageView mobileImage=(ImageView)view.findViewById(R.id.mobile_image);</div><div class="line">        TextView mobileName=(TextView)view.findViewById(R.id.mobile_name);</div><div class="line">        mobileImage.setImageResource(mobile.getImageId());</div><div class="line">        mobileName.setText(mobile.getName());</div><div class="line">        <span class="keyword">return</span> view;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
-</ul>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Android</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/06/28/android/Android-ListView-image/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/13/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><a class="page-number" href="/page/13/">13</a><span class="page-number current">14</span><a class="page-number" href="/page/15/">15</a><a class="page-number" href="/page/16/">16</a><span class="space">&hellip;</span><a class="page-number" href="/page/26/">26</a><a class="extend next" rel="next" href="/page/15/">Next &raquo;</a>
+      <a class="extend prev" rel="prev" href="/page/13/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><a class="page-number" href="/page/13/">13</a><span class="page-number current">14</span><a class="page-number" href="/page/15/">15</a><a class="page-number" href="/page/16/">16</a><span class="space">&hellip;</span><a class="page-number" href="/page/27/">27</a><a class="extend next" rel="next" href="/page/15/">Next &raquo;</a>
     </nav>
   
 
@@ -993,10 +977,6 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">数学</a>
-              </li>
-            
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">STL</a>
               </li>
             
@@ -1005,7 +985,7 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">DFS</a>
+                <a href="javascript:void(0)" class="js-tag color3">数学</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1013,15 +993,19 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">DFS</a>
+              </li>
+            
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">二分法</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">BFS</a>
+                <a href="javascript:void(0)" class="js-tag color5">01背包</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">01背包</a>
+                <a href="javascript:void(0)" class="js-tag color4">BFS</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1049,15 +1033,15 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">OpenJudge</a>
+              </li>
+            
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">POJ</a>
               </li>
             
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">枚举</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">OpenJudge</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1069,11 +1053,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">SQL</a>
+                <a href="javascript:void(0)" class="js-tag color5">Java</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Java</a>
+                <a href="javascript:void(0)" class="js-tag color4">SQL</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1113,11 +1097,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">错题集</a>
+                <a href="javascript:void(0)" class="js-tag color3">js</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">js</a>
+                <a href="javascript:void(0)" class="js-tag color4">错题集</a>
               </li>
             
               <li class="article-tag-list-item">
