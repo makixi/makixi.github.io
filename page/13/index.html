@@ -156,6 +156,78 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-HDOJ/HDOJ-1114-Piggy-Bank" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/07/11/HDOJ/HDOJ-1114-Piggy-Bank/">HDOJ 1114 Piggy-Bank</a>
+    </h1>
+  
+
+        
+        <a href="/2017/07/11/HDOJ/HDOJ-1114-Piggy-Bank/" class="archive-article-date">
+  	<time datetime="2017-07-11T02:10:23.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-11</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong>Problem Description</strong><br>Before ACM can do anything, a budget must be prepared and the necessary financial support obtained. The main income for this action comes from Irreversibly Bound Money (IBM). The idea behind is simple. Whenever some ACM member has any small money, he takes all the coins and throws them into a piggy-bank. You know that this process is irreversible, the coins cannot be removed without breaking the pig. After a sufficiently long time, there should be enough cash in the piggy-bank to pay everything that needs to be paid.<br>But there is a big problem with piggy-banks. It is not possible to determine how much money is inside. So we might break the pig into pieces only to find out that there is not enough money. Clearly, we want to avoid this unpleasant situation. The only possibility is to weigh the piggy-bank and try to guess how many coins are inside. Assume that we are able to determine the weight of the pig exactly and that we know the weights of all coins of a given currency. Then there is some minimum amount of money in the piggy-bank that we can guarantee. Your task is to find out this worst case and determine the minimum amount of cash inside the piggy-bank. We need your help. No more prematurely broken pigs!</p>
+<p><strong>Input</strong><br>The input consists of T test cases. The number of them (T) is given on the first line of the input file. Each test case begins with a line containing two integers E and F. They indicate the weight of an empty pig and of the pig filled with coins. Both weights are given in grams. No pig will weigh more than 10 kg, that means 1 &lt;= E &lt;= F &lt;= 10000. On the second line of each test case, there is an integer number N (1 &lt;= N &lt;= 500) that gives the number of various coins used in the given currency. Following this are exactly N lines, each specifying one coin type. These lines contain two integers each, Pand W (1 &lt;= P &lt;= 50000, 1 &lt;= W &lt;=10000). P is the value of the coin in monetary units, W is it’s weight in grams.</p>
+<p><strong>Output</strong><br>Print exactly one line of output for each test case. The line must contain the sentence “The minimum amount of money in the piggy-bank is X.” where X is the minimum amount of money that can be achieved using coins with the given total weight. If the weight cannot be reached exactly, print a line “This is impossible.”.</p>
+<p><strong>Sample Input</strong><br>3<br>10 110<br>2<br>1 1<br>30 50<br>10 110<br>2<br>1 1<br>50 30<br>1 6<br>2<br>10 3<br>20 4</p>
+<p><strong>Sample Output</strong><br>The minimum amount of money in the piggy-bank is 60.<br>The minimum amount of money in the piggy-bank is 100.<br>This is impossible.</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;algorithm&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> MAXNUM 10010</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> INF 10000000	<span class="comment">//设大点 但是用INT_MAX会溢出 用10000会WA</span></span></div><div class="line"><span class="keyword">int</span> val[MAXNUM], wei[MAXNUM];</div><div class="line"><span class="keyword">int</span> d[MAXNUM];</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="keyword">int</span> t,e,f,n,left;</div><div class="line">	<span class="built_in">cin</span> &gt;&gt; t;		<span class="comment">//test数量</span></div><div class="line">	<span class="keyword">while</span> (t--) &#123;</div><div class="line">		fill(d, d + MAXNUM, INF);</div><div class="line">		<span class="built_in">cin</span> &gt;&gt; e &gt;&gt; f;	<span class="comment">//空罐重量 当前重量</span></div><div class="line">		left = f - e;	<span class="comment">//coin重量</span></div><div class="line">		<span class="built_in">cin</span> &gt;&gt; n;		<span class="comment">//coin种类</span></div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; ++i)</div><div class="line">			<span class="built_in">scanf</span>(<span class="string">"%d%d"</span>, &amp;val[i], &amp;wei[i]);	<span class="comment">//价值和重量  用cin会超时</span></div><div class="line">		d[<span class="number">0</span>] = <span class="number">0</span>;</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; ++i)		<span class="comment">//是否有第i个硬币</span></div><div class="line">			<span class="keyword">for</span> (<span class="keyword">int</span> j = wei[i]; j &lt;= left; ++j)</div><div class="line">				d[j] = min(d[j], d[j - wei[i]] + val[i]);</div><div class="line">		<span class="keyword">if</span> (d[left] == INF)</div><div class="line">			<span class="built_in">cout</span> &lt;&lt; <span class="string">"This is impossible."</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">		<span class="keyword">else</span></div><div class="line">			<span class="built_in">cout</span> &lt;&lt; <span class="string">"The minimum amount of money in the piggy-bank is "</span> &lt;&lt; d[left] &lt;&lt; <span class="string">"."</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">HDOJ</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">DP</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">01背包</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/07/11/HDOJ/HDOJ-1114-Piggy-Bank/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
     <article id="post-HDOJ/HDOJ-1080-Human-Gene-Functions" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -847,78 +919,6 @@
 
 
   
-    <article id="post-算法/数论初步" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/07/06/算法/数论初步/">数论初步</a>
-    </h1>
-  
-
-        
-        <a href="/2017/07/06/算法/数论初步/" class="archive-article-date">
-  	<time datetime="2017-07-06T05:24:46.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-06</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="除法表达式"><a href="#除法表达式" class="headerlink" title="除法表达式"></a>除法表达式</h2><p>给出一个这样的除法表达式X1/X2/X3/…/Xk,其中Xi是正整数。除法表达式应当按照从左到右的顺序求和，例如表达式1/2/1/2的值为1/4。但可以在表达式中嵌入括号以改变计算顺序。例如表达式(1/2)/(1/2)的值为1.<br>输入X1,X2,X3,…,Xk，判断是否可以通过添加括号，使表达式的值为整数。K&lt;=10000,Xi&lt;=10^9<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">gcd</span><span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span> b)</span> </span>&#123;</div><div class="line">	<span class="keyword">return</span> b == <span class="number">0</span> ? a : gcd(b, a%b);</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">judge</span><span class="params">(<span class="keyword">int</span> *X)</span> </span>&#123;</div><div class="line">	X[<span class="number">2</span>] /= gcd(X[<span class="number">2</span>], X[<span class="number">1</span>]);</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">3</span>; i &lt;= k; ++i)x[<span class="number">2</span>] /= gcd(X[i], X[<span class="number">2</span>]);</div><div class="line">	<span class="keyword">return</span> X[<span class="number">2</span>] == <span class="number">1</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h2 id="无平方因子的数"><a href="#无平方因子的数" class="headerlink" title="无平方因子的数"></a>无平方因子的数</h2><p>给出正整数n和m，区间[n,m]内的“无平方因子”的数有多少个？整数p无平方因子当且仅当不存在k&gt;1，使得p是k^2的倍数。1&lt;=n&lt;=m&lt;=10^12,m-n&lt;=10^7.<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> n, m;</div><div class="line">	<span class="built_in">cin</span> &gt;&gt; n &gt;&gt; m;</div><div class="line">	<span class="keyword">int</span> c = <span class="number">0</span>;</div><div class="line">	<span class="built_in">memset</span>(vis, <span class="number">0</span>, <span class="keyword">sizeof</span>(vis));</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="built_in">sqrt</span>(n<span class="number">-0.5</span>); i &lt;= <span class="built_in">sqrt</span>(m+<span class="number">0.5</span>); ++i)</div><div class="line">		<span class="keyword">if</span> (!vis[i]) &#123;</div><div class="line">			prime[c++] = i;</div><div class="line">			<span class="keyword">for</span> (<span class="keyword">int</span> j = i*i; j &lt;= m; j += i*i)</div><div class="line">				vis[j] = <span class="number">1</span>;</div><div class="line">		&#125;</div><div class="line">	<span class="comment">//最后还为0的就是无平方因子的数</span></div></pre></td></tr></table></figure></p>
-<h2 id="直线上的点"><a href="#直线上的点" class="headerlink" title="直线上的点"></a>直线上的点</h2><p>求直线ax+by+c=0上有多少个整点 (x,y)满足x∈[x1,x2],y∈[y1,y2]<br>c=-g(a,b)时有解 其他解呈倍数关系<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">gcd</span><span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span> b, <span class="keyword">int</span> &amp;d, <span class="keyword">int</span> &amp;x, <span class="keyword">int</span> &amp;y)</span> </span>&#123;</div><div class="line">	<span class="keyword">if</span> (!b) &#123; d = a; x = <span class="number">1</span>; y = <span class="number">0</span>; &#125;</div><div class="line">	<span class="keyword">else</span> &#123; gcd(b, a%b, d, y, x); y -= x*(a / b); &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h2 id="同余与模算术"><a href="#同余与模算术" class="headerlink" title="同余与模算术"></a>同余与模算术</h2><h3 id="大整数取模"><a href="#大整数取模" class="headerlink" title="大整数取模"></a>大整数取模</h3><p>输入正整数n和m，输出n%m的值<br>每步取模<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="keyword">char</span> n[<span class="number">110</span>];</div><div class="line">	<span class="keyword">int</span> m;</div><div class="line">	<span class="built_in">cin</span> &gt;&gt; n &gt;&gt; m;</div><div class="line">	<span class="keyword">int</span> len = <span class="built_in">strlen</span>(n);</div><div class="line">	<span class="keyword">int</span> ans = <span class="number">0</span>;</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; len; ++i)</div><div class="line">		ans = (<span class="keyword">int</span>)(((<span class="keyword">long</span> <span class="keyword">long</span>)ans * <span class="number">10</span> + n[i]) % m);</div><div class="line">	<span class="built_in">cout</span> &lt;&lt; ans &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h3 id="幂取模"><a href="#幂取模" class="headerlink" title="幂取模"></a>幂取模</h3><p>输入正整数a、n和m，输入(a^n)%m的值<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">pow_mod</span><span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span> n, <span class="keyword">int</span> m)</span> </span>&#123;</div><div class="line">	<span class="keyword">int</span> x = pow_mod(a, n / <span class="number">2</span>, m);</div><div class="line">	<span class="keyword">long</span> <span class="keyword">long</span> ans = (<span class="keyword">long</span> <span class="keyword">long</span>)x*x%m;</div><div class="line">	<span class="keyword">if</span> (n % <span class="number">2</span>)ans = ans*a%m;</div><div class="line">	<span class="keyword">return</span> (<span class="keyword">int</span>)ans;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h3 id="模线性方程"><a href="#模线性方程" class="headerlink" title="模线性方程"></a>模线性方程</h3><p>输入正整数a,b,n,a%n=b%n<br>即a-b是n的整数倍<br>算法略</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">C++练手题</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">数学</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">算法</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/07/06/算法/数论初步/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/12/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="page-number" href="/page/12/">12</a><span class="page-number current">13</span><a class="page-number" href="/page/14/">14</a><a class="page-number" href="/page/15/">15</a><span class="space">&hellip;</span><a class="page-number" href="/page/27/">27</a><a class="extend next" rel="next" href="/page/14/">Next &raquo;</a>
@@ -1070,10 +1070,6 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">-HDOJ</a>
-              </li>
-            
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">01背包</a>
               </li>
             
@@ -1086,11 +1082,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Floyd</a>
+                <a href="javascript:void(0)" class="js-tag color5">组合数学</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">组合数学</a>
+                <a href="javascript:void(0)" class="js-tag color1">Floyd</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1146,15 +1142,15 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">树</a>
+              </li>
+            
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">排序</a>
               </li>
             
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">分治</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">树</a>
               </li>
             
               <li class="article-tag-list-item">
