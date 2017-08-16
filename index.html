@@ -220,6 +220,74 @@
 
 
   
+    <article id="post-HDOJ/HDOJ-1052-Tian-Ji-The-Horse-Racing" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/08/16/HDOJ/HDOJ-1052-Tian-Ji-The-Horse-Racing/">HDOJ 1052 Tian Ji -- The Horse Racing</a>
+    </h1>
+  
+
+        
+        <a href="/2017/08/16/HDOJ/HDOJ-1052-Tian-Ji-The-Horse-Racing/" class="archive-article-date">
+  	<time datetime="2017-08-16T02:51:25.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-08-16</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong>Problem Description</strong><br>Here is a famous story in Chinese history.<br>“That was about 2300 years ago. General Tian Ji was a high official in the country Qi. He likes to play horse racing with the king and others.”<br>“Both of Tian and the king have three horses in different classes, namely, regular, plus, and super. The rule is to have three rounds in a match; each of the horses must be used in one round. The winner of a single round takes two hundred silver dollars from the loser.”<br>“Being the most powerful man in the country, the king has so nice horses that in each class his horse is better than Tian’s. As a result, each time the king takes six hundred silver dollars from Tian.”<br>“Tian Ji was not happy about that, until he met Sun Bin, one of the most famous generals in Chinese history. Using a little trick due to Sun, Tian Ji brought home two hundred silver dollars and such a grace in the next match.”<br>“It was a rather simple trick. Using his regular class horse race against the super class from the king, they will certainly lose that round. But then his plus beat the king’s regular, and his super beat the king’s plus. What a simple trick. And how do you think of Tian Ji, the high ranked official in China?”<br><img src="https://github.com/makixi/makixi.github.io/raw/master/img/%E5%88%B7%E9%A2%98%E4%B8%93%E7%94%A8%E5%9B%BE/HDOJ1052.gif" alt="figure"><br>Were Tian Ji lives in nowadays, he will certainly laugh at himself. Even more, were he sitting in the ACM contest right now, he may discover that the horse racing problem can be simply viewed as finding the maximum matching in a bipartite graph. Draw Tian’s horses on one side, and the king’s horses on the other. Whenever one of Tian’s horses can beat one from the king, we draw an edge between them, meaning we wish to establish this pair. Then, the problem of winning as many rounds as possible is just to find the maximum matching in this graph. If there are ties, the problem becomes more complicated, he needs to assign weights 0, 1, or -1 to all the possible edges, and find a maximum weighted perfect matching…<br>However, the horse racing problem is a very special case of bipartite matching. The graph is decided by the speed of the horses — a vertex of higher speed always beat a vertex of lower speed. In this case, the weighted bipartite matching algorithm is a too advanced tool to deal with the problem.<br>In this problem, you are asked to write a program to solve this special case of matching problem.</p>
+<p><strong>Input</strong><br>The input consists of up to 50 test cases. Each case starts with a positive integer n (n &lt;= 1000) on the first line, which is the number of horses on each side. The next n integers on the second line are the speeds of Tian’s horses. Then the next n integers on the third line are the speeds of the king’s horses. The input ends with a line that has a single 0 after the last test case.</p>
+<p><strong>Output</strong><br>For each input case, output a line containing a single number, which is the maximum money Tian Ji will get, in silver dollars.</p>
+<p><strong>Sample Input</strong><br>3<br>92 83 71<br>95 87 74<br>2<br>20 20<br>20 20<br>2<br>20 19<br>22 18<br>0</p>
+<p><strong>Sample Output</strong><br>200<br>0<br>0</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;vector&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;algorithm&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="keyword">int</span> n;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</div><div class="line">	<span class="keyword">while</span>(<span class="built_in">cin</span>&gt;&gt;n&amp;&amp;n)&#123;</div><div class="line">		<span class="keyword">int</span> res=<span class="number">0</span>;</div><div class="line">		<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; king(n);</div><div class="line">		<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; tian(n);</div><div class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;n;++i)<span class="built_in">cin</span>&gt;&gt;tian[i];</div><div class="line">		sort(tian.begin(),tian.end());</div><div class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;n;++i)<span class="built_in">cin</span>&gt;&gt;king[i];</div><div class="line">		sort(king.begin(),king.end());</div><div class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> kb=<span class="number">0</span>,tb=<span class="number">0</span>,te=n<span class="number">-1</span>,ke=n<span class="number">-1</span>;kb&lt;=ke&amp;&amp;tb&lt;=te;)&#123;</div><div class="line">			<span class="keyword">if</span>(tian[te]&gt;king[ke])&#123;<span class="comment">//田最快&gt;王最快</span></div><div class="line">				te--;ke--;</div><div class="line">				res+=<span class="number">200</span>;</div><div class="line">			&#125;<span class="keyword">else</span> <span class="keyword">if</span>(tian[te]&lt;king[ke])&#123;<span class="comment">//田最快&lt;王最快 让速度最慢的马去比</span></div><div class="line">				ke--;tb++;</div><div class="line">				res-=<span class="number">200</span>;</div><div class="line">			&#125;<span class="keyword">else</span> <span class="keyword">if</span>(tian[tb]&gt;king[kb])&#123;<span class="comment">//田最慢&gt;王最慢</span></div><div class="line">				res+=<span class="number">200</span>;</div><div class="line">				tb++;kb++;</div><div class="line">			&#125;<span class="keyword">else</span> <span class="keyword">if</span>(tian[tb]&lt;king[kb])&#123;<span class="comment">//田最慢&lt;王最慢 去消耗王最快的马</span></div><div class="line">				tb++;ke--;</div><div class="line">				res-=<span class="number">200</span>;</div><div class="line">			&#125;<span class="keyword">else</span> <span class="keyword">if</span>(tian[tb]&lt;king[ke])&#123;<span class="comment">//田最快=王最快  田最慢=王最慢</span></div><div class="line">				tb++;ke--;</div><div class="line">				res-=<span class="number">200</span>;</div><div class="line">			&#125;<span class="keyword">else</span>&#123;</div><div class="line">				tb++;ke--;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">		<span class="built_in">cout</span>&lt;&lt;res&lt;&lt;<span class="built_in">endl</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">HDOJ</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">贪心算法</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/08/16/HDOJ/HDOJ-1052-Tian-Ji-The-Horse-Racing/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
     <article id="post-HDOJ/HDOJ-1051-Wooden-Sticks" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -813,70 +881,6 @@
 
 
   
-    <article id="post-HDOJ/HDOJ-1049-Climbing-Worm" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/08/15/HDOJ/HDOJ-1049-Climbing-Worm/">HDOJ 1049 Climbing Worm</a>
-    </h1>
-  
-
-        
-        <a href="/2017/08/15/HDOJ/HDOJ-1049-Climbing-Worm/" class="archive-article-date">
-  	<time datetime="2017-08-15T02:57:52.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-08-15</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><strong>Problem Description</strong><br>An inch worm is at the bottom of a well n inches deep. It has enough energy to climb u inches every minute, but then has to rest a minute before climbing again. During the rest, it slips down d inches. The process of climbing and resting then repeats. How long before the worm climbs out of the well? We’ll always count a portion of a minute as a whole minute and if the worm just reaches the top of the well at the end of its climbing, we’ll assume the worm makes it out.</p>
-<p><strong>Input</strong><br>There will be multiple problem instances. Each line will contain 3 positive integers n, u and d. These give the values mentioned in the paragraph above. Furthermore, you may assume d &lt; u and n &lt; 100. A value of n = 0 indicates end of output.</p>
-<p><strong>Output</strong><br>Each input instance should generate a single integer on a line, indicating the number of minutes it takes for the worm to climb out of the well.</p>
-<p><strong>Sample Input</strong><br>10 2 1<br>20 3 1<br>0 0 0</p>
-<p><strong>Sample Output</strong><br>17<br>19</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;algorithm&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="keyword">int</span> n, u, d;</div><div class="line">	<span class="keyword">while</span> (<span class="built_in">cin</span> &gt;&gt; n &gt;&gt; u &gt;&gt; d) &#123;</div><div class="line">		<span class="keyword">if</span> (!n &amp;&amp; !u &amp;&amp; !d)<span class="keyword">break</span>;</div><div class="line">		<span class="keyword">int</span> times = <span class="number">1</span>,curr=<span class="number">0</span>;</div><div class="line">		curr += u;</div><div class="line">		<span class="keyword">for</span> (; curr &lt; n; times += <span class="number">2</span>) &#123;</div><div class="line">			curr -= d;</div><div class="line">			curr += u;</div><div class="line">		&#125;</div><div class="line">		<span class="built_in">cout</span> &lt;&lt; times &lt;&lt; <span class="built_in">endl</span>;</div><div class="line"></div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">HDOJ</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/08/15/HDOJ/HDOJ-1049-Climbing-Worm/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/33/">33</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
@@ -1000,10 +1004,6 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">数学</a>
-              </li>
-            
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">STL</a>
               </li>
             
@@ -1012,11 +1012,15 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">DP</a>
+                <a href="javascript:void(0)" class="js-tag color3">数学</a>
               </li>
             
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">DFS</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">DP</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1036,19 +1040,19 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Dijkstra</a>
-              </li>
-            
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">01背包</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">组合数学</a>
+                <a href="javascript:void(0)" class="js-tag color4">Dijkstra</a>
               </li>
             
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">字典树</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">组合数学</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1096,11 +1100,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Java</a>
+                <a href="javascript:void(0)" class="js-tag color4">SQL</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">SQL</a>
+                <a href="javascript:void(0)" class="js-tag color5">Java</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1112,11 +1116,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+                <a href="javascript:void(0)" class="js-tag color5">数据结构</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">数据结构</a>
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1128,7 +1132,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">HTML</a>
+                <a href="javascript:void(0)" class="js-tag color4">错题集</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">js</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1136,11 +1144,7 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">错题集</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">js</a>
+                <a href="javascript:void(0)" class="js-tag color5">HTML</a>
               </li>
             
               <li class="article-tag-list-item">
