@@ -156,6 +156,68 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-HDOJ/HDOJ-1301-Jungle-Roads" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/08/08/HDOJ/HDOJ-1301-Jungle-Roads/">HDOJ 1301 Jungle Roads</a>
+    </h1>
+  
+
+        
+        <a href="/2017/08/08/HDOJ/HDOJ-1301-Jungle-Roads/" class="archive-article-date">
+  	<time datetime="2017-08-08T07:48:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-08-08</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong>Problem Description</strong><br><img src="https://github.com/makixi/makixi.github.io/raw/master/img/%E5%88%B7%E9%A2%98%E4%B8%93%E7%94%A8%E5%9B%BE/jungleroads.gif" alt="jungleroads"><br>The Head Elder of the tropical island of Lagrishan has a problem. A burst of foreign aid money was spent on extra roads between villages some years ago. But the jungle overtakes roads relentlessly, so the large road network is too expensive to maintain. The Council of Elders must choose to stop maintaining some roads. The map above on the left shows all the roads in use now and the cost in aacms per month to maintain them. Of course there needs to be some way to get between all the villages on maintained roads, even if the route is not as short as before. The Chief Elder would like to tell the Council of Elders what would be the smallest amount they could spend in aacms per month to maintain roads that would connect all the villages. The villages are labeled A through I in the maps above. The map on the right shows the roads that could be maintained most cheaply, for 216 aacms per month. Your task is to write a program that will solve such problems.<br>The input consists of one to 100 data sets, followed by a final line containing only 0. Each data set starts with a line containing only a number n, which is the number of villages, 1 &lt; n &lt; 27, and the villages are labeled with the first n letters of the alphabet, capitalized. Each data set is completed with n-1 lines that start with village labels in alphabetical order. There is no line for the last village. Each line for a village starts with the village label followed by a number, k, of roads from this village to villages with labels later in the alphabet. If k is greater than 0, the line continues with data for each of the k roads. The data for each road is the village label for the other end of the road followed by the monthly maintenance cost in aacms for the road. Maintenance costs will be positive integers less than 100. All data fields in the row are separated by single blanks. The road network will always allow travel between all the villages. The network will never have more than 75 roads. No village will have more than 15 roads going to other villages (before or after in the alphabet). In the sample input below, the first data set goes with the map above.<br>The output is one integer per line for each data set: the minimum cost in aacms per month to maintain a road system that connect all the villages. Caution: A brute force solution that examines every possible set of roads will not finish within the one minute time limit.</p>
+<p><strong>Sample Input</strong><br>9<br>A 2 B 12 I 25<br>B 3 C 10 H 40 I 8<br>C 2 D 18 G 55<br>D 1 E 44<br>E 2 F 60 G 38<br>F 0<br>G 1 H 35<br>H 1 I 35<br>3<br>A 2 B 10 C 40<br>B 1 C 20<br>0</p>
+<p><strong>Sample Output</strong><br>216<br>30</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;vector&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;string&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cstring&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;map&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;algorithm&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> inf=<span class="number">0x3f3f3f3f</span>;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</div><div class="line">	<span class="keyword">int</span> n,num,w;</div><div class="line">	<span class="keyword">char</span> start,tmp;</div><div class="line">	<span class="keyword">while</span>(<span class="built_in">cin</span>&gt;&gt;n&amp;&amp;n)&#123;</div><div class="line">		<span class="built_in">map</span>&lt;<span class="keyword">char</span>,<span class="built_in">map</span>&lt;<span class="keyword">char</span>,<span class="keyword">int</span>&gt; &gt; m;</div><div class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;n<span class="number">-1</span>;++i)&#123;</div><div class="line">			<span class="built_in">cin</span>&gt;&gt;start&gt;&gt;num;</div><div class="line">			<span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;num;++j)&#123;</div><div class="line">				<span class="built_in">cin</span>&gt;&gt;tmp&gt;&gt;w;</div><div class="line">				<span class="keyword">if</span>(m[start].find(tmp)!=m[start].end()&amp;&amp;m[start][tmp]&lt;=w)</div><div class="line">					<span class="keyword">continue</span>;</div><div class="line">				m[start][tmp]=m[tmp][start]=w;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">		<span class="built_in">vector</span>&lt;<span class="keyword">char</span>&gt; v;</div><div class="line">		v.push_back(<span class="string">'A'</span>);</div><div class="line">		<span class="keyword">int</span> res=<span class="number">0</span>;</div><div class="line">		<span class="keyword">while</span>(v.size()&lt;n)&#123;</div><div class="line">			<span class="keyword">int</span> tmpw=inf;</div><div class="line">			<span class="keyword">char</span> tmpc;</div><div class="line">			<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;v.size();++i)&#123;</div><div class="line">				<span class="keyword">for</span>(<span class="built_in">map</span>&lt;<span class="keyword">char</span>,<span class="keyword">int</span>&gt;::iterator it=m[v[i]].begin();it!=m[v[i]].end();++it)&#123;</div><div class="line">					<span class="keyword">if</span>((find(v.begin(),v.end(),it-&gt;first)==v.end())&amp;&amp;it-&gt;second&lt;tmpw)&#123;</div><div class="line">						tmpw=it-&gt;second;</div><div class="line">						tmpc=it-&gt;first;</div><div class="line">					&#125;</div><div class="line">				&#125;</div><div class="line">			&#125;</div><div class="line">			v.push_back(tmpc);</div><div class="line">			res+=tmpw;</div><div class="line">		&#125;</div><div class="line">		<span class="built_in">cout</span>&lt;&lt;res&lt;&lt;<span class="built_in">endl</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">HDOJ</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/08/08/HDOJ/HDOJ-1301-Jungle-Roads/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
     <article id="post-HDOJ/HDOJ-1036-Average-is-not-Fast-Enough" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -760,75 +822,6 @@
 
 
   
-    <article id="post-练手/考研题/编程题-False-coin" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/08/06/练手/考研题/编程题-False-coin/">编程题-False coin</a>
-    </h1>
-  
-
-        
-        <a href="/2017/08/06/练手/考研题/编程题-False-coin/" class="archive-article-date">
-  	<time datetime="2017-08-06T10:46:03.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-08-06</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><strong>题目描述</strong><br>The “Gold Bar”bank received information from reliable sources that in their last group of N coins exactly one coin is false and differs in weight from other coins (while all other coins are equal in weight). After the economic crisis they have only a simple balance available (like one in the picture). Using this balance, one is able to determine if the weight of objects in the left pan is less than, greater than, or equal to the weight of objects in the right pan. In order to detect the false coin the bank employees numbered all coins by the integers from 1 to N, thus assigning each coin a unique integer identifier. After that they began to weight various groups of coins by placing equal numbers of coins in the left pan and in the right pan. The identifiers of coins and the results of the weightings were carefully recorded. You are to write a program that will help the bank employees to determine the identifier of the false coin using the results of these weightings.</p>
-<p><strong>输入描述:</strong><br>The first line of the input file contains two integers N and K, separated by spaces, where N is the number of coins (2&lt;=N&lt;=1000 ) and K is the number of weightings fulfilled (1&lt;=K&lt;=100). The following 2K lines describe all weightings. Two consecutive lines describe each weighting. The first of them starts with a number Pi (1&lt;=Pi&lt;=N/2), representing the number of coins placed in the left and in the right pans, followed by Pi identifiers of coins placed in the left pan and Pi identifiers of coins placed in the right pan. All numbers are separated by spaces. The second line contains one of the following characters: ‘&lt;’, ‘&gt;’, or ‘=’. It represents the result of the weighting:</p>
-<ul>
-<li>‘&lt;’ means that the weight of coins in the left pan is less than the weight of coins in the right pan,</li>
-<li>‘&gt;’ means that the weight of coins in the left pan is greater than the weight of coins in the right pan,</li>
-<li>‘=’ means that the weight of coins in the left pan is equal to the weight of coins in the right pan.</li>
-</ul>
-<p><strong>输出描述:</strong><br>Write to the output file the identifier of the false coin or 0, if it cannot be found by the results of the given weightings.</p>
-<p><strong>输入</strong><br>5 3<br>2 1 2 3 4<br>&lt;<br>1 1 4<br>=<br>1 2 5<br>=</p>
-<p><strong>输出</strong><br>3</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;vector&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;algorithm&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> maxn = <span class="number">105</span>;</div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">sentence</span> &#123;</span></div><div class="line">	<span class="keyword">char</span> judge;</div><div class="line">	<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; left;</div><div class="line">	<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; right;</div><div class="line">&#125;;</div><div class="line">sentence s[maxn];</div><div class="line"><span class="keyword">int</span> k;</div><div class="line"><span class="function"><span class="keyword">bool</span> <span class="title">isFake</span><span class="params">(<span class="keyword">int</span> num,<span class="keyword">bool</span> light)</span> </span>&#123;</div><div class="line">	<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; left, right;</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; k; ++i) &#123;</div><div class="line">		<span class="keyword">if</span> (light) &#123;</div><div class="line">			left = s[i].left;</div><div class="line">			right = s[i].right;</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">else</span> &#123;</div><div class="line">			left = s[i].right;</div><div class="line">			right = s[i].left;</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">switch</span> (s[i].judge) &#123;</div><div class="line">		<span class="keyword">case</span> <span class="string">'&gt;'</span>:</div><div class="line">			<span class="keyword">if</span> (find(left.begin(),left.end(),num)==left.end())</div><div class="line">				<span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">			<span class="keyword">break</span>;</div><div class="line">		<span class="keyword">case</span> <span class="string">'&lt;'</span>:</div><div class="line">			<span class="keyword">if</span> (find(right.begin(),right.end(),num)==right.end())</div><div class="line">				<span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">			<span class="keyword">break</span>;</div><div class="line">		<span class="keyword">case</span> <span class="string">'='</span>:</div><div class="line">			<span class="keyword">if</span> (find(left.begin(), left.end(), num) != left.end() || find(right.begin(), right.end(), num) != right.end())</div><div class="line">				<span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">			<span class="keyword">break</span>;</div><div class="line">		<span class="keyword">default</span>:<span class="keyword">break</span>;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> <span class="literal">true</span>;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="keyword">int</span> n, tmp,cnt,mark;</div><div class="line">	<span class="keyword">bool</span> flag;</div><div class="line">	<span class="keyword">while</span> (<span class="built_in">cin</span> &gt;&gt; n &gt;&gt; k) &#123;</div><div class="line">		cnt = <span class="number">0</span>;</div><div class="line">		flag = <span class="literal">false</span>;</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; k; ++i) &#123;</div><div class="line">			<span class="built_in">cin</span> &gt;&gt; tmp;</div><div class="line">			s[i].left.resize(tmp);</div><div class="line">			s[i].right.resize(tmp);</div><div class="line">			<span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; tmp; ++j)</div><div class="line">				<span class="built_in">cin</span> &gt;&gt; s[i].left[j];</div><div class="line">			<span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; tmp; ++j)</div><div class="line">				<span class="built_in">cin</span> &gt;&gt; s[i].right[j];</div><div class="line">			<span class="built_in">cin</span> &gt;&gt; s[i].judge;</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; ++i) &#123;</div><div class="line">			<span class="keyword">bool</span> judge1 = isFake(i, <span class="literal">true</span>);</div><div class="line">			<span class="keyword">bool</span> judge2 = isFake(i, <span class="literal">false</span>);</div><div class="line">			<span class="keyword">if</span> ((judge1&amp;&amp;!judge2)||(!judge1&amp;&amp;judge2)) &#123;</div><div class="line">				mark = i;</div><div class="line">				cnt++;</div><div class="line">			&#125;</div><div class="line">			<span class="keyword">if</span> (cnt == <span class="number">2</span>)<span class="keyword">break</span>;</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">if</span>(cnt==<span class="number">0</span>)</div><div class="line">			<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; ++i) &#123;</div><div class="line">				<span class="keyword">bool</span> judge1 = isFake(i, <span class="literal">true</span>);</div><div class="line">				<span class="keyword">bool</span> judge2 = isFake(i, <span class="literal">false</span>);</div><div class="line">				<span class="keyword">if</span> (judge1 &amp;&amp; judge2) &#123;</div><div class="line">					mark = i;</div><div class="line">					cnt++;</div><div class="line">				&#125;</div><div class="line">				<span class="keyword">if</span> (cnt == <span class="number">2</span>)<span class="keyword">break</span>;</div><div class="line">			&#125;</div><div class="line">		<span class="keyword">if</span> (cnt!=<span class="number">1</span>)</div><div class="line">			<span class="built_in">cout</span> &lt;&lt; <span class="string">"0"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">		<span class="keyword">else</span> <span class="built_in">cout</span> &lt;&lt;mark&lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">考研题</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/08/06/练手/考研题/编程题-False-coin/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/7/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/">9</a><a class="page-number" href="/page/10/">10</a><span class="space">&hellip;</span><a class="page-number" href="/page/35/">35</a><a class="extend next" rel="next" href="/page/9/">Next &raquo;</a>
@@ -940,11 +933,11 @@ MathJax.Hub.Queue(function() {
           <ul class="article-tag-list" q-show="showTags">
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">C++练手题</a>
+                <a href="javascript:void(0)" class="js-tag color1">PAT甲级</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">PAT甲级</a>
+                <a href="javascript:void(0)" class="js-tag color2">C++练手题</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -952,11 +945,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">STL</a>
+                <a href="javascript:void(0)" class="js-tag color3">数学</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">数学</a>
+                <a href="javascript:void(0)" class="js-tag color4">STL</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -964,11 +957,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">DFS</a>
+                <a href="javascript:void(0)" class="js-tag color3">DP</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">DP</a>
+                <a href="javascript:void(0)" class="js-tag color4">DFS</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -996,11 +989,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">组合数学</a>
+                <a href="javascript:void(0)" class="js-tag color4">字典树</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">字典树</a>
+                <a href="javascript:void(0)" class="js-tag color5">组合数学</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1068,11 +1061,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+                <a href="javascript:void(0)" class="js-tag color5">数据结构</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">数据结构</a>
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1084,11 +1077,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">HTML</a>
+                <a href="javascript:void(0)" class="js-tag color5">操作系统</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">操作系统</a>
+                <a href="javascript:void(0)" class="js-tag color5">HTML</a>
               </li>
             
               <li class="article-tag-list-item">
