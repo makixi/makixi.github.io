@@ -162,6 +162,75 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-PAT/PAT-advanced-1080-Graduate-Admission-30" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/05/01/PAT/PAT-advanced-1080-Graduate-Admission-30/">PAT advanced 1080.Graduate Admission(30)</a>
+    </h1>
+  
+
+        
+        <a href="/2017/05/01/PAT/PAT-advanced-1080-Graduate-Admission-30/" class="archive-article-date">
+  	<time datetime="2017-05-01T01:37:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-05-01</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>It is said that in 2013, there were about 100 graduate schools ready to proceed over 40,000 applications in Zhejiang Province. It would help a lot if you could write a program to automate the admission procedure.</p>
+<p>Each applicant will have to provide two grades: the national entrance exam grade GE, and the interview grade GI. The final grade of an applicant is (GE + GI) / 2. The admission rules are:</p>
+<p>The applicants are ranked according to their final grades, and will be admitted one by one from the top of the rank list.<br>If there is a tied final grade, the applicants will be ranked according to their national entrance exam grade GE. If still tied, their ranks must be the same.<br>Each applicant may have K choices and the admission will be done according to his/her choices: if according to the rank list, it is one’s turn to be admitted; and if the quota of one’s most preferred shcool is not exceeded, then one will be admitted to this school, or one’s other choices will be considered one by one in order. If one gets rejected by all of preferred schools, then this unfortunate applicant will be rejected.<br>If there is a tied rank, and if the corresponding applicants are applying to the same school, then that school must admit all the applicants with the same rank, even if its quota will be exceeded.<br><strong>Input Specification:</strong></p>
+<p>Each input file contains one test case. Each case starts with a line containing three positive integers: N (&lt;=40,000), the total number of applicants; M (&lt;=100), the total number of graduate schools; and K (&lt;=5), the number of choices an applicant may have.</p>
+<p>In the next line, separated by a space, there are M positive integers. The i-th integer is the quota of the i-th graduate school respectively.</p>
+<p>Then N lines follow, each contains 2+K integers separated by a space. The first 2 integers are the applicant’s GE and GI, respectively. The next K integers represent the preferred schools. For the sake of simplicity, we assume that the schools are numbered from 0 to M-1, and the applicants are numbered from 0 to N-1.</p>
+<p><strong>Output Specification:</strong></p>
+<p>For each test case you should output the admission results for all the graduate schools. The results of each school must occupy a line, which contains the applicants’ numbers that school admits. The numbers must be in increasing order and be separated by a space. There must be no extra space at the end of each line. If no applicant is admitted by a school, you must output an empty line correspondingly.</p>
+<p><strong>Sample Input:</strong><br>11 6 3<br>2 1 2 2 2 3<br>100 100 0 1 2<br>60 60 2 3 5<br>100 90 0 3 4<br>90 100 1 2 0<br>90 90 5 1 3<br>80 90 1 0 2<br>80 80 0 1 2<br>80 80 0 1 2<br>80 70 1 3 2<br>70 80 1 2 3<br>100 100 0 2 4<br><strong>Sample Output:</strong><br>0 10<br>3<br>5 6 7<br>2 8</p>
+<p>1 4</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#include&lt;iostream&gt;</span></div><div class="line"><span class="comment">#include&lt;vector&gt;</span></div><div class="line"><span class="comment">#include&lt;algorithm&gt;</span></div><div class="line">using namespace std;</div><div class="line"></div><div class="line">int n;//applicants</div><div class="line">int m;//graduate schools</div><div class="line">int k;//choices</div><div class="line"></div><div class="line">struct sch &#123;</div><div class="line">	int MaxNum; //名额限制</div><div class="line">	int LastRank;//最后一名录取同学的名次</div><div class="line">	vector&lt;int&gt; stuId;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">struct stu &#123;</div><div class="line">	int id;</div><div class="line">	int GE,GI;</div><div class="line">	int FGrade;</div><div class="line">	vector&lt;int&gt; schID;</div><div class="line">	int rank;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">bool cmp(stu a,stu b) &#123;</div><div class="line">	<span class="keyword">if</span> (a.FGrade != b.FGrade) <span class="built_in">return</span> a.FGrade &gt; b.FGrade;</div><div class="line">	<span class="keyword">else</span> <span class="built_in">return</span> a.GE &gt; b.GE;</div><div class="line">&#125;</div><div class="line"></div><div class="line">int <span class="function"><span class="title">main</span></span>() &#123;</div><div class="line">	cin &gt;&gt; n &gt;&gt; m &gt;&gt; k;</div><div class="line">	vector&lt;sch&gt; school(m);</div><div class="line">	vector&lt;stu&gt; student(n);</div><div class="line">	<span class="keyword">for</span> (int i = 0; i &lt; m; ++i) &#123;</div><div class="line">		cin &gt;&gt; school[i].MaxNum;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">for</span> (int i = 0; i &lt; n; ++i) &#123;</div><div class="line">		student[i].schID.resize(k);</div><div class="line">		student[i].id = i;</div><div class="line">		cin &gt;&gt; student[i].GE &gt;&gt; student[i].GI;</div><div class="line">		student[i].FGrade = (student[i].GE + student[i].GI);</div><div class="line">		<span class="keyword">for</span> (int j = 0; j &lt; k; ++j)</div><div class="line">			cin &gt;&gt; student[i].schID[j];</div><div class="line">	&#125;</div><div class="line">	sort(student.begin(), student.end(), cmp);</div><div class="line">	student[0].rank = 1;</div><div class="line">	<span class="keyword">for</span> (int i = 1; i &lt; n; ++i) &#123;</div><div class="line">		<span class="keyword">if</span> (student[i].GE == student[i - 1].GE&amp;&amp;student[i].GI == student[i - 1].GI)</div><div class="line">			student[i].rank = student[i - 1].rank;</div><div class="line">		<span class="keyword">else</span></div><div class="line">			student[i].rank = student[i - 1].rank + 1;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">for</span> (int i = 0; i &lt; n; ++i) &#123;</div><div class="line">		<span class="keyword">for</span> (int j = 0; j &lt; k; ++j) &#123;</div><div class="line">			int s = student[i].schID[j];//第i个学生的第j个志愿</div><div class="line">			int id = student[i].id;</div><div class="line">			int rank = student[i].rank;</div><div class="line">			<span class="keyword">if</span> (school[s].MaxNum&gt;0 || school[s].LastRank == rank) &#123;</div><div class="line">				school[s].MaxNum-=1;</div><div class="line">				school[s].LastRank = rank;</div><div class="line">				school[s].stuId.push_back(id);</div><div class="line">				<span class="built_in">break</span>;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">for</span> (int i = 0; i &lt; m; ++i) &#123;</div><div class="line">		sort(school[i].stuId.begin(), school[i].stuId.end());</div><div class="line">		<span class="keyword">for</span> (int j = 0; j &lt; school[i].stuId.size();++j)&#123;</div><div class="line">			<span class="keyword">if</span> (j) cout &lt;&lt; <span class="string">" "</span>;</div><div class="line">			cout &lt;&lt; school[i].stuId[j];</div><div class="line">		&#125;</div><div class="line">		cout &lt;&lt; endl;</div><div class="line">	&#125;</div><div class="line">	<span class="built_in">return</span> 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">PAT甲级</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/05/01/PAT/PAT-advanced-1080-Graduate-Admission-30/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
     <article id="post-PAT/PAT-advanced-1119-Pre-and-Post-order-Traversals-30" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -734,74 +803,6 @@
 
 
   
-    <article id="post-错题/js错题集" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/27/错题/js错题集/">js错题集</a>
-    </h1>
-  
-
-        
-        <a href="/2017/04/27/错题/js错题集/" class="archive-article-date">
-  	<time datetime="2017-04-27T02:16:47.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-04-27</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="执行后弹出的是："><a href="#执行后弹出的是：" class="headerlink" title="执行后弹出的是："></a>执行后弹出的是：</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">var name=<span class="string">"world!"</span>;</div><div class="line">(<span class="function"><span class="title">function</span></span>()&#123;</div><div class="line">  <span class="keyword">if</span>(typedef name==<span class="string">"undefined"</span>)&#123;</div><div class="line">    var name=<span class="string">"jack"</span>;</div><div class="line">    console.log(<span class="string">"goodbye"</span>+name);</div><div class="line">  <span class="keyword">else</span>&#123;</div><div class="line">    console.log(<span class="string">"Hello"</span>+name);</div><div class="line">  &#125;</div><div class="line">  &#125;</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
-<p>goodbye jack<br>函数“自动”执行时，外层的name还没有被赋值</p>
-<h3 id="写出下面代码的运行结果"><a href="#写出下面代码的运行结果" class="headerlink" title="写出下面代码的运行结果"></a>写出下面代码的运行结果</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">var a,b;</div><div class="line">(<span class="function"><span class="title">function</span></span>()&#123;</div><div class="line">    alert(a);</div><div class="line">    alert(b);</div><div class="line">    var a=b=3;</div><div class="line">    alert(a);</div><div class="line">    alert(b);</div><div class="line">&#125; )();</div><div class="line">alert(a);</div><div class="line">alert(b);</div></pre></td></tr></table></figure>
-<p>undefined，undefined，3,3，undefined，3<br>var a=b=3 时a是局部变量，而b是全局变量</p>
-<h3 id="请问以下程序的输出是（）"><a href="#请问以下程序的输出是（）" class="headerlink" title="请问以下程序的输出是（）"></a>请问以下程序的输出是（）</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">function</span> <span class="function"><span class="title">Foo</span></span>()&#123;</div><div class="line">     var i=0;</div><div class="line">     <span class="built_in">return</span> <span class="function"><span class="title">function</span></span>()&#123;</div><div class="line">         document.write(i++);</div><div class="line">     &#125;</div><div class="line">&#125;</div><div class="line">var f1=Foo(),</div><div class="line">f2=Foo();</div><div class="line">f1();</div><div class="line">f1();</div><div class="line">f2();</div></pre></td></tr></table></figure>
-<p>010<br>这是一个闭包，闭包可以用在许多地方。它的最大用处有两个，一个是前面提到的可以读取函数内部的变量，另一个就是让这些变量的值始终保持在内存中。<br>这里的局部变量i，对f1()来说是全局变量，对f2()来说也是全局变量，但是f1()的i跟f2()的i又是相互独立相互不可见的，f1()每执行一次，f1()的i就加一，f2（）每次执行一次，f2()的i就加油，但是相互之间不影响，因此结果是010</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">错题集</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">js</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/04/27/错题/js错题集/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/35/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/34/">34</a><a class="page-number" href="/page/35/">35</a><span class="page-number current">36</span><a class="page-number" href="/page/37/">37</a><a class="extend next" rel="next" href="/page/37/">Next &raquo;</a>
@@ -917,15 +918,27 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">PAT甲级</a>
-              </li>
-            
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">天梯赛</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Dijkstra</a>
+                <a href="javascript:void(0)" class="js-tag color1">PAT甲级</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">HDOJ</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">STL</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">算法</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">数学</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -933,11 +946,15 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">DP</a>
+              </li>
+            
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">二分法</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">BST</a>
+                <a href="javascript:void(0)" class="js-tag color4">BFS</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -945,15 +962,43 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">AVL</a>
-              </li>
-            
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">贪心算法</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">BFS</a>
+                <a href="javascript:void(0)" class="js-tag color5">多重背包</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Java</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">01背包</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Dijkstra</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">字典树</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">组合数学</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Floyd</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">BST</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">AVL</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -970,50 +1015,6 @@ MathJax.Hub.Queue(function() {
             
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">并查集</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">STL</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">HDOJ</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">数学</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">算法</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">DP</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">多重背包</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Java</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">01背包</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">字典树</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Floyd</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">组合数学</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1049,11 +1050,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">数据结构</a>
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+                <a href="javascript:void(0)" class="js-tag color5">数据结构</a>
               </li>
             
               <li class="article-tag-list-item">
