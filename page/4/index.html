@@ -162,6 +162,76 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-HDOJ/HDOJ-1059-Dividing" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/08/19/HDOJ/HDOJ-1059-Dividing/">HDOJ 1059 Dividing(多重背包)</a>
+    </h1>
+  
+
+        
+        <a href="/2017/08/19/HDOJ/HDOJ-1059-Dividing/" class="archive-article-date">
+  	<time datetime="2017-08-19T03:43:35.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-08-19</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong>Problem Description</strong><br>Marsha and Bill own a collection of marbles. They want to split the collection among themselves so that both receive an equal share of the marbles. This would be easy if all the marbles had the same value, because then they could just split the collection in half. But unfortunately, some of the marbles are larger, or more beautiful than others. So, Marsha and Bill start by assigning a value, a natural number between one and six, to each marble. Now they want to divide the marbles so that each of them gets the same total value.<br>Unfortunately, they realize that it might be impossible to divide the marbles in this way (even if the total value of all marbles is even). For example, if there are one marble of value 1, one of value 3 and two of value 4, then they cannot be split into sets of equal value. So, they ask you to write a program that checks whether there is a fair partition of the marbles.</p>
+<p><strong>Input</strong><br>Each line in the input describes one collection of marbles to be divided. The lines consist of six non-negative integers n1, n2, …, n6, where ni is the number of marbles of value i. So, the example from above would be described by the input-line <code>1 0 1 2 0 0&#39;&#39;. The maximum total number of marbles will be 20000.
+The last line of the input file will be</code>0 0 0 0 0 0’’; do not process this line.</p>
+<p><strong>Output</strong><br>For each colletcion, output <code>Collection #k:&#39;&#39;, where k is the number of the test case, and then either</code>Can be divided.’’ or ``Can’t be divided.’’.<br>Output a blank line after each test case.</p>
+<p><strong>Sample Input</strong><br>1 0 1 2 0 0<br>1 0 0 0 1 1<br>0 0 0 0 0 0</p>
+<p><strong>Sample Output</strong><br>Collection #1:<br>Can’t be divided.</p>
+<p>Collection #2:<br>Can be divided.</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;vector&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;algorithm&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cmath&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="function"><span class="keyword">const</span> <span class="keyword">double</span> <span class="title">eps</span><span class="params">(<span class="number">1e-8</span>)</span></span>;</div><div class="line"><span class="keyword">int</span> n;</div><div class="line"><span class="keyword">int</span> tmp;</div><div class="line"><span class="keyword">bool</span> f[<span class="number">60010</span>];</div><div class="line"><span class="keyword">int</span> all;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</div><div class="line">    <span class="keyword">int</span> t[<span class="number">7</span>];</div><div class="line">    <span class="keyword">int</span> cas = <span class="number">0</span>;</div><div class="line">    <span class="keyword">while</span>(~<span class="built_in">scanf</span>(<span class="string">"%d"</span>, t + <span class="number">1</span>))&#123;</div><div class="line">        cas++;</div><div class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">2</span>; i &lt;= <span class="number">6</span>; i++) <span class="built_in">scanf</span>(<span class="string">"%d"</span>, t + i);</div><div class="line">        <span class="keyword">if</span>(!t[<span class="number">1</span>] &amp;&amp;!t[<span class="number">2</span>] &amp;&amp; !t[<span class="number">3</span>] &amp;&amp; !t[<span class="number">4</span>] &amp;&amp; !t[<span class="number">5</span>] &amp;&amp; !t[<span class="number">6</span>])</div><div class="line">			<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">        <span class="built_in">memset</span>(f, <span class="number">0</span>, <span class="keyword">sizeof</span>(f));</div><div class="line">        f[<span class="number">0</span>] = <span class="literal">true</span>;</div><div class="line">        all = <span class="number">0</span>;</div><div class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= <span class="number">6</span>; i++)</div><div class="line">            all += i*t[i];</div><div class="line">        <span class="keyword">if</span>(all &amp; <span class="number">1</span>)&#123;</div><div class="line">            <span class="built_in">printf</span>(<span class="string">"Collection #%d:\nCan't be divided.\n\n"</span>, cas);</div><div class="line">            <span class="keyword">continue</span>;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= <span class="number">6</span>; i++)&#123;</div><div class="line">            <span class="keyword">int</span> k = <span class="number">1</span>;</div><div class="line">            <span class="keyword">while</span>(k &lt; t[i])&#123;</div><div class="line">                <span class="keyword">for</span>(<span class="keyword">int</span> j = (all &gt;&gt; <span class="number">1</span>); j &gt;= k*i; j--)</div><div class="line">                    f[j] = f[j] || f[j - k*i];</div><div class="line">                t[i] -= k;</div><div class="line">                k *= <span class="number">2</span>;</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> j = (all &gt;&gt; <span class="number">1</span>); j &gt;= t[i]*i; j--)</div><div class="line">                f[j] = f[j] || f[j - t[i]*i];</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">if</span>(f[all &gt;&gt; <span class="number">1</span>])</div><div class="line">            <span class="built_in">printf</span>(<span class="string">"Collection #%d:\nCan be divided.\n\n"</span>, cas);</div><div class="line">        <span class="keyword">else</span></div><div class="line">            <span class="built_in">printf</span>(<span class="string">"Collection #%d:\nCan't be divided.\n\n"</span>,cas);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">HDOJ</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">多重背包</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/08/19/HDOJ/HDOJ-1059-Dividing/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
     <article id="post-HDOJ/HDOJ-1058-Humble-Numbers" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -771,70 +841,6 @@
 
 
   
-    <article id="post-练手/考研题/编程题-Day-of-Week" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/08/17/练手/考研题/编程题-Day-of-Week/">编程题-Day of Week(求周几)</a>
-    </h1>
-  
-
-        
-        <a href="/2017/08/17/练手/考研题/编程题-Day-of-Week/" class="archive-article-date">
-  	<time datetime="2017-08-17T09:11:52.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-08-17</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><strong>题目描述</strong><br>We now use the Gregorian style of dating in Russia. The leap years are years with number divisible by 4 but not divisible by 100, or divisible by 400. For example, years 2004, 2180 and 2400 are leap. Years 2004, 2181 and 2300 are not leap. Your task is to write a program which will compute the day of week corresponding to a given date in the nearest past or in the future using today’s agreement about dating.</p>
-<p><strong>输入描述:</strong><br>There is one single line contains the day number d, month name M and year number y(1000≤y≤3000). The month name is the corresponding English name starting from the capital letter.</p>
-<p><strong>输出描述:</strong><br>Output a single line with the English name of the day of week corresponding to the date, starting from the capital letter. All other letters must be in lower case.<br>Month and Week name in Input/Output:<br>January, February, March, April, May, June, July, August, September, October, November, December<br>Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday</p>
-<p><strong>输入</strong><br>9 October 2001<br>14 October 2001</p>
-<p><strong>输出</strong><br>Tuesday<br>Sunday</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;string.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="keyword">char</span> mon[<span class="number">12</span>][<span class="number">20</span>]=&#123;<span class="string">"January"</span>,<span class="string">"February"</span>,<span class="string">"March"</span>,<span class="string">"April"</span>,<span class="string">"May"</span>,<span class="string">"June"</span>,<span class="string">"July"</span>,<span class="string">"August"</span>,<span class="string">"September"</span>,<span class="string">"October"</span>,<span class="string">"November"</span>,<span class="string">"December"</span>&#125;;</div><div class="line"><span class="keyword">char</span> week[<span class="number">7</span>][<span class="number">20</span>]=&#123;<span class="string">"Monday"</span>,<span class="string">"Tuesday"</span>,<span class="string">"Wednesday"</span>,<span class="string">"Thursday"</span>,<span class="string">"Friday"</span>,<span class="string">"Saturday"</span>,<span class="string">"Sunday"</span>,&#125;;</div><div class="line"><span class="keyword">int</span> date[<span class="number">12</span>]=&#123;<span class="number">31</span>,<span class="number">28</span>,<span class="number">31</span>,<span class="number">30</span>,<span class="number">31</span>,<span class="number">30</span>,<span class="number">31</span>,<span class="number">31</span>,<span class="number">30</span>,<span class="number">31</span>,<span class="number">30</span>,<span class="number">31</span>&#125;;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</div><div class="line">    <span class="keyword">int</span> day,year;</div><div class="line">    <span class="keyword">int</span> i,j,m,sum=<span class="number">0</span>;</div><div class="line">    <span class="keyword">char</span> month[<span class="number">10</span>];</div><div class="line">    <span class="keyword">while</span>(<span class="built_in">scanf</span>(<span class="string">"%d%s%d"</span>,&amp;day,month,&amp;year)!=EOF)&#123;</div><div class="line">        <span class="keyword">for</span>(i=<span class="number">0</span>;i&lt;<span class="number">12</span>;i++)</div><div class="line">            <span class="keyword">if</span>(!<span class="built_in">strcmp</span>(month,mon[i]))</div><div class="line">                <span class="keyword">break</span>;</div><div class="line">        i++;</div><div class="line">        m=i;</div><div class="line">        <span class="keyword">if</span>(m==<span class="number">1</span>||m==<span class="number">2</span>) &#123;</div><div class="line">            m+=<span class="number">12</span>;</div><div class="line">            year--;</div><div class="line">        &#125;</div><div class="line">        <span class="comment">//int iWeek=(d+2*m+3*(m+1)/5+y+y/4-y/100+y/400)%7; 基姆拉尔森计算公式</span></div><div class="line">        sum=(day+<span class="number">2</span>*m+<span class="number">3</span>*(m+<span class="number">1</span>)/<span class="number">5</span>+year+year/<span class="number">4</span>-year/<span class="number">100</span>+year/<span class="number">400</span>);</div><div class="line">        sum=sum%<span class="number">7</span>;</div><div class="line">        <span class="built_in">printf</span>(<span class="string">"%s\n"</span>,week[sum]);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">考研题</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/08/17/练手/考研题/编程题-Day-of-Week/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/3/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/38/">38</a><a class="extend next" rel="next" href="/page/5/">Next &raquo;</a>
@@ -950,11 +956,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">C++练手题</a>
+                <a href="javascript:void(0)" class="js-tag color1">PAT甲级</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">PAT甲级</a>
+                <a href="javascript:void(0)" class="js-tag color2">C++练手题</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -962,11 +968,15 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">数学</a>
+                <a href="javascript:void(0)" class="js-tag color4">STL</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">STL</a>
+                <a href="javascript:void(0)" class="js-tag color3">算法</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">数学</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -975,10 +985,6 @@ MathJax.Hub.Queue(function() {
             
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">DFS</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">算法</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1006,11 +1012,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Dijkstra</a>
+                <a href="javascript:void(0)" class="js-tag color5">01背包</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">01背包</a>
+                <a href="javascript:void(0)" class="js-tag color4">Dijkstra</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1082,11 +1088,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">数据结构</a>
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+                <a href="javascript:void(0)" class="js-tag color5">数据结构</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1106,15 +1112,15 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">操作系统</a>
-              </li>
-            
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">错题集</a>
               </li>
             
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">js</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">操作系统</a>
               </li>
             
               <li class="article-tag-list-item">
