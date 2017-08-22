@@ -162,6 +162,70 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-PAT/PAT-advanced-1122-Hamiltonian-Cycle" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/08/18/PAT/PAT-advanced-1122-Hamiltonian-Cycle/">PAT advanced 1122 Hamiltonian Cycle</a>
+    </h1>
+  
+
+        
+        <a href="/2017/08/18/PAT/PAT-advanced-1122-Hamiltonian-Cycle/" class="archive-article-date">
+  	<time datetime="2017-08-18T02:16:21.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-08-18</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>The “Hamilton cycle problem” is to find a simple cycle that contains every vertex in a graph. Such a cycle is called a “Hamiltonian cycle”.<br>In this problem, you are supposed to tell if a given cycle is a Hamiltonian cycle.</p>
+<p><strong>Input Specification:</strong><br>Each input file contains one test case. For each case, the first line contains 2 positive integers N (2&lt; N &lt;= 200), the number of vertices, and M, the number of edges in an undirected graph. Then M lines follow, each describes an edge in the format “Vertex1 Vertex2”, where the vertices are numbered from 1 to N. The next line gives a positive integer K which is the number of queries, followed by K lines of queries, each in the format:<br>n V1 V2 … Vn<br>where n is the number of vertices in the list, and Vi’s are the vertices on a path.</p>
+<p><strong>Output Specification:</strong><br>For each query, print in a line “YES” if the path does form a Hamiltonian cycle, or “NO” if not.</p>
+<p><strong>Sample Input:</strong><br>6 10<br>6 2<br>3 4<br>1 5<br>2 5<br>3 1<br>4 1<br>1 6<br>6 3<br>1 2<br>4 5<br>6<br>7 5 1 4 3 6 2 5<br>6 5 1 4 3 6 2<br>9 6 2 1 6 3 4 5 2 6<br>4 1 2 5 1<br>7 6 1 3 4 5 2 6<br>7 6 1 2 5 4 3 1</p>
+<p><strong>Sample Output:</strong><br>YES<br>NO<br>NO<br>NO<br>YES<br>NO</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;vector&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cstring&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;map&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;algorithm&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> maxn=<span class="number">210</span>;</div><div class="line"><span class="keyword">bool</span> table[maxn][maxn]=&#123;<span class="literal">false</span>&#125;;</div><div class="line"><span class="keyword">bool</span> vis[maxn]=&#123;<span class="literal">false</span>&#125;;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</div><div class="line">	<span class="keyword">int</span> n,m,k,a,b,num,be;</div><div class="line">	<span class="built_in">cin</span>&gt;&gt;n&gt;&gt;m;</div><div class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;m;++i)&#123;</div><div class="line">		<span class="built_in">cin</span>&gt;&gt;a&gt;&gt;b;</div><div class="line">		table[a][b]=table[b][a]=<span class="number">1</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="built_in">cin</span>&gt;&gt;k;</div><div class="line">	<span class="keyword">while</span>(k--)&#123;</div><div class="line">		<span class="keyword">bool</span> flag=<span class="literal">true</span>;</div><div class="line">		<span class="built_in">cin</span>&gt;&gt;num;</div><div class="line">		<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; v(num);</div><div class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;num;++i)&#123;</div><div class="line">			<span class="built_in">cin</span>&gt;&gt;v[i];</div><div class="line">			vis[v[i]]=<span class="literal">true</span>;</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">if</span>(v[<span class="number">0</span>]!=v[num<span class="number">-1</span>])</div><div class="line">			<span class="built_in">printf</span>(<span class="string">"NO\n"</span>);</div><div class="line">		<span class="keyword">else</span> <span class="keyword">if</span>(num!=n+<span class="number">1</span>)</div><div class="line">			<span class="built_in">printf</span>(<span class="string">"NO\n"</span>);</div><div class="line">		<span class="keyword">else</span>&#123;</div><div class="line">			<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=n;++i)</div><div class="line">				<span class="keyword">if</span>(!vis[i])&#123;</div><div class="line">					flag=<span class="literal">false</span>;<span class="keyword">break</span>;</div><div class="line">				&#125;</div><div class="line">			<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;num;++i)</div><div class="line">				<span class="keyword">if</span>(!table[v[i]][v[i<span class="number">-1</span>]])&#123;</div><div class="line">					flag=<span class="literal">false</span>;<span class="keyword">break</span>;</div><div class="line">				&#125;</div><div class="line">			<span class="keyword">if</span>(flag)<span class="built_in">printf</span>(<span class="string">"YES\n"</span>);</div><div class="line">			<span class="keyword">else</span> <span class="built_in">printf</span>(<span class="string">"NO\n"</span>);</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">if</span>(k)<span class="built_in">memset</span>(vis,<span class="literal">false</span>,<span class="keyword">sizeof</span>(vis));</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">PAT甲级</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/08/18/PAT/PAT-advanced-1122-Hamiltonian-Cycle/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
     <article id="post-PAT/PAT-advanced-1121-Damn-Single" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -753,74 +817,6 @@
 
 
   
-    <article id="post-练手/考研题/编程题-路径打印" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/08/16/练手/考研题/编程题-路径打印/">编程题-路径打印</a>
-    </h1>
-  
-
-        
-        <a href="/2017/08/16/练手/考研题/编程题-路径打印/" class="archive-article-date">
-  	<time datetime="2017-08-16T07:13:01.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-08-16</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><strong>题目描述</strong><br>给你一串路径，譬如： a\b\c a\d\e b\cst d\ 你把这些路径中蕴含的目录结构给画出来，子目录直接列在父目录下面，并比父目录向右缩一格，就像这样： a   b     c   d      e b   cst d 同一级的需要按字母顺序排列，不能乱。</p>
-<p><strong>输入描述:</strong><br>每个测试案例第一行为一个正整数n（n&lt;=10）表示有n个路径，当n为0时，测试结束，接下来有n行，每行有一个字串表示一个路径，长度小于50。</p>
-<p><strong>输出描述:</strong><br>输出目录结构，每一个测试样例的输出紧跟一个空行。</p>
-<p><strong>输入</strong><br>4<br>a\b\c<br>a\d\e<br>b\cst<br>d\<br>0</p>
-<p><strong>输出</strong><br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">a</div><div class="line">  b</div><div class="line">    c</div><div class="line">  d</div><div class="line">    e</div><div class="line">b</div><div class="line">  cst</div><div class="line">d</div></pre></td></tr></table></figure></p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;map&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;string&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">node</span> &#123;</span></div><div class="line">	<span class="built_in">map</span>&lt;<span class="built_in">string</span>, node&gt; child;</div><div class="line">	<span class="function"><span class="keyword">void</span> <span class="title">print</span><span class="params">(<span class="keyword">int</span> num)</span> </span>&#123;</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">auto</span> it = child.begin(); it != child.end(); ++it) &#123;</div><div class="line">			<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; num; ++i)<span class="built_in">cout</span> &lt;&lt; <span class="string">" "</span>;</div><div class="line">			<span class="built_in">cout</span> &lt;&lt; it-&gt;first &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">			it-&gt;second.print(<span class="number">1</span> + it-&gt;first.length() + num);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="keyword">int</span> n;</div><div class="line">	<span class="built_in">string</span> tmp;</div><div class="line">	<span class="keyword">while</span> (<span class="built_in">cin</span> &gt;&gt; n&amp;&amp;n) &#123;</div><div class="line">		node root;</div><div class="line">		<span class="keyword">while</span> (n--) &#123;</div><div class="line">			<span class="built_in">cin</span> &gt;&gt; tmp;</div><div class="line">			tmp += <span class="string">'\\'</span>;</div><div class="line">			node *curr = &amp;root;</div><div class="line">			<span class="keyword">for</span> (<span class="keyword">size_t</span> i = <span class="number">0</span>, j = tmp.find(<span class="string">'\\'</span>); j != <span class="built_in">string</span>::npos; j = tmp.find(<span class="string">'\\'</span>, j + <span class="number">1</span>)) &#123;</div><div class="line">				<span class="keyword">if</span> (j &gt; i) &#123;</div><div class="line">					<span class="built_in">string</span> str = tmp.substr(i, j - i);</div><div class="line">					<span class="keyword">if</span> (curr-&gt;child.find(str) == curr-&gt;child.end()) &#123;</div><div class="line">						node nex;</div><div class="line">						curr-&gt;child[str] = nex;</div><div class="line">					&#125;</div><div class="line">					curr = &amp;curr-&gt;child[str];</div><div class="line">				&#125;</div><div class="line">				i = j + <span class="number">1</span>;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">		root.print(<span class="number">0</span>);</div><div class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">STL</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">考研题</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/08/16/练手/考研题/编程题-路径打印/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/5/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><a class="page-number" href="/page/8/">8</a><span class="space">&hellip;</span><a class="page-number" href="/page/39/">39</a><a class="extend next" rel="next" href="/page/7/">Next &raquo;</a>
@@ -948,11 +944,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">STL</a>
+                <a href="javascript:void(0)" class="js-tag color3">数学</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">数学</a>
+                <a href="javascript:void(0)" class="js-tag color4">STL</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -960,11 +956,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">DFS</a>
+                <a href="javascript:void(0)" class="js-tag color3">DP</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">DP</a>
+                <a href="javascript:void(0)" class="js-tag color4">DFS</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1088,11 +1084,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">HTML</a>
+                <a href="javascript:void(0)" class="js-tag color5">操作系统</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">操作系统</a>
+                <a href="javascript:void(0)" class="js-tag color5">HTML</a>
               </li>
             
               <li class="article-tag-list-item">
