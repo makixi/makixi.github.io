@@ -78,7 +78,7 @@
     			
             
     			
-    			<a q-on="click: openSlider(e, 'aboutme')" href="javascript:void(0)">关于我</a>
+    			<a q-on="click: openSlider(e, 'aboutme')" href="javascript:void(0)">About Me</a>
     			
             
 		</nav>
@@ -161,6 +161,70 @@
           </div>
           <div id="js-content" class="content-ll">
             
+  
+    <article id="post-天梯赛/L2-002-链表去重" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/08/20/天梯赛/L2-002-链表去重/">L2-002.链表去重</a>
+    </h1>
+  
+
+        
+        <a href="/2017/08/20/天梯赛/L2-002-链表去重/" class="archive-article-date">
+  	<time datetime="2017-08-20T03:49:52.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-08-20</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>给定一个带整数键值的单链表L，本题要求你编写程序，删除那些键值的绝对值有重复的结点。即对任意键值K，只有键值或其绝对值等于K的第一个结点可以被保留。同时，所有被删除的结点必须被保存在另外一个链表中。例如：另L为21→-15→-15→-7→15，则你必须输出去重后的链表21→-15→-7、以及被删除的链表-15→15。</p>
+<p><strong>输入格式：</strong><br>输入第一行包含链表第一个结点的地址、以及结点个数N（&lt;= 105 的正整数）。结点地址是一个非负的5位整数，NULL指针用-1表示。<br>随后N行，每行按下列格式给出一个结点的信息：<br>Address Key Next<br>其中Address是结点的地址，Key是绝对值不超过104的整数，Next是下一个结点的地址。</p>
+<p><strong>输出格式：</strong><br>首先输出去重后的链表，然后输出被删除结点组成的链表。每个结点占一行，按输入的格式输出。</p>
+<p><strong>输入样例：</strong><br>00100 5<br>99999 -7 87654<br>23854 -15 00000<br>87654 15 -1<br>00000 -15 99999<br>00100 21 23854</p>
+<p><strong>输出样例：</strong><br>00100 21 23854<br>23854 -15 99999<br>99999 -7 -1<br>00000 -15 87654<br>87654 15 -1</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;vector&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;string&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cstring&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cmath&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;algorithm&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> maxn=<span class="number">100001</span>;</div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Node</span>&#123;</span></div><div class="line">	<span class="keyword">int</span> ad;</div><div class="line">	<span class="keyword">int</span> val;</div><div class="line">	<span class="keyword">int</span> nex;</div><div class="line">&#125;node[<span class="number">100001</span>];</div><div class="line"><span class="keyword">bool</span> vis[maxn]=&#123;<span class="literal">false</span>&#125;;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</div><div class="line">	<span class="keyword">int</span> fad,n,tmp;</div><div class="line">	<span class="built_in">cin</span>&gt;&gt;fad&gt;&gt;n;</div><div class="line">	<span class="built_in">vector</span>&lt;Node&gt; v1,v2;</div><div class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;n;++i)&#123;</div><div class="line">		<span class="built_in">scanf</span>(<span class="string">"%d"</span>,&amp;tmp);</div><div class="line">		<span class="built_in">scanf</span>(<span class="string">"%d %d"</span>,&amp;node[tmp].val,&amp;node[tmp].nex);</div><div class="line">		node[tmp].ad=tmp;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">while</span>(fad!=<span class="number">-1</span>)&#123;</div><div class="line">		<span class="keyword">if</span>(!vis[<span class="built_in">abs</span>(node[fad].val)])&#123;</div><div class="line">			vis[<span class="built_in">abs</span>(node[fad].val)]=<span class="literal">true</span>;</div><div class="line">			v1.push_back(node[fad]);</div><div class="line">		&#125;<span class="keyword">else</span></div><div class="line">			v2.push_back(node[fad]);</div><div class="line">		fad=node[fad].nex;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;v1.size();++i)</div><div class="line">		<span class="keyword">if</span>(i!=v1.size()<span class="number">-1</span>)</div><div class="line">			<span class="built_in">printf</span>(<span class="string">"%05d %d %05d\n"</span>,v1[i].ad,v1[i].val,v1[i+<span class="number">1</span>].ad);</div><div class="line">		<span class="keyword">else</span></div><div class="line">			<span class="built_in">printf</span>(<span class="string">"%05d %d -1\n"</span>,v1[i].ad,v1[i].val);</div><div class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;v2.size();++i)</div><div class="line">		<span class="keyword">if</span>(i!=v2.size()<span class="number">-1</span>)</div><div class="line">			<span class="built_in">printf</span>(<span class="string">"%05d %d %05d\n"</span>,v2[i].ad,v2[i].val,v2[i+<span class="number">1</span>].ad);</div><div class="line">		<span class="keyword">else</span></div><div class="line">			<span class="built_in">printf</span>(<span class="string">"%05d %d -1\n"</span>,v2[i].ad,v2[i].val);</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">天梯赛</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/08/20/天梯赛/L2-002-链表去重/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
   
     <article id="post-天梯赛/L2-001-紧急救援" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
@@ -755,74 +819,6 @@
 
 
   
-    <article id="post-练手/考研题/编程题-继续畅通工程-最小生成树" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/08/19/练手/考研题/编程题-继续畅通工程-最小生成树/">编程题-继续畅通工程(最小生成树)</a>
-    </h1>
-  
-
-        
-        <a href="/2017/08/19/练手/考研题/编程题-继续畅通工程-最小生成树/" class="archive-article-date">
-  	<time datetime="2017-08-19T05:40:57.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-08-19</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><strong>题目描述</strong><br>省政府“畅通工程”的目标是使全省任何两个村庄间都可以实现公路交通（但不一定有直接的公路相连，只要能间接通过公路可达即可）。现得到城镇道路统计表，表中列出了任意两城镇间修建道路的费用，以及该道路是否已经修通的状态。现请你编写程序，计算出全省畅通需要的最低成本。</p>
-<p><strong>输入描述:</strong><br>测试输入包含若干测试用例。每个测试用例的第1行给出村庄数目N ( 1&lt; N &lt; 100 )；随后的 N(N-1)/2 行对应村庄间道路的成本及修建状态，每行给4个正整数，分别是两个村庄的编号（从1编号到N），此两村庄间道路的成本，以及修建状态：1表示已建，0表示未建。<br>当N为0时输入结束。</p>
-<p><strong>输出描述:</strong><br>每个测试用例的输出占一行，输出全省畅通需要的最低成本。</p>
-<p><strong>输入</strong><br>3<br>1 2 1 0<br>1 3 2 0<br>2 3 4 0<br>3<br>1 2 1 0<br>1 3 2 0<br>2 3 4 1<br>3<br>1 2 1 0<br>1 3 2 1<br>2 3 4 1<br>0</p>
-<p><strong>输出</strong><br>3<br>1<br>0</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cstring&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;vector&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;map&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;algorithm&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> maxn = <span class="number">101</span>;</div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> inf = <span class="number">0x3f3f3f3f</span>;</div><div class="line"><span class="keyword">int</span> n;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="keyword">int</span> res;</div><div class="line">	<span class="keyword">while</span> (<span class="built_in">cin</span> &gt;&gt; n&amp;&amp;n) &#123;<span class="comment">//need n-1 roads</span></div><div class="line">		<span class="keyword">int</span> a, b, c, d;</div><div class="line">		res = <span class="number">0</span>;</div><div class="line">		<span class="built_in">map</span>&lt;<span class="keyword">char</span>, <span class="built_in">map</span>&lt;<span class="keyword">char</span>, <span class="keyword">int</span>&gt;&gt; cost;</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n*(n - <span class="number">1</span>) / <span class="number">2</span>; ++i) &#123;</div><div class="line">			<span class="built_in">cin</span> &gt;&gt; a &gt;&gt; b &gt;&gt; c &gt;&gt; d;</div><div class="line">			<span class="keyword">if</span> (d == <span class="number">1</span>)</div><div class="line">				cost[a][b] = cost[b][a] = <span class="number">0</span>;</div><div class="line">			<span class="keyword">else</span></div><div class="line">				<span class="keyword">if</span>(cost[a].find(b)==cost[a].end()||cost[a][b]&gt;c)</div><div class="line">					cost[a][b] = cost[b][a] = c;</div><div class="line">		&#125;</div><div class="line">		<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; pro;</div><div class="line">		pro.push_back(<span class="number">1</span>);</div><div class="line">		<span class="keyword">while</span>(pro.size()&lt;n) &#123;</div><div class="line">			<span class="keyword">int</span> mincost = inf,u,k;</div><div class="line">			<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; pro.size();++i)</div><div class="line">				<span class="keyword">for</span> (<span class="built_in">map</span>&lt;<span class="keyword">char</span>,<span class="keyword">int</span>&gt;::iterator it = cost[pro[i]].begin(); it != cost[pro[i]].end(); ++it)</div><div class="line">					<span class="keyword">if</span> ((find(pro.begin(), pro.end(), it-&gt;first) == pro.end()) &amp;&amp; (it-&gt;second &lt; mincost)) &#123;</div><div class="line">						mincost = it-&gt;second;</div><div class="line">						u = it-&gt;first;</div><div class="line">					&#125;</div><div class="line">			pro.push_back(u);</div><div class="line">			res += mincost;</div><div class="line">		&#125;</div><div class="line">		<span class="built_in">printf</span>(<span class="string">"%d\n"</span>, res);</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">STL</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">考研题</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/08/19/练手/考研题/编程题-继续畅通工程-最小生成树/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/6/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/">8</a><a class="page-number" href="/page/9/">9</a><span class="space">&hellip;</span><a class="page-number" href="/page/42/">42</a><a class="extend next" rel="next" href="/page/8/">Next &raquo;</a>
@@ -913,7 +909,7 @@ MathJax.Hub.Queue(function() {
       
         
       
-      <li style="width: 50%" q-on="click: openSlider(e, 'aboutme')"><a href="javascript:void(0)" q-class="active:aboutme">关于我</a></li>
+      <li style="width: 50%" q-on="click: openSlider(e, 'aboutme')"><a href="javascript:void(0)" q-class="active:aboutme">About Me</a></li>
       
         
     </ul>
@@ -934,7 +930,7 @@ MathJax.Hub.Queue(function() {
           <ul class="article-tag-list" q-show="showTags">
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">天梯赛</a>
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -942,11 +938,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">HDOJ</a>
+                <a href="javascript:void(0)" class="js-tag color4">天梯赛</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">STL</a>
+                <a href="javascript:void(0)" class="js-tag color5">HDOJ</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -954,15 +950,19 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">STL</a>
+              </li>
+            
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">算法</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">DFS</a>
+                <a href="javascript:void(0)" class="js-tag color3">DP</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">DP</a>
+                <a href="javascript:void(0)" class="js-tag color4">DFS</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -994,19 +994,19 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">01背包</a>
-              </li>
-            
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">Dijkstra</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">字典树</a>
+                <a href="javascript:void(0)" class="js-tag color5">01背包</a>
               </li>
             
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">组合数学</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">字典树</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1027,6 +1027,10 @@ MathJax.Hub.Queue(function() {
             
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">递归</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">逻辑</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1066,10 +1070,6 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
-              </li>
-            
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">数据结构</a>
               </li>
             
@@ -1086,11 +1086,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">逻辑</a>
+                <a href="javascript:void(0)" class="js-tag color4">错题集</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">HTML</a>
+                <a href="javascript:void(0)" class="js-tag color3">js</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1098,11 +1098,7 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">错题集</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">js</a>
+                <a href="javascript:void(0)" class="js-tag color5">HTML</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1139,7 +1135,7 @@ MathJax.Hub.Queue(function() {
     
     	<section class="tools-section tools-section-me" q-show="aboutme">
   	  	
-  	  		<div class="aboutme-wrap" id="js-aboutme">南昌大学大二在读&lt;br&gt;有些迷茫的咸鱼&lt;br&gt;一些平常的刷题记录&lt;br&gt;以及为了期末考试的一些日常总结&lt;br&gt;网页制作游戏制作超算大数据都会一些&lt;br&gt;啃书Ing</div>
+  	  		<div class="aboutme-wrap" id="js-aboutme">什么都不会/(ㄒoㄒ)/~~</div>
   	  	
     	</section>
     
