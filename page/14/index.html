@@ -162,6 +162,80 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-PAT/PAT-advanced-1110-Complete-Binary-Tree" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/08/13/PAT/PAT-advanced-1110-Complete-Binary-Tree/">PAT advanced 1110 Complete Binary Tree</a>
+    </h1>
+  
+
+        
+        <a href="/2017/08/13/PAT/PAT-advanced-1110-Complete-Binary-Tree/" class="archive-article-date">
+  	<time datetime="2017-08-13T03:03:28.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-08-13</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Given a tree, you are supposed to tell if it is a complete binary tree.</p>
+<p><strong>Input Specification:</strong><br>Each input file contains one test case. For each case, the first line gives a positive integer N (&lt;=20) which is the total number of nodes in the tree – and hence the nodes are numbered from 0 to N-1. Then N lines follow, each corresponds to a node, and gives the indices of the left and right children of the node. If the child does not exist, a “-“ will be put at the position. Any pair of children are separated by a space.</p>
+<p><strong>Output Specification:</strong><br>For each case, print in one line “YES” and the index of the last node if the tree is a complete binary tree, or “NO” and the index of the root if not. There must be exactly one space separating the word and the number.</p>
+<p><strong>Sample Input 1:</strong><br>9<br>7 8<br>- -<br>- -<br>- -<br>0 1<br>2 3<br>4 5<br>- -<br>- -</p>
+<p><strong>Sample Output 1:</strong><br>YES 8</p>
+<p><strong>Sample Input 2:</strong><br>8<br>- -<br>4 5<br>0 6<br>- -<br>2 3<br>- 7<br>- -<br>- -</p>
+<p><strong>Sample Output 2:</strong><br>NO 1</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;queue&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;vector&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cstring&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;algorithm&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="keyword">int</span> n;</div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">node</span> &#123;</span></div><div class="line">	<span class="keyword">int</span> left, right;</div><div class="line">&#125;;</div><div class="line"><span class="built_in">vector</span>&lt;node&gt; tree;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="keyword">int</span> root=<span class="number">0</span>;</div><div class="line">	<span class="built_in">cin</span> &gt;&gt; n;</div><div class="line">	tree.resize(n);</div><div class="line">	<span class="built_in">vector</span>&lt;<span class="keyword">bool</span>&gt; isRoot(n, <span class="literal">true</span>);</div><div class="line">	<span class="keyword">char</span> a[<span class="number">3</span>],b[<span class="number">3</span>];</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; ++i) &#123;</div><div class="line">		<span class="built_in">cin</span> &gt;&gt; a &gt;&gt; b;</div><div class="line">		<span class="keyword">if</span> (a[<span class="number">0</span>] != <span class="string">'-'</span>) &#123;</div><div class="line">			tree[i].left = a[<span class="number">0</span>] - <span class="string">'0'</span>;</div><div class="line">			<span class="keyword">if</span> (<span class="built_in">strlen</span>(a) == <span class="number">2</span>)</div><div class="line">				tree[i].left = tree[i].left * <span class="number">10</span> + (a[<span class="number">1</span>] - <span class="string">'0'</span>);</div><div class="line">			isRoot[tree[i].left] =<span class="literal">false</span>;</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">else</span> tree[i].left = <span class="number">-1</span>;</div><div class="line">		<span class="keyword">if</span> (b[<span class="number">0</span>] != <span class="string">'-'</span>) &#123;</div><div class="line">			tree[i].right = b[<span class="number">0</span>] - <span class="string">'0'</span>;</div><div class="line">			<span class="keyword">if</span> (<span class="built_in">strlen</span>(b) == <span class="number">2</span>)</div><div class="line">				tree[i].right = tree[i].right * <span class="number">10</span> + (b[<span class="number">1</span>] - <span class="string">'0'</span>);</div><div class="line">			isRoot[tree[i].right] = <span class="literal">false</span>;</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">else</span> tree[i].right = <span class="number">-1</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i= <span class="number">0</span>; i &lt; n; ++i)</div><div class="line">		<span class="keyword">if</span> (isRoot[i]) &#123; root = i; <span class="keyword">break</span>; &#125;</div><div class="line">	<span class="built_in">queue</span>&lt;<span class="keyword">int</span>&gt; q;</div><div class="line">	<span class="keyword">int</span> tmp,last=<span class="number">0</span>,cnt=<span class="number">0</span>;</div><div class="line">	q.push(root);</div><div class="line">	<span class="keyword">while</span> (!q.empty()) &#123;</div><div class="line">		tmp = q.front(); q.pop();</div><div class="line">		<span class="keyword">if</span> (tmp != <span class="number">-1</span>) &#123; last = tmp; ++cnt; &#125;</div><div class="line">		<span class="keyword">else</span> &#123;</div><div class="line">			<span class="keyword">if</span> (cnt != n)<span class="built_in">printf</span>(<span class="string">"NO %d"</span>, root);</div><div class="line">			<span class="keyword">else</span> <span class="built_in">printf</span>(<span class="string">"YES %d"</span>, last);</div><div class="line">			<span class="keyword">break</span>;</div><div class="line">		&#125;</div><div class="line">		q.push(tree[tmp].left);</div><div class="line">		q.push(tree[tmp].right);</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">BFS</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">PAT甲级</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">树</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/08/13/PAT/PAT-advanced-1110-Complete-Binary-Tree/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
     <article id="post-练手/考研题/编程题-合唱队型-两部分DP" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -792,78 +866,6 @@
 
 
   
-    <article id="post-PAT/PAT-advanced-1106-Lowest-Price-in-Supply-Chain" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/08/11/PAT/PAT-advanced-1106-Lowest-Price-in-Supply-Chain/">PAT advanced 1106 Lowest Price in Supply Chain</a>
-    </h1>
-  
-
-        
-        <a href="/2017/08/11/PAT/PAT-advanced-1106-Lowest-Price-in-Supply-Chain/" class="archive-article-date">
-  	<time datetime="2017-08-11T01:44:35.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-08-11</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>A supply chain is a network of retailers（零售商）, distributors（经销商）, and suppliers（供应商）– everyone involved in moving a product from supplier to customer.<br>Starting from one root supplier, everyone on the chain buys products from one’s supplier in a price P and sell or distribute them in a price that is r% higher than P. Only the retailers will face the customers. It is assumed that each member in the supply chain has exactly one supplier except the root supplier, and there is no supply cycle.<br>Now given a supply chain, you are supposed to tell the lowest price a customer can expect from some retailers.</p>
-<p><strong>Input Specification:</strong><br>Each input file contains one test case. For each case, The first line contains three positive numbers: N (&lt;=105), the total number of the members in the supply chain (and hence their ID’s are numbered from 0 to N-1, and the root supplier’s ID is 0); P, the price given by the root supplier; and r, the percentage rate of price increment for each distributor or retailer. Then N lines follow, each describes a distributor or retailer in the following format:<br>Ki ID[1] ID[2] … ID[Ki]<br>where in the i-th line, Ki is the total number of distributors or retailers who receive products from supplier i, and is then followed by the ID’s of these distributors or retailers. Kj being 0 means that the j-th member is a retailer. All the numbers in a line are separated by a space.</p>
-<p><strong>Output Specification:</strong><br>For each test case, print in one line the lowest price we can expect from some retailers, accurate up to 4 decimal places, and the number of retailers that sell at the lowest price. There must be one space between the two numbers. It is guaranteed that the all the prices will not exceed 1010.</p>
-<p><strong>Sample Input:</strong><br>10 1.80 1.00<br>3 2 3 5<br>1 9<br>1 4<br>1 7<br>0<br>2 6 1<br>1 8<br>0<br>0<br>0</p>
-<p><strong>Sample Output:</strong><br>1.8362 2</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;vector&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cmath&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;map&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;algorithm&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> inf = <span class="number">0x3f3f3f3f</span>;</div><div class="line"><span class="keyword">int</span> n;</div><div class="line"><span class="keyword">double</span> p, r;</div><div class="line"><span class="keyword">double</span> minprice=inf;</div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">node</span> &#123;</span></div><div class="line">	<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; child;</div><div class="line">&#125;;</div><div class="line"><span class="built_in">vector</span>&lt;node&gt; v;</div><div class="line"><span class="built_in">map</span>&lt;<span class="keyword">double</span>, <span class="keyword">int</span>&gt; m;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">dfs</span><span class="params">(<span class="keyword">int</span> curr,<span class="keyword">int</span> depth)</span> </span>&#123;</div><div class="line">	<span class="keyword">if</span> (!v[curr].child.size()) &#123;</div><div class="line">		<span class="keyword">double</span> price = p*<span class="built_in">pow</span>(<span class="number">1</span> + r, depth);</div><div class="line">		m[price]++;</div><div class="line">		minprice = min(minprice, price);</div><div class="line">		<span class="keyword">return</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; v[curr].child.size(); ++i)</div><div class="line">		dfs(v[curr].child[i], depth + <span class="number">1</span>);</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="keyword">int</span> tmp;</div><div class="line">	<span class="built_in">cin</span> &gt;&gt; n &gt;&gt; p &gt;&gt; r;</div><div class="line">	r /= <span class="number">100</span>;</div><div class="line">	v.resize(n);</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; ++i) &#123;</div><div class="line">		<span class="built_in">cin</span> &gt;&gt; tmp;</div><div class="line">		v[i].child.resize(tmp);</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; tmp; ++j)</div><div class="line">			<span class="built_in">cin</span> &gt;&gt; v[i].child[j];</div><div class="line">	&#125;</div><div class="line">	dfs(<span class="number">0</span>, <span class="number">0</span>);</div><div class="line">	<span class="built_in">printf</span>(<span class="string">"%.4lf %d"</span>, minprice, m[minprice]);</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">DFS</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">PAT甲级</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">树</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/08/11/PAT/PAT-advanced-1106-Lowest-Price-in-Supply-Chain/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/13/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><a class="page-number" href="/page/13/">13</a><span class="page-number current">14</span><a class="page-number" href="/page/15/">15</a><a class="page-number" href="/page/16/">16</a><span class="space">&hellip;</span><a class="page-number" href="/page/44/">44</a><a class="extend next" rel="next" href="/page/15/">Next &raquo;</a>
@@ -1003,11 +1005,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">BFS</a>
+                <a href="javascript:void(0)" class="js-tag color4">二分法</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">二分法</a>
+                <a href="javascript:void(0)" class="js-tag color4">BFS</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1035,11 +1037,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">字典树</a>
+                <a href="javascript:void(0)" class="js-tag color5">组合数学</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">组合数学</a>
+                <a href="javascript:void(0)" class="js-tag color4">字典树</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1111,19 +1113,19 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">天梯赛</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">堆</a>
-              </li>
-            
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">排序</a>
               </li>
             
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">分治</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">天梯赛</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">堆</a>
               </li>
             
               <li class="article-tag-list-item">
