@@ -162,6 +162,106 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-算法/贪心算法相关" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/07/02/算法/贪心算法相关/">贪心算法相关练习</a>
+    </h1>
+  
+
+        
+        <a href="/2017/07/02/算法/贪心算法相关/" class="archive-article-date">
+  	<time datetime="2017-07-02T03:56:25.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-02</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="区间覆盖问题"><a href="#区间覆盖问题" class="headerlink" title="区间覆盖问题"></a>区间覆盖问题</h3><p>数轴上有n个闭区间[ai,bi]，选择尽量少的区间覆盖一条指定线段[s,t]；</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#include&lt;iostream&gt;</span></div><div class="line"><span class="comment">#include&lt;algorithm&gt;</span></div><div class="line">using namespace std;</div><div class="line">struct node &#123;</div><div class="line">	int a, b;</div><div class="line">&#125;;</div><div class="line">bool cmp(node a, node b) &#123;</div><div class="line">	<span class="keyword">if</span> (a.a != b.a)<span class="built_in">return</span> a.a &lt; b.a;</div><div class="line">	<span class="keyword">else</span> <span class="built_in">return</span> a.b &gt; b.b;</div><div class="line">&#125;</div><div class="line">int <span class="function"><span class="title">main</span></span>() &#123;</div><div class="line">	int s, t;</div><div class="line">	int n,cnt=1;</div><div class="line">	cin &gt;&gt; n;</div><div class="line">	cin &gt;&gt; s &gt;&gt; t;</div><div class="line">	node *range = (struct node*)malloc(n * sizeof(struct node));</div><div class="line">	<span class="keyword">for</span> (int i = 0; i &lt; n; ++i)</div><div class="line">	&#123;</div><div class="line">		cin &gt;&gt; range[i].a &gt;&gt; range[i].b;</div><div class="line">		<span class="keyword">if</span> (range[i].a &lt; s)range[i].a = s;</div><div class="line">		<span class="keyword">if</span> (range[i].b &gt; t)range[i].b = t;</div><div class="line">	&#125;</div><div class="line">	sort(range, range + n, cmp);</div><div class="line">	<span class="keyword">while</span> (range[0].b != t) &#123;</div><div class="line">		<span class="keyword">if</span> (range[0].a != s) &#123; cout &lt;&lt; <span class="string">"No solution"</span> &lt;&lt; endl; <span class="built_in">return</span> 0; &#125;</div><div class="line">		cnt++;</div><div class="line">		s = range[0].b;</div><div class="line">		<span class="keyword">for</span> (int i = 0; i &lt; n; ++i)</div><div class="line">		&#123;</div><div class="line">			<span class="keyword">if</span> (range[i].a &lt; s)range[i].a = s;</div><div class="line">		&#125;</div><div class="line">		sort(range, range + n, cmp);</div><div class="line">	&#125;</div><div class="line">	cout &lt;&lt; cnt &lt;&lt; endl;</div><div class="line">	<span class="built_in">return</span> 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="moving-tables"><a href="#moving-tables" class="headerlink" title="moving tables"></a>moving tables</h2><p><strong>Problem Description</strong><br>The famous ACM (Advanced Computer Maker) Company has rented a floor of a building whose shape is in the following figure.</p>
+<p><img src="https://github.com/makixi/makixi.github.io/raw/master/img/%E5%88%B7%E9%A2%98%E4%B8%93%E7%94%A8%E5%9B%BE/movingtables1.gif" alt="movingtables1"><br>The floor has 200 rooms each on the north side and south side along the corridor. Recently the Company made a plan to reform its system. The reform includes moving a lot of tables between rooms. Because the corridor is narrow and all the tables are big, only one table can pass through the corridor. Some plan is needed to make the moving efficient. The manager figured out the following plan: Moving a table from a room to another room can be done within 10 minutes. When moving a table from room i to room j, the part of the corridor between the front of room i and the front of room j is used. So, during each 10 minutes, several moving between two rooms not sharing the same part of the corridor will be done simultaneously. To make it clear the manager illustrated the possible cases and impossible cases of simultaneous moving.<br><img src="https://github.com/makixi/makixi.github.io/raw/master/img/%E5%88%B7%E9%A2%98%E4%B8%93%E7%94%A8%E5%9B%BE/movingtables2.gif" alt="movingtables2"><br>For each room, at most one table will be either moved in or moved out. Now, the manager seeks out a method to minimize the time to move all the tables. Your job is to write a program to solve the manager’s problem.</p>
+<p><strong>Input</strong><br>The input consists of T test cases. The number of test cases ) (T is given in the first line of the input. Each test case begins with a line containing an integer N , 1&lt;=N&lt;=200 , that represents the number of tables to move. Each of the following N lines contains two positive integers s and t, representing that a table is to move from room number s to room number t (each room number appears at most once in the N lines). From the N+3-rd line, the remaining test cases are listed in the same manner as above.</p>
+<p><strong>Output</strong><br>The output should contain the minimum time in minutes to complete the moving, one per line.</p>
+<p><strong>Sample Input</strong><br>3<br>4<br>10 20<br>30 40<br>50 60<br>70 80<br>2<br>1 3<br>2 200<br>3<br>10 100<br>20 80<br>30 50</p>
+<p><strong>Sample Output</strong><br>10<br>20<br>30</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#include &lt;iostream&gt;</span></div><div class="line">using namespace std;</div><div class="line">int <span class="function"><span class="title">main</span></span>()</div><div class="line">&#123;</div><div class="line">	int t, i, j, N, P[200];</div><div class="line">	int s, d, temp, k, min;</div><div class="line">	cin &gt;&gt; t;</div><div class="line">	<span class="keyword">for</span> (i = 0; i&lt;t; i++)</div><div class="line">	&#123;</div><div class="line">		<span class="keyword">for</span> (j = 0; j&lt;200; j++)</div><div class="line">			P[j] = 0;</div><div class="line">		cin &gt;&gt; N;</div><div class="line">		<span class="keyword">for</span> (j = 0; j&lt;N; j++)</div><div class="line">		&#123;</div><div class="line">			cin &gt;&gt; s &gt;&gt; d;</div><div class="line">			s = (s - 1) / 2;</div><div class="line">			d = (d - 1) / 2;</div><div class="line">			<span class="keyword">if</span> (s&gt;d)</div><div class="line">			&#123;</div><div class="line">				temp = s;</div><div class="line">				s = d;</div><div class="line">				d = temp;</div><div class="line">			&#125;</div><div class="line">			<span class="keyword">for</span> (k = s; k &lt;= d; k++)</div><div class="line">				P[k]++;</div><div class="line">		&#125;</div><div class="line">		min = -1;</div><div class="line">		<span class="keyword">for</span> (j = 0; j&lt;200; j++)</div><div class="line">			<span class="keyword">if</span> (P[j]&gt;min)</div><div class="line">				min = P[j];</div><div class="line">		cout &lt;&lt; min * 10 &lt;&lt; endl;</div><div class="line">	&#125;</div><div class="line">	<span class="built_in">return</span> 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="今年暑假不AC"><a href="#今年暑假不AC" class="headerlink" title="今年暑假不AC"></a>今年暑假不AC</h2><p><strong>Problem Description</strong><br>“今年暑假不AC？”<br>“是的。”<br>“那你干什么呢？”<br>“看世界杯呀，笨蛋！”<br>“@#$%^&amp;*%…”</p>
+<p>确实如此，世界杯来了，球迷的节日也来了，估计很多ACMer也会抛开电脑，奔向电视了。<br>作为球迷，一定想看尽量多的完整的比赛，当然，作为新时代的好青年，你一定还会看一些其它的节目，比如新闻联播（永远不要忘记关心国家大事）、非常6+7、超级女生，以及王小丫的《开心辞典》等等，假设你已经知道了所有你喜欢看的电视节目的转播时间表，你会合理安排吗？（目标是能看尽量多的完整节目）</p>
+<p><strong>Input</strong><br>输入数据包含多个测试实例，每个测试实例的第一行只有一个整数n(n&lt;=100)，表示你喜欢看的节目的总数，然后是n行数据，每行包括两个数据Ti_s,Ti_e (1&lt;=i&lt;=n)，分别表示第i个节目的开始和结束时间，为了简化问题，每个时间都用一个正整数表示。n=0表示输入结束，不做处理。</p>
+<p><strong>Output</strong><br>对于每个测试实例，输出能完整看到的电视节目的个数，每个测试实例的输出占一行。</p>
+<p><strong>Sample Input</strong><br>12<br>1 3<br>3 4<br>0 7<br>3 8<br>15 19<br>15 20<br>10 15<br>8 18<br>6 12<br>5 10<br>4 14<br>2 9<br>0</p>
+<p><strong>Sample Output</strong><br>5</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#include&lt;iostream&gt;</span></div><div class="line"><span class="comment">#include&lt;algorithm&gt;</span></div><div class="line"><span class="comment">#include&lt;vector&gt;</span></div><div class="line">using namespace std;</div><div class="line"><span class="comment">#define MAX 105</span></div><div class="line">struct node&#123;</div><div class="line">	int begin;</div><div class="line">	int end;</div><div class="line">&#125;;</div><div class="line">vector&lt;node&gt; tv;</div><div class="line">bool cmp(node a, node b) &#123;</div><div class="line">	<span class="keyword">if</span> (a.end == b.end)<span class="built_in">return</span> a.begin &lt; b.begin;</div><div class="line">	<span class="built_in">return</span> a.end &lt; b.end;</div><div class="line">&#125;</div><div class="line">int <span class="function"><span class="title">main</span></span>() &#123;</div><div class="line">	int n,a,b;</div><div class="line">	<span class="keyword">while</span> (cin &gt;&gt; n&amp;&amp;n) &#123;</div><div class="line">		tv.clear();</div><div class="line">		tv.resize(n);</div><div class="line">		<span class="keyword">for</span> (int i = 0; i &lt; n; ++i) &#123;</div><div class="line">			cin &gt;&gt; a &gt;&gt; b;</div><div class="line">			tv[i].begin = a;</div><div class="line">			tv[i].end = b;</div><div class="line">		&#125;</div><div class="line">		sort(tv.begin(), tv.end(), cmp);</div><div class="line">		int ans=1;</div><div class="line">		int en=tv[0].end;</div><div class="line">		<span class="keyword">for</span> (int i = 1; i &lt; n; ++i) &#123;</div><div class="line">			<span class="keyword">if</span>(en&lt;=tv[i].begin)&#123;</div><div class="line">				++ans;</div><div class="line">				en=tv[i].end;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">		cout &lt;&lt; ans &lt;&lt; endl;</div><div class="line">	&#125;</div><div class="line">	<span class="built_in">return</span> 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="fire-set"><a href="#fire-set" class="headerlink" title="fire set"></a>fire set</h2><p><strong>Problem Description</strong><br>Suppose that we have a square city with straight streets. A map of a city is a square board with n rows and n columns, each representing a street or a piece of wall.</p>
+<p>A blockhouse is a small castle that has four openings through which to shoot. The four openings are facing North, East, South, and West, respectively. There will be one machine gun shooting through each opening.</p>
+<p>Here we assume that a bullet is so powerful that it can run across any distance and destroy a blockhouse on its way. On the other hand, a wall is so strongly built that can stop the bullets.</p>
+<p>The goal is to place as many blockhouses in a city as possible so that no two can destroy each other. A configuration of blockhouses is legal provided that no two blockhouses are on the same horizontal row or vertical column in a map unless there is at least one wall separating them. In this problem we will consider small square cities (at most 4x4) that contain walls through which bullets cannot run through.</p>
+<p>The following image shows five pictures of the same board. The first picture is the empty board, the second and third pictures show legal configurations, and the fourth and fifth pictures show illegal configurations. For this board, the maximum number of blockhouses in a legal configuration is 5; the second picture shows one way to do it, but there are several other ways.<br><img src="https://github.com/makixi/makixi.github.io/raw/master/img/%E5%88%B7%E9%A2%98%E4%B8%93%E7%94%A8%E5%9B%BE/fireset.jpg" alt="fireset"><br>Your task is to write a program that, given a description of a map, calculates the maximum number of blockhouses that can be placed in the city in a legal configuration.</p>
+<p><strong>Input</strong><br>The input file contains one or more map descriptions, followed by a line containing the number 0 that signals the end of the file. Each map description begins with a line containing a positive integer n that is the size of the city; n will be at most 4. The next n lines each describe one row of the map, with a ‘.’ indicating an open space and an uppercase ‘X’ indicating a wall. There are no spaces in the input file.</p>
+<p><strong>Output</strong><br>For each test case, output one line containing the maximum number of blockhouses that can be placed in the city in a legal configuration.</p>
+<p><strong>Sample Input</strong><br>4<br>.X..<br>….<br>XX..<br>….<br>2<br>XX<br>.X<br>3<br>.X.<br>X.X<br>.X.<br>3<br>…<br>.XX<br>.XX<br>4<br>….<br>….<br>….<br>….<br>0</p>
+<p><strong>Sample Output</strong><br>5<br>1<br>5<br>2<br>4</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#include&lt;iostream&gt;</span></div><div class="line"><span class="comment">#include&lt;string&gt;</span></div><div class="line"><span class="comment">#include&lt;algorithm&gt;</span></div><div class="line">using namespace std;</div><div class="line">//string c[5];</div><div class="line">char c[5][5];</div><div class="line">int n, res;</div><div class="line"></div><div class="line">bool judge(int x, int y) &#123;</div><div class="line">	<span class="keyword">if</span> (c[x][y] != <span class="string">'.'</span>)<span class="built_in">return</span> <span class="literal">false</span>;</div><div class="line">	<span class="keyword">for</span> (int i = x - 1; i &gt;= 0; i--) &#123;</div><div class="line">		<span class="keyword">if</span> (c[i][y] == <span class="string">'X'</span>)<span class="built_in">break</span>;</div><div class="line">		<span class="keyword">if</span> (c[i][y] == <span class="string">'O'</span>)<span class="built_in">return</span> <span class="literal">false</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">for</span> (int i = y - 1; i &gt;= 0; --i) &#123;</div><div class="line">		<span class="keyword">if</span> (c[x][i] == <span class="string">'X'</span>)<span class="built_in">break</span>;</div><div class="line">		<span class="keyword">if</span> (c[x][i] == <span class="string">'O'</span>)<span class="built_in">return</span> <span class="literal">false</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="built_in">return</span> <span class="literal">true</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line">void dfs(int x, int y, int tot) &#123;</div><div class="line">	<span class="keyword">if</span> (x == n&amp;&amp;y == 0) &#123;</div><div class="line">		res = max(res, tot);</div><div class="line">		<span class="built_in">return</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">if</span> (y == n) &#123;</div><div class="line">		dfs(x + 1, 0, tot);</div><div class="line">		<span class="built_in">return</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">for</span> (int i = y; i &lt; n; ++i) &#123;</div><div class="line">		<span class="keyword">if</span> (judge(x, i)) &#123;</div><div class="line">			c[x][i] = <span class="string">'O'</span>;</div><div class="line">			dfs(x, i + 1, tot + 1);</div><div class="line">			c[x][i] = <span class="string">'.'</span>;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	dfs(x + 1, 0, tot);</div><div class="line">&#125;</div><div class="line"></div><div class="line">int <span class="function"><span class="title">main</span></span>() &#123;</div><div class="line">	<span class="keyword">while</span> (cin &gt;&gt; n&amp;&amp;n) &#123;</div><div class="line">		res = 0;</div><div class="line">		<span class="keyword">for</span> (int i = 0; i &lt; n; ++i) &#123;</div><div class="line">			//cin &gt;&gt; c[i];</div><div class="line">			scanf(<span class="string">"%s"</span>, c[i]);</div><div class="line">		&#125;</div><div class="line">		dfs(0, 0, 0);</div><div class="line">		cout &lt;&lt; res &lt;&lt; endl;</div><div class="line">	&#125;</div><div class="line">	<span class="built_in">return</span> 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="Wooden-Sticks"><a href="#Wooden-Sticks" class="headerlink" title="Wooden Sticks"></a>Wooden Sticks</h2><p><strong>Problem Description</strong><br>There is a pile of n wooden sticks. The length and weight of each stick are known in advance. The sticks are to be processed by a woodworking machine in one by one fashion. It needs some time, called setup time, for the machine to prepare processing a stick. The setup times are associated with cleaning operations and changing tools and shapes in the machine. The setup times of the woodworking machine are given as follows:</p>
+<p>(a) The setup time for the first wooden stick is 1 minute.<br>(b) Right after processing a stick of length l and weight w , the machine will need no setup time for a stick of length l’ and weight w’ if l&lt;=l’ and w&lt;=w’. Otherwise, it will need 1 minute for setup.</p>
+<p>You are to find the minimum setup time to process a given pile of n wooden sticks. For example, if you have five sticks whose pairs of length and weight are (4,9), (5,2), (2,1), (3,5), and (1,4), then the minimum setup time should be 2 minutes since there is a sequence of pairs (1,4), (3,5), (4,9), (2,1), (5,2).</p>
+<p><strong>Input</strong><br>The input consists of T test cases. The number of test cases (T) is given in the first line of the input file. Each test case consists of two lines: The first line has an integer n , 1&lt;=n&lt;=5000, that represents the number of wooden sticks in the test case, and the second line contains n 2 positive integers l1, w1, l2, w2, …, ln, wn, each of magnitude at most 10000 , where li and wi are the length and weight of the i th wooden stick, respectively. The 2n integers are delimited by one or more spaces.</p>
+<p><strong>Output</strong><br>The output should contain the minimum setup time in minutes, one per line.</p>
+<p><strong>Sample Input</strong><br>3<br>5<br>4 9 5 2 2 1 3 5 1 4<br>3<br>2 2 1 1 2 2<br>3<br>1 3 2 2 3 1</p>
+<p><strong>Sample Output</strong><br>2<br>1<br>3</p>
+<p>应该是贪心算法最最最最基本的题了，这里用的是对l排序，对w贪心<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#include&lt;iostream&gt;</span></div><div class="line"><span class="comment">#include&lt;algorithm&gt;</span></div><div class="line">using namespace std;</div><div class="line">int n;</div><div class="line">struct node &#123;</div><div class="line">	int l, w;</div><div class="line">	int vis;</div><div class="line">	bool operator&lt;(const node&amp;c)const &#123;</div><div class="line">		<span class="built_in">return</span> l == c.l ? w &lt; c.w : l &lt; c.l;</div><div class="line">	&#125;</div><div class="line">&#125;st[5001];</div><div class="line">void <span class="function"><span class="title">read</span></span>() &#123;</div><div class="line">	cin &gt;&gt; n;</div><div class="line">	<span class="keyword">for</span> (int i = 0; i &lt; n; ++i) &#123;</div><div class="line">		cin &gt;&gt; st[i].l &gt;&gt; st[i].w;</div><div class="line">		st[i].vis = 0;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line">void <span class="function"><span class="title">work</span></span>() &#123;</div><div class="line">	int cnt = 0;</div><div class="line">	sort(st, st + n);</div><div class="line">	<span class="keyword">for</span> (int i = 0; i &lt; n; ++i) &#123;</div><div class="line">		<span class="keyword">if</span> (!st[i].vis) &#123;</div><div class="line">			st[i].vis=1;</div><div class="line">			cnt++;</div><div class="line">			int k = i;</div><div class="line">			<span class="keyword">for</span> (int j = i+1; j &lt; n; ++j) &#123;</div><div class="line">				<span class="keyword">if</span> (!st[j].vis) &#123;</div><div class="line">					<span class="keyword">if</span> (st[j].w &gt;= st[k].w) &#123;</div><div class="line">						st[j].vis = 1;</div><div class="line">						k = j;</div><div class="line">					&#125;</div><div class="line">				&#125;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	cout &lt;&lt; cnt &lt;&lt; endl;</div><div class="line">&#125;</div><div class="line">int <span class="function"><span class="title">main</span></span>() &#123;</div><div class="line">	int t;</div><div class="line">	cin &gt;&gt; t;</div><div class="line">	<span class="keyword">while</span> (t--) &#123;</div><div class="line">		<span class="built_in">read</span>();</div><div class="line">		work();</div><div class="line">	&#125;</div><div class="line">	<span class="built_in">return</span> 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">C++练手题</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">贪心算法</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">算法</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/07/02/算法/贪心算法相关/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
     <article id="post-练手/递归求解相关" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -790,72 +890,6 @@
 
 
   
-    <article id="post-PAT/PAT-advanced-1071-Speech-Patterns" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/06/27/PAT/PAT-advanced-1071-Speech-Patterns/">PAT advanced 1071 Speech Patterns</a>
-    </h1>
-  
-
-        
-        <a href="/2017/06/27/PAT/PAT-advanced-1071-Speech-Patterns/" class="archive-article-date">
-  	<time datetime="2017-06-27T06:22:11.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-06-27</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>People often have a preference among synonyms of the same word. For example, some may prefer “the police”, while others may prefer “the cops”. Analyzing such patterns can help to narrow down a speaker’s identity, which is useful when validating, for example, whether it’s still the same person behind an online avatar.</p>
-<p>Now given a paragraph of text sampled from someone’s speech, can you find the person’s most commonly used word?</p>
-<p><strong>Input Specification:</strong><br>Each input file contains one test case. For each case, there is one line of text no more than 1048576 characters in length, terminated by a carriage return ‘\n’. The input contains at least one alphanumerical character, i.e., one character from the set [0-9 A-Z a-z].</p>
-<p><strong>Output Specification:</strong><br>For each test case, print in one line the most commonly occurring word in the input text, followed by a space and the number of times it has occurred in the input. If there are more than one such words, print the lexicographically smallest one. The word should be printed in all lower case. Here a “word” is defined as a continuous sequence of alphanumerical characters separated by non-alphanumerical characters or the line beginning/end.</p>
-<p>Note that words are case insensitive.</p>
-<p><strong>Sample Input:</strong><br>Can1: “Can a can can a can?  It can!”</p>
-<p><strong>Sample Output:</strong><br>can 5</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#include&lt;iostream&gt;</span></div><div class="line"><span class="comment">#include&lt;string&gt;</span></div><div class="line"><span class="comment">#include&lt;map&gt;</span></div><div class="line">using namespace std;</div><div class="line">int <span class="function"><span class="title">main</span></span>() &#123;</div><div class="line">	string str,tmp=<span class="string">""</span>;</div><div class="line">	getline(cin, str);</div><div class="line">	map&lt;string,int&gt; m;</div><div class="line">	<span class="keyword">for</span> (int i = 0; i &lt; str.length(); ++i) &#123;</div><div class="line">		<span class="keyword">if</span> (isalnum(str[i])) &#123;</div><div class="line">			str[i] = tolower(str[i]);</div><div class="line">			tmp += str[i];</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">else</span> &#123;</div><div class="line">			<span class="keyword">if</span>(!tmp.empty())</div><div class="line">				m[tmp]++;</div><div class="line">			tmp = <span class="string">""</span>;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">if</span> (!tmp.empty())m[tmp]++;</div><div class="line">	int max = 0;</div><div class="line">	<span class="keyword">for</span> (map&lt;string, int&gt;::iterator it = m.begin(); it != m.end(); ++it) &#123;</div><div class="line">		<span class="keyword">if</span> (it-&gt;second &gt; max) &#123;</div><div class="line">			max = it-&gt;second;</div><div class="line">			tmp = it-&gt;first;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	cout &lt;&lt; tmp &lt;&lt; <span class="string">" "</span> &lt;&lt; max &lt;&lt; endl;</div><div class="line">	<span class="built_in">return</span> 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">PAT甲级</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/06/27/PAT/PAT-advanced-1071-Speech-Patterns/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/31/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/30/">30</a><a class="page-number" href="/page/31/">31</a><span class="page-number current">32</span><a class="page-number" href="/page/33/">33</a><a class="page-number" href="/page/34/">34</a><span class="space">&hellip;</span><a class="page-number" href="/page/44/">44</a><a class="extend next" rel="next" href="/page/33/">Next &raquo;</a>
@@ -971,19 +1005,7 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">HDOJ</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">STL</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">数学</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">算法</a>
+                <a href="javascript:void(0)" class="js-tag color5">OpenJudge</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -991,19 +1013,7 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">DFS</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">BFS</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">二分法</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Hash</a>
+                <a href="javascript:void(0)" class="js-tag color3">递归</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1011,7 +1021,51 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">枚举</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">POJ</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">数学</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">位</a>
+              </li>
+            
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">01背包</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">HDOJ</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">算法</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">STL</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">DFS</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">二分法</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">BFS</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Hash</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1019,11 +1073,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">枚举</a>
+                <a href="javascript:void(0)" class="js-tag color4">Dijkstra</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Dijkstra</a>
+                <a href="javascript:void(0)" class="js-tag color5">组合数学</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1032,50 +1086,6 @@ MathJax.Hub.Queue(function() {
             
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">Floyd</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">组合数学</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">PAT甲级</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">BST</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">AVL</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">递归</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">逻辑</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">树</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">并查集</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">OpenJudge</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">POJ</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">位</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1091,11 +1101,31 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">C++</a>
+                <a href="javascript:void(0)" class="js-tag color1">PAT甲级</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+                <a href="javascript:void(0)" class="js-tag color4">BST</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">AVL</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">逻辑</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">树</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">并查集</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">C++</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1103,11 +1133,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">天梯赛</a>
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">堆</a>
+                <a href="javascript:void(0)" class="js-tag color4">天梯赛</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1116,6 +1146,10 @@ MathJax.Hub.Queue(function() {
             
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">分治</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">堆</a>
               </li>
             
               <li class="article-tag-list-item">
