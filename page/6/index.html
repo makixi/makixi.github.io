@@ -162,6 +162,69 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-天梯赛/L3-015-球队“食物链”" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/08/24/天梯赛/L3-015-球队“食物链”/">L3-015.球队“食物链”</a>
+    </h1>
+  
+
+        
+        <a href="/2017/08/24/天梯赛/L3-015-球队“食物链”/" class="archive-article-date">
+  	<time datetime="2017-08-24T09:03:57.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-08-24</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>某国的足球联赛中有N支参赛球队，编号从1至N。联赛采用主客场双循环赛制，参赛球队两两之间在双方主场各赛一场。<br>联赛战罢，结果已经尘埃落定。此时，联赛主席突发奇想，希望从中找出一条包含所有球队的“食物链”，来说明联赛的精彩程度。“食物链”为一个1至N的排列{ T1 T2 … TN }，满足：球队T1战胜过球队T2，球队T2战胜过球队T3，……，球队T(N-1)战胜过球队TN，球队TN战胜过球队T1。<br>现在主席请你从联赛结果中找出“食物链”。若存在多条“食物链”，请找出字典序最小的。<br>注：排列{ a1 a2 …aN }在字典序上小于排列{ b1 b2 … bN }，当且仅当存在整数K（1 &lt;= K &lt;= N），满足：aK &lt; bK且对于任意小于K的正整数i，ai=bi。</p>
+<p><strong>输入格式：</strong><br>输入第一行给出一个整数N（2 &lt;= N &lt;= 20），为参赛球队数。随后N行，每行N个字符，给出了NxN的联赛结果表，其中第i行第j列的字符为球队i在主场对阵球队j的比赛结果：“W”表示球队i战胜球队j，“L”表示球队i负于球队j，“D”表示两队打平，“-”表示无效（当i=j时）。输入中无多余空格。</p>
+<p><strong>输出格式：</strong><br>按题目要求找到“食物链”T1 T2 … TN，将这N个数依次输出在一行上，数字间以1个空格分隔，行的首尾不得有多余空格。若不存在“食物链”，输出“No Solution”。</p>
+<p><strong>输入样例1：</strong><br>5<br>-LWDW<br>W-LDW<br>WW-LW<br>DWW-W<br>DDLW-<br><strong>输出样例1：</strong><br>1 3 5 4 2<br><strong>输入样例2：</strong><br>5<br>-WDDW<br>D-DWL<br>DD-DW<br>DDW-D<br>DDDD-<br><strong>输出样例2：</strong><br>No Solution</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;string&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;vector&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;algorithm&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> maxn = <span class="number">21</span>;</div><div class="line"><span class="keyword">bool</span> v[maxn][maxn];</div><div class="line"><span class="keyword">bool</span> vis[maxn];</div><div class="line"><span class="keyword">int</span> res[maxn];</div><div class="line"><span class="keyword">int</span> n;</div><div class="line"><span class="keyword">bool</span> success=<span class="literal">false</span>;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">dfs</span><span class="params">(<span class="keyword">int</span> u,<span class="keyword">int</span> cnt)</span> </span>&#123;</div><div class="line">	<span class="keyword">if</span> (success)<span class="keyword">return</span>;</div><div class="line">	res[cnt] = u;</div><div class="line">	<span class="keyword">if</span> (cnt == n&amp;&amp;v[u][<span class="number">1</span>]==<span class="number">1</span>) &#123;</div><div class="line">		success = <span class="literal">true</span>;</div><div class="line">		<span class="keyword">return</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">if</span> (cnt &gt;= n)<span class="keyword">return</span>;</div><div class="line">	<span class="keyword">bool</span> flag = <span class="literal">false</span>;</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; ++i)<span class="comment">//剪枝 如果没有能赢1的直接return</span></div><div class="line">		<span class="keyword">if</span> (!vis[i] &amp;&amp; v[i][<span class="number">1</span>])</div><div class="line">			flag = <span class="literal">true</span>;</div><div class="line">	<span class="keyword">if</span> (!flag)<span class="keyword">return</span>;</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;=n; ++i)</div><div class="line">		<span class="keyword">if</span> (!vis[i]&amp;&amp;v[u][i]) &#123;</div><div class="line">			vis[i] = <span class="literal">true</span>;</div><div class="line">			dfs(i, cnt + <span class="number">1</span>);</div><div class="line">			vis[i] = <span class="literal">false</span>;</div><div class="line">		&#125;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">	fill(vis, vis + maxn, <span class="literal">false</span>);</div><div class="line">	fill(v[<span class="number">0</span>], v[<span class="number">0</span>] + maxn*maxn, <span class="literal">false</span>);</div><div class="line">	<span class="built_in">scanf</span>(<span class="string">"%d"</span>, &amp;n);</div><div class="line">	<span class="keyword">char</span> str[maxn];</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; ++i) &#123;</div><div class="line">		<span class="built_in">scanf</span>(<span class="string">"%s"</span>, str + <span class="number">1</span>);</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">1</span>; j &lt;= n; ++j) &#123;</div><div class="line">			<span class="keyword">if</span> (str[j] == <span class="string">'W'</span>)</div><div class="line">				v[i][j] = <span class="literal">true</span>;</div><div class="line">			<span class="keyword">if</span> (str[j] == <span class="string">'L'</span>)</div><div class="line">				v[j][i] = <span class="literal">true</span>;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	vis[<span class="number">1</span>] = <span class="literal">true</span>;</div><div class="line">	dfs(<span class="number">1</span>,<span class="number">1</span>);</div><div class="line">	<span class="keyword">if</span> (!success)<span class="built_in">cout</span> &lt;&lt; <span class="string">"No Solution"</span>;</div><div class="line">	<span class="keyword">else</span></div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; ++i) &#123;</div><div class="line">			<span class="keyword">if</span> (i != <span class="number">1</span>)<span class="built_in">printf</span>(<span class="string">" "</span>);</div><div class="line">			<span class="built_in">printf</span>(<span class="string">"%d"</span>, res[i]);</div><div class="line">		&#125;</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">天梯赛</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/08/24/天梯赛/L3-015-球队“食物链”/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
     <article id="post-天梯赛/L3-014-周游世界" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -528,15 +591,15 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">HDOJ</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
         			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">DP</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
         			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">枚举</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">HDOJ</a>
         		</li>
       		
 		</ul>
@@ -754,75 +817,9 @@
 
 
   
-    <article id="post-天梯赛/L3-007-天梯地图" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/08/23/天梯赛/L3-007-天梯地图/">L3-007.天梯地图</a>
-    </h1>
-  
-
-        
-        <a href="/2017/08/23/天梯赛/L3-007-天梯地图/" class="archive-article-date">
-  	<time datetime="2017-08-23T09:53:31.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-08-23</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>本题要求你实现一个天梯赛专属在线地图，队员输入自己学校所在地和赛场地点后，该地图应该推荐两条路线：一条是最快到达路线；一条是最短距离的路线。题目保证对任意的查询请求，地图上都至少存在一条可达路线。</p>
-<p><strong>输入格式：</strong><br>输入在第一行给出两个正整数N（2 &lt;= N &lt;=500）和M，分别为地图中所有标记地点的个数和连接地点的道路条数。随后M行，每行按如下格式给出一条道路的信息：<br>V1 V2 one-way length time<br>其中V1和V2是道路的两个端点的编号（从0到N-1）；如果该道路是从V1到V2的单行线，则one-way为1，否则为0；length是道路的长度；time是通过该路所需要的时间。最后给出一对起点和终点的编号。</p>
-<p><strong>输出格式：</strong><br>首先按下列格式输出最快到达的时间T和用节点编号表示的路线：<br>Time = T: 起点 =&gt; 节点1 =&gt; … =&gt; 终点<br>然后在下一行按下列格式输出最短距离D和用节点编号表示的路线：<br>Distance = D: 起点 =&gt; 节点1 =&gt; … =&gt; 终点<br>如果最快到达路线不唯一，则输出几条最快路线中最短的那条，题目保证这条路线是唯一的。而如果最短距离的路线不唯一，则输出途径节点数最少的那条，题目保证这条路线是唯一的。<br>如果这两条路线是完全一样的，则按下列格式输出：<br>Time = T; Distance = D: 起点 =&gt; 节点1 =&gt; … =&gt; 终点</p>
-<p><strong>输入样例1：</strong><br>10 15<br>0 1 0 1 1<br>8 0 0 1 1<br>4 8 1 1 1<br>5 4 0 2 3<br>5 9 1 1 4<br>0 6 0 1 1<br>7 3 1 1 2<br>8 3 1 1 2<br>2 5 0 2 2<br>2 1 1 1 1<br>1 5 0 1 3<br>1 4 0 1 1<br>9 7 1 1 3<br>3 1 0 2 5<br>6 3 1 2 1<br>5 3</p>
-<p><strong>输出样例1：</strong><br>Time = 6: 5 =&gt; 4 =&gt; 8 =&gt; 3<br>Distance = 3: 5 =&gt; 1 =&gt; 3</p>
-<p><strong>输入样例2:</strong><br>7 9<br>0 4 1 1 1<br>1 6 1 3 1<br>2 6 1 1 1<br>2 5 1 2 2<br>3 0 0 1 1<br>3 1 1 3 1<br>3 2 1 2 1<br>4 5 0 2 2<br>6 5 1 2 1<br>3 5</p>
-<p><strong>输出样例2:</strong><br>Time = 3; Distance = 4: 3 =&gt; 2 =&gt; 5</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;vector&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;algorithm&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> maxn = <span class="number">510</span>;</div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> inf = <span class="number">0x3f3f3f3f</span>;</div><div class="line"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; timepath, dispath, tmppath, dispre[maxn];</div><div class="line"><span class="keyword">int</span> e[maxn][maxn], t[maxn][maxn];</div><div class="line"><span class="keyword">int</span>  timepre[maxn];</div><div class="line"><span class="keyword">bool</span> vis[maxn];</div><div class="line"><span class="keyword">int</span> dis[maxn],weight[maxn];</div><div class="line"><span class="keyword">int</span> n, source, des;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">disDfs</span><span class="params">(<span class="keyword">int</span> v)</span> </span>&#123;</div><div class="line">	tmppath.push_back(v);</div><div class="line">	<span class="keyword">if</span> (v == source) &#123;</div><div class="line">		<span class="keyword">if</span> (tmppath.size()&lt;dispath.size() || dispath.size() == <span class="number">0</span>)</div><div class="line">			dispath = tmppath;</div><div class="line">		tmppath.pop_back();</div><div class="line">		<span class="keyword">return</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;dispre[v].size();++i)</div><div class="line">		disDfs(dispre[v][i]);</div><div class="line">	tmppath.pop_back();</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">timeDfs</span><span class="params">(<span class="keyword">int</span> v)</span> </span>&#123;</div><div class="line">	timepath.push_back(v);</div><div class="line">	<span class="keyword">if</span> (v == source)</div><div class="line">		<span class="keyword">return</span>;</div><div class="line">	timeDfs(timepre[v]);</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="keyword">int</span> m;</div><div class="line">	fill(e[<span class="number">0</span>], e[<span class="number">0</span>] + maxn*maxn, inf);</div><div class="line">	fill(t[<span class="number">0</span>], t[<span class="number">0</span>] + maxn*maxn, inf);</div><div class="line">	<span class="built_in">cin</span> &gt;&gt; n &gt;&gt; m;</div><div class="line">	<span class="keyword">while</span> (m--) &#123;</div><div class="line">		<span class="keyword">int</span> a, b, c, d, f;</div><div class="line">		<span class="built_in">cin</span> &gt;&gt; a &gt;&gt; b &gt;&gt; c &gt;&gt; d &gt;&gt; f;</div><div class="line">		e[a][b] = d;</div><div class="line">		t[a][b] = f;</div><div class="line">		<span class="keyword">if</span> (!c) &#123;</div><div class="line">			e[b][a] = d;</div><div class="line">			t[b][a] = f;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	<span class="built_in">cin</span> &gt;&gt; source &gt;&gt; des;</div><div class="line">	fill(dis, dis + maxn, inf);</div><div class="line">	fill(vis, vis + maxn, <span class="literal">false</span>);</div><div class="line">	dis[source] = <span class="number">0</span>;</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i&lt;n; ++i) &#123;</div><div class="line">		<span class="keyword">int</span> u = <span class="number">-1</span>, minn = inf;</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j&lt;n; ++j)</div><div class="line">			<span class="keyword">if</span> (!vis[j] &amp;&amp; dis[j]&lt;minn) &#123;</div><div class="line">				minn = dis[j];</div><div class="line">				u = j;</div><div class="line">			&#125;</div><div class="line">		<span class="keyword">if</span> (u == <span class="number">-1</span>)<span class="keyword">break</span>;</div><div class="line">		vis[u] = <span class="literal">true</span>;</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j&lt;n; ++j)</div><div class="line">			<span class="keyword">if</span> (!vis[j] &amp;&amp; e[u][j] != inf) &#123;</div><div class="line">				<span class="keyword">if</span> (dis[j]&gt;dis[u] + e[u][j]) &#123;</div><div class="line">					dis[j] = dis[u] + e[u][j];</div><div class="line">					dispre[j].clear();</div><div class="line">					dispre[j].push_back(u);</div><div class="line">				&#125;</div><div class="line">				<span class="keyword">else</span> <span class="keyword">if</span> (dis[j] == dis[u] + e[u][j]) &#123;</div><div class="line">					dispre[j].push_back(u);</div><div class="line">				&#125;</div><div class="line">			&#125;</div><div class="line">	&#125;</div><div class="line">	disDfs(des);</div><div class="line">	fill(vis, vis + maxn, <span class="literal">false</span>);</div><div class="line">	fill(dis, dis + maxn, inf);</div><div class="line">	fill(weight, weight + maxn, inf);</div><div class="line">	dis[source] = <span class="number">0</span>;</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; ++i) &#123;</div><div class="line">		<span class="keyword">int</span> u = <span class="number">-1</span>, minn = inf;</div><div class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;n;++j)</div><div class="line">			<span class="keyword">if</span> (!vis[j] &amp;&amp; dis[j] &lt; minn) &#123;</div><div class="line">				minn = dis[j];</div><div class="line">				u = j;</div><div class="line">			&#125;</div><div class="line">		<span class="keyword">if</span> (u == <span class="number">-1</span>)<span class="keyword">break</span>;</div><div class="line">		vis[u] = <span class="literal">true</span>;</div><div class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;n;++j)</div><div class="line">			<span class="keyword">if</span> (!vis[j] &amp;&amp; t[u][j] != inf) &#123;</div><div class="line">				<span class="keyword">if</span> (dis[j] &gt; dis[u] + t[u][j]) &#123;</div><div class="line">					dis[j] = dis[u] + t[u][j];</div><div class="line">					timepre[j] = u;</div><div class="line">					weight[j] = weight[u] + e[u][j];</div><div class="line">				&#125;</div><div class="line">				<span class="keyword">else</span> <span class="keyword">if</span> (dis[j] == dis[u] + t[u][j] &amp;&amp; weight[j] &gt; weight[u] + e[u][j]) &#123;</div><div class="line">					timepre[j] = u;</div><div class="line">					weight[j] = weight[u] + e[u][j];</div><div class="line">				&#125;</div><div class="line">			&#125;</div><div class="line">	&#125;</div><div class="line">	timeDfs(des);</div><div class="line">	<span class="built_in">printf</span>(<span class="string">"Time = %d: "</span>, timepath.size());</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = timepath.size() - <span class="number">1</span>; i &gt;= <span class="number">0</span>; --i) &#123;</div><div class="line">		<span class="keyword">if</span> (i != timepath.size() - <span class="number">1</span>)<span class="built_in">cout</span> &lt;&lt; <span class="string">" =&gt; "</span>;</div><div class="line">		<span class="built_in">cout</span> &lt;&lt; timepath[i];</div><div class="line">	&#125;</div><div class="line">	<span class="built_in">printf</span>(<span class="string">"Distance = %d: "</span>, dispath.size());</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = dispath.size() - <span class="number">1</span>; i &gt;= <span class="number">0</span>; --i) &#123;</div><div class="line">		<span class="keyword">if</span> (i != dispath.size() - <span class="number">1</span>)<span class="built_in">cout</span> &lt;&lt; <span class="string">" =&gt; "</span>;</div><div class="line">		<span class="built_in">cout</span> &lt;&lt; dispath[i];</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">天梯赛</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/08/23/天梯赛/L3-007-天梯地图/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/5/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><a class="page-number" href="/page/8/">8</a><span class="space">&hellip;</span><a class="page-number" href="/page/46/">46</a><a class="extend next" rel="next" href="/page/7/">Next &raquo;</a>
+      <a class="extend prev" rel="prev" href="/page/5/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><a class="page-number" href="/page/8/">8</a><span class="space">&hellip;</span><a class="page-number" href="/page/47/">47</a><a class="extend next" rel="next" href="/page/7/">Next &raquo;</a>
     </nav>
   
 
@@ -935,43 +932,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">OpenJudge</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">DP</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">递归</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">贪心算法</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">枚举</a>
+                <a href="javascript:void(0)" class="js-tag color5">HDOJ</a>
               </li>
             
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">数学</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">POJ</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">位</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">01背包</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">HDOJ</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -980,6 +945,10 @@ MathJax.Hub.Queue(function() {
             
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">算法</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">DP</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -999,15 +968,23 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">贪心算法</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">01背包</a>
+              </li>
+            
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Java</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Dijkstra</a>
+                <a href="javascript:void(0)" class="js-tag color3">枚举</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">字典树</a>
+                <a href="javascript:void(0)" class="js-tag color4">Dijkstra</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1019,15 +996,23 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Android</a>
+                <a href="javascript:void(0)" class="js-tag color4">字典树</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">SQL</a>
+                <a href="javascript:void(0)" class="js-tag color5">OpenJudge</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">android</a>
+                <a href="javascript:void(0)" class="js-tag color3">递归</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">POJ</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">位</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1059,6 +1044,18 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Android</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">SQL</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">android</a>
+              </li>
+            
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">C++</a>
               </li>
             
@@ -1071,6 +1068,10 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">天梯赛</a>
+              </li>
+            
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">排序</a>
               </li>
             
@@ -1079,7 +1080,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">天梯赛</a>
+                <a href="javascript:void(0)" class="js-tag color3">js</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">错题集</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1088,14 +1093,6 @@ MathJax.Hub.Queue(function() {
             
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">HTML</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">错题集</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">js</a>
               </li>
             
               <li class="article-tag-list-item">
