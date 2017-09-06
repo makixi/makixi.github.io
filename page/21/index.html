@@ -162,6 +162,80 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-PAT/PAT-advanced-1102-Invert-a-Binary-Tree" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/08/09/PAT/PAT-advanced-1102-Invert-a-Binary-Tree/">PAT advanced 1102 Invert a Binary Tree</a>
+    </h1>
+  
+
+        
+        <a href="/2017/08/09/PAT/PAT-advanced-1102-Invert-a-Binary-Tree/" class="archive-article-date">
+  	<time datetime="2017-08-09T01:59:44.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-08-09</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>The following is from Max Howell @twitter:<br>Google: 90% of our engineers use the software you wrote (Homebrew), but you can’t invert a binary tree on a whiteboard so fuck off.<br>Now it’s your turn to prove that YOU CAN invert a binary tree!</p>
+<p><strong>Input Specification:</strong><br>Each input file contains one test case. For each case, the first line gives a positive integer N (&lt;=10) which is the total number of nodes in the tree – and hence the nodes are numbered from 0 to N-1. Then N lines follow, each corresponds to a node from 0 to N-1, and gives the indices of the left and right children of the node. If the child does not exist, a “-“ will be put at the position. Any pair of children are separated by a space.</p>
+<p><strong>Output Specification:</strong><br>For each test case, print in the first line the level-order, and then in the second line the in-order traversal sequences of the inverted tree. There must be exactly one space between any adjacent numbers, and no extra space at the end of the line.</p>
+<p><strong>Sample Input:</strong><br>8<br>1 -</p>
+<ul>
+<li>-<br>0 -<br>2 7</li>
+<li>-</li>
+<li>-<br>5 -<br>4 6</li>
+</ul>
+<p><strong>Sample Output:</strong><br>3 7 2 6 4 0 5 1<br>6 5 7 4 3 2 0 1</p>
+<p>给一个二叉树<br>求它反转后的层序和中序遍历</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;queue&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;vector&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> inf=<span class="number">0x3f3f3f3f</span>;</div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">tree</span>&#123;</span></div><div class="line">	<span class="keyword">int</span> left,right;</div><div class="line">&#125;;</div><div class="line"><span class="built_in">vector</span>&lt;tree&gt; v;</div><div class="line"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; level,in;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">print</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; v)</span></span>&#123;</div><div class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;v.size();++i)&#123;</div><div class="line">		<span class="keyword">if</span>(i)<span class="built_in">cout</span>&lt;&lt;<span class="string">" "</span>;</div><div class="line">		<span class="built_in">cout</span>&lt;&lt;v[i];</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">inorder</span><span class="params">(<span class="keyword">int</span> root)</span></span>&#123;</div><div class="line">	<span class="keyword">if</span>(root==<span class="number">-1</span>)<span class="keyword">return</span>;</div><div class="line">	inorder(v[root].left);</div><div class="line">	in.push_back(root);</div><div class="line">	inorder(v[root].right);</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</div><div class="line">	<span class="keyword">int</span> n,root;</div><div class="line">	<span class="keyword">char</span> tmp;</div><div class="line">	<span class="built_in">cin</span>&gt;&gt;n;		<span class="comment">//numbered from 0 to n-1 and n&lt;=10</span></div><div class="line">	getchar();</div><div class="line">	v.resize(n);</div><div class="line">	<span class="built_in">vector</span>&lt;<span class="keyword">bool</span>&gt; mark(n,<span class="literal">false</span>);</div><div class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;n;++i)&#123;</div><div class="line">		<span class="built_in">cin</span>&gt;&gt;tmp;</div><div class="line">		v[i].right=(tmp==<span class="string">'-'</span>?<span class="number">-1</span>:tmp-<span class="string">'0'</span>);</div><div class="line">		<span class="built_in">cin</span>&gt;&gt;tmp;</div><div class="line">		v[i].left=(tmp==<span class="string">'-'</span>?<span class="number">-1</span>:tmp-<span class="string">'0'</span>);</div><div class="line">		getchar();</div><div class="line">		<span class="keyword">if</span>(v[i].right!=<span class="number">-1</span>)mark[v[i].right]=<span class="literal">true</span>;</div><div class="line">		<span class="keyword">if</span>(v[i].left!=<span class="number">-1</span>)mark[v[i].left]=<span class="literal">true</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;n;++i)</div><div class="line">		<span class="keyword">if</span>(!mark[i])&#123;</div><div class="line">			root=i;<span class="keyword">break</span>;</div><div class="line">		&#125;</div><div class="line">	<span class="built_in">queue</span>&lt;<span class="keyword">int</span>&gt; q;</div><div class="line">	q.push(root);</div><div class="line">	<span class="keyword">int</span> node;</div><div class="line">	<span class="keyword">while</span>(!q.empty())&#123;</div><div class="line">		node=q.front();q.pop();</div><div class="line">		<span class="keyword">if</span>(v[node].left!=<span class="number">-1</span>)q.push(v[node].left);</div><div class="line">		<span class="keyword">if</span>(v[node].right!=<span class="number">-1</span>)q.push(v[node].right);</div><div class="line">		level.push_back(node);</div><div class="line">	&#125;</div><div class="line">	print(level);</div><div class="line">	<span class="built_in">cout</span>&lt;&lt;<span class="built_in">endl</span>;</div><div class="line">	inorder(root);</div><div class="line">	print(in);</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">PAT甲级</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">树</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/08/09/PAT/PAT-advanced-1102-Invert-a-Binary-Tree/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
     <article id="post-练手/考研题/编程题-位操作练习" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -761,80 +835,9 @@
 
 
   
-    <article id="post-HDOJ/HDOJ-1034-Candy-Sharing-Game" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/08/07/HDOJ/HDOJ-1034-Candy-Sharing-Game/">HDOJ 1034 Candy Sharing Game</a>
-    </h1>
-  
-
-        
-        <a href="/2017/08/07/HDOJ/HDOJ-1034-Candy-Sharing-Game/" class="archive-article-date">
-  	<time datetime="2017-08-07T00:38:14.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-08-07</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><strong>Problem Description</strong><br>A number of students sit in a circle facing their teacher in the center. Each student initially has an even number of pieces of candy. When the teacher blows a whistle, each student simultaneously gives half of his or her candy to the neighbor on the right. Any student, who ends up with an odd number of pieces of candy, is given another piece by the teacher. The game ends when all students have the same number of pieces of candy.<br>Write a program which determines the number of times the teacher blows the whistle and the final number of pieces of candy for each student from the amount of candy each child starts with.</p>
-<p><strong>Input</strong><br>The input may describe more than one game. For each game, the input begins with the number N of students, followed by N (even) candy counts for the children counter-clockwise around the circle. The input ends with a student count of 0. Each input number is on a line by itself.</p>
-<p><strong>Output</strong><br>For each game, output the number of rounds of the game followed by the amount of candy each child ends up with, both on one line.</p>
-<p><strong>Sample Input</strong><br>6<br>36<br>2<br>2<br>2<br>2<br>2<br>11<br>22<br>20<br>18<br>16<br>14<br>12<br>10<br>8<br>6<br>4<br>2<br>4<br>2<br>4<br>6<br>8<br>0</p>
-<p><strong>Sample Output</strong><br>15 14<br>17 22<br>4 8</p>
-<p><strong>Hint</strong><br>The game ends in a finite number of steps because:</p>
-<ol>
-<li>The maximum candy count can never increase.</li>
-<li>The minimum candy count can never decrease.</li>
-<li>No one with more than the minimum amount will ever decrease to the minimum.</li>
-<li>If the maximum and minimum candy count are not the same, at least one student with the minimum amount must have their count increase.</li>
-</ol>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;vector&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;algorithm&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; v;</div><div class="line"><span class="keyword">int</span> n;</div><div class="line"><span class="function"><span class="keyword">bool</span> <span class="title">same</span><span class="params">()</span></span>&#123;</div><div class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;n;++i)</div><div class="line">		<span class="keyword">if</span>(v[i]!=v[i<span class="number">-1</span>])<span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">	<span class="keyword">return</span> <span class="literal">true</span>;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">exchange</span><span class="params">()</span></span>&#123;</div><div class="line">	<span class="keyword">int</span> t=v[<span class="number">0</span>]/<span class="number">2</span>;</div><div class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;v.size();++i)&#123;</div><div class="line">		<span class="keyword">int</span> a=v[i];</div><div class="line">		v[i]/=<span class="number">2</span>;</div><div class="line">		v[i]+=t;</div><div class="line">		t=a/<span class="number">2</span>;</div><div class="line">	&#125;</div><div class="line">	v[<span class="number">0</span>]/=<span class="number">2</span>;</div><div class="line">	v[<span class="number">0</span>]+=t;</div><div class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;v.size();++i)</div><div class="line">		<span class="keyword">if</span>(v[i]%<span class="number">2</span>)v[i]++;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</div><div class="line">    <span class="keyword">int</span> cnt;</div><div class="line">    <span class="keyword">while</span>(<span class="built_in">cin</span>&gt;&gt;n&amp;&amp;n)&#123;</div><div class="line">    	v.clear();</div><div class="line">    	v.resize(n);</div><div class="line">    	cnt=<span class="number">0</span>;</div><div class="line">    	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;n;++i)</div><div class="line">    		<span class="built_in">cin</span>&gt;&gt;v[i];</div><div class="line">    	<span class="keyword">while</span>(!same())&#123;</div><div class="line">    		exchange();</div><div class="line">    		cnt++;</div><div class="line">		&#125;</div><div class="line">		<span class="built_in">cout</span>&lt;&lt;cnt&lt;&lt;<span class="string">" "</span>&lt;&lt;v[<span class="number">0</span>]&lt;&lt;<span class="built_in">endl</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">HDOJ</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/08/07/HDOJ/HDOJ-1034-Candy-Sharing-Game/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/20/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/19/">19</a><a class="page-number" href="/page/20/">20</a><span class="page-number current">21</span><a class="page-number" href="/page/22/">22</a><a class="page-number" href="/page/23/">23</a><span class="space">&hellip;</span><a class="page-number" href="/page/48/">48</a><a class="extend next" rel="next" href="/page/22/">Next &raquo;</a>
+      <a class="extend prev" rel="prev" href="/page/20/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/19/">19</a><a class="page-number" href="/page/20/">20</a><span class="page-number current">21</span><a class="page-number" href="/page/22/">22</a><a class="page-number" href="/page/23/">23</a><span class="space">&hellip;</span><a class="page-number" href="/page/49/">49</a><a class="extend next" rel="next" href="/page/22/">Next &raquo;</a>
     </nav>
   
 
@@ -971,11 +974,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">BFS</a>
+                <a href="javascript:void(0)" class="js-tag color4">二分法</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">二分法</a>
+                <a href="javascript:void(0)" class="js-tag color4">BFS</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1007,11 +1010,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Floyd</a>
+                <a href="javascript:void(0)" class="js-tag color4">字典树</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">字典树</a>
+                <a href="javascript:void(0)" class="js-tag color1">Floyd</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1067,19 +1070,19 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">C++</a>
-              </li>
-            
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">android</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+                <a href="javascript:void(0)" class="js-tag color4">C++</a>
               </li>
             
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">数据结构</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1095,11 +1098,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">操作系统</a>
+                <a href="javascript:void(0)" class="js-tag color5">HTML</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">HTML</a>
+                <a href="javascript:void(0)" class="js-tag color5">操作系统</a>
               </li>
             
               <li class="article-tag-list-item">
