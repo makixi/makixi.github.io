@@ -162,6 +162,70 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-练手/考研题/编程题-日志排序" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/08/04/练手/考研题/编程题-日志排序/">编程题-日志排序</a>
+    </h1>
+  
+
+        
+        <a href="/2017/08/04/练手/考研题/编程题-日志排序/" class="archive-article-date">
+  	<time datetime="2017-08-04T08:20:41.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-08-04</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong>题目描述</strong><br>有一个网络日志，记录了网络中计算任务的执行情况，每个计算任务对应一条如下形式的日志记录： “hs_10000_p”是计算任务的名称， “2007-01-17 19:22:53,315”是计算任务开始执行的时间“年-月-日 时：分：秒，毫秒”， “253.035(s)”是计算任务消耗的时间(以秒计) hs_10000_p 2007-01-17 19:22:53,315 253.035(s) 请你写一个程序，对日志中记录计算任务进行排序。 时间消耗少的计算任务排在前面，时间消耗多的计算任务排在后面。 如果两个计算任务消耗的时间相同，则将开始执行时间早的计算任务排在前面。</p>
+<p><strong>输入描述:</strong><br>日志中每个记录是一个字符串，每个字符串占一行。最后一行为空行，表示日志结束。日志中最多可能有10000条记录。<br>计算任务名称的长度不超过10，开始执行时间的格式是YYYY-MM-DD HH:MM:SS,MMM，消耗时间小数点后有三位数字。<br>计算任务名称与任务开始时间、消耗时间之间以一个或多个空格隔开，行首和行尾可能有多余的空格。</p>
+<p><strong>输出描述:</strong><br>排序好的日志记录。每个记录的字符串各占一行。<br>输入的格式与输入保持一致，输入包括几个空格，你的输出中也应该包含同样多的空格。</p>
+<p><strong>输入</strong><br>hs_10000_p   2007-01-17 19:22:53,315     253.035(s)<br>hs_10001_p   2007-01-17 19:22:53,315     253.846(s)<br>hs_10002_m   2007-01-17 19:22:53,315     129.574(s)<br>hs_10002_p   2007-01-17 19:22:53,315     262.531(s)<br>hs_10003_m   2007-01-17 19:22:53,318     126.622(s)<br>hs_10003_p   2007-01-17 19:22:53,318     136.962(s)<br>hs_10005_m   2007-01-17 19:22:53,318     130.487(s)<br>hs_10005_p   2007-01-17 19:22:53,318     253.035(s)<br>hs_10006_m   2007-01-17 19:22:53,318     248.548(s)<br>hs_10006_p   2007-01-17 19:25:23,367    3146.827(s)</p>
+<p><strong>输出</strong><br>hs_10003_m   2007-01-17 19:22:53,318     126.622(s)<br>hs_10002_m   2007-01-17 19:22:53,315     129.574(s)<br>hs_10005_m   2007-01-17 19:22:53,318     130.487(s)<br>hs_10003_p   2007-01-17 19:22:53,318     136.962(s)<br>hs_10006_m   2007-01-17 19:22:53,318     248.548(s)<br>hs_10000_p   2007-01-17 19:22:53,315     253.035(s)<br>hs_10005_p   2007-01-17 19:22:53,318     253.035(s)<br>hs_10001_p   2007-01-17 19:22:53,315     253.846(s)<br>hs_10002_p   2007-01-17 19:22:53,315     262.531(s)<br>hs_10006_p   2007-01-17 19:25:23,367    3146.827(s)</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;cstring&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;algorithm&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">node</span>&#123;</span></div><div class="line">	<span class="keyword">char</span> all[<span class="number">100</span>];</div><div class="line">	<span class="keyword">float</span> consume;</div><div class="line">	<span class="keyword">char</span> start[<span class="number">30</span>];</div><div class="line">&#125;;</div><div class="line">node daily[<span class="number">10000</span>];</div><div class="line"><span class="function"><span class="keyword">bool</span> <span class="title">cmp</span><span class="params">(node a,node b)</span></span>&#123;</div><div class="line">	<span class="keyword">if</span>(a.consume!=b.consume)<span class="keyword">return</span> a.consume&lt;b.consume;</div><div class="line">	<span class="keyword">return</span> <span class="built_in">strcmp</span>(a.start,b.start)&lt;<span class="number">0</span>;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</div><div class="line">	<span class="keyword">int</span> cnt=<span class="number">0</span>;</div><div class="line">	<span class="keyword">char</span> name[<span class="number">20</span>],data[<span class="number">20</span>],start[<span class="number">20</span>];</div><div class="line">	<span class="keyword">while</span>(gets(daily[cnt].all)&amp;&amp;<span class="built_in">strcmp</span>(daily[cnt].all,<span class="string">""</span>))&#123;</div><div class="line">		<span class="built_in">sscanf</span>(daily[cnt].all,<span class="string">"%s %s %s %f(s)"</span>,name,data,start,&amp;daily[cnt].consume);</div><div class="line">		<span class="built_in">strcat</span>(daily[cnt].start,data);</div><div class="line">		<span class="built_in">strcat</span>(daily[cnt].start,start);</div><div class="line">		cnt++;</div><div class="line">	&#125;</div><div class="line">	sort(daily,daily+cnt,cmp);</div><div class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;cnt;++i)</div><div class="line">		<span class="built_in">cout</span>&lt;&lt;daily[i].all&lt;&lt;<span class="built_in">endl</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">C++练手题</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/08/04/练手/考研题/编程题-日志排序/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
     <article id="post-HDOJ/HDOJ-1028-Ignatius-and-the-the-Princess-III" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -203,11 +267,11 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">HDOJ</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">DP</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">DP</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">HDOJ</a>
         		</li>
       		
 		</ul>
@@ -542,11 +606,11 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">HDOJ</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">DP</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">DP</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">HDOJ</a>
         		</li>
       		
 		</ul>
@@ -771,70 +835,6 @@
 
 
   
-    <article id="post-练手/考研题/编程题-进制转换" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/08/02/练手/考研题/编程题-进制转换/">编程题-进制转换</a>
-    </h1>
-  
-
-        
-        <a href="/2017/08/02/练手/考研题/编程题-进制转换/" class="archive-article-date">
-  	<time datetime="2017-08-02T10:39:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-08-02</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><strong>题目描述</strong><br>将M进制的数X转换为N进制的数输出。</p>
-<p><strong>输入描述:</strong><br>输入的第一行包括两个整数：M和N(2&lt;=M,N&lt;=36)。<br>下面的一行输入一个数X，X是M进制的数，现在要求你将M进制的数X转换成N进制的数输出。</p>
-<p><strong>输出描述:</strong><br>输出X的N进制表示的数。<br>输入时字母部分为大写，输出时为小写，并且有大数据。</p>
-<p><strong>输入</strong><br>16 10<br>F</p>
-<p><strong>输出</strong><br>15</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stack&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;vector&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;string&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="keyword">int</span> m, n,i,j,carry;</div><div class="line">	<span class="built_in">string</span> str;</div><div class="line">	<span class="keyword">while</span> (<span class="built_in">cin</span> &gt;&gt; m &gt;&gt; n &gt;&gt; str) &#123;</div><div class="line">		<span class="keyword">int</span> len = str.length();</div><div class="line">		<span class="built_in">stack</span>&lt;<span class="keyword">char</span>&gt; s;</div><div class="line">		<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; v(len, <span class="number">0</span>);</div><div class="line">		<span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; len; ++i)</div><div class="line">			v[i] = <span class="built_in">isalpha</span>(str[i]) ? str[i] - <span class="string">'A'</span> + <span class="number">10</span> : str[i] - <span class="string">'0'</span>;</div><div class="line">		<span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; len;v[i]?<span class="number">0</span>:++i) &#123;</div><div class="line">			<span class="keyword">for</span> (j = i, carry = <span class="number">0</span>; j &lt; len; ++j) &#123;</div><div class="line">				v[j] += carry*m;</div><div class="line">				carry = v[j] % n;</div><div class="line">				v[j] /= n;</div><div class="line">			&#125;</div><div class="line">			s.push(carry &gt; <span class="number">9</span> ? <span class="string">'a'</span> + carry - <span class="number">10</span> : carry + <span class="string">'0'</span>);</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">for</span> (; s.top() == <span class="string">'0'</span>; s.pop());<span class="comment">//trim back zero</span></div><div class="line">		<span class="keyword">for</span> (; s.size(); <span class="built_in">cout</span> &lt;&lt; s.top(), s.pop());</div><div class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">C++练手题</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/08/02/练手/考研题/编程题-进制转换/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/23/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/22/">22</a><a class="page-number" href="/page/23/">23</a><span class="page-number current">24</span><a class="page-number" href="/page/25/">25</a><a class="page-number" href="/page/26/">26</a><span class="space">&hellip;</span><a class="page-number" href="/page/49/">49</a><a class="extend next" rel="next" href="/page/25/">Next &raquo;</a>
@@ -950,6 +950,42 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">OpenJudge</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">DP</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">递归</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">贪心算法</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">枚举</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">数学</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">POJ</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">位</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">01背包</a>
+              </li>
+            
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">HDOJ</a>
               </li>
             
@@ -958,19 +994,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">数学</a>
-              </li>
-            
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">算法</a>
               </li>
             
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">DFS</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">DP</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -986,19 +1014,7 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">贪心算法</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">01背包</a>
-              </li>
-            
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Java</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">枚举</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1006,11 +1022,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">字典树</a>
+                <a href="javascript:void(0)" class="js-tag color5">组合数学</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">组合数学</a>
+                <a href="javascript:void(0)" class="js-tag color4">字典树</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1030,10 +1046,6 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">递归</a>
-              </li>
-            
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">逻辑</a>
               </li>
             
@@ -1047,18 +1059,6 @@ MathJax.Hub.Queue(function() {
             
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">并查集</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">OpenJudge</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">POJ</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">位</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1082,11 +1082,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">天梯赛</a>
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+                <a href="javascript:void(0)" class="js-tag color4">天梯赛</a>
               </li>
             
               <li class="article-tag-list-item">
