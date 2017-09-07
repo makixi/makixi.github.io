@@ -162,6 +162,74 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-PAT/PAT-advanced-1090-Highest-Price-in-Supply-Chain-25" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/05/08/PAT/PAT-advanced-1090-Highest-Price-in-Supply-Chain-25/">PAT advanced 1090.Highest Price in Supply Chain(25)</a>
+    </h1>
+  
+
+        
+        <a href="/2017/05/08/PAT/PAT-advanced-1090-Highest-Price-in-Supply-Chain-25/" class="archive-article-date">
+  	<time datetime="2017-05-08T07:15:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-05-08</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>A supply chain is a network of retailers（零售商）, distributors（经销商）, and suppliers（供应商）– everyone involved in moving a product from supplier to customer.</p>
+<p>Starting from one root supplier, everyone on the chain buys products from one’s supplier in a price P and sell or distribute them in a price that is r% higher than P. It is assumed that each member in the supply chain has exactly one supplier except the root supplier, and there is no supply cycle.</p>
+<p>Now given a supply chain, you are supposed to tell the highest price we can expect from some retailers.</p>
+<p><strong>Input Specification:</strong></p>
+<p>Each input file contains one test case. For each case, The first line contains three positive numbers: N (&lt;=105), the total number of the members in the supply chain (and hence they are numbered from 0 to N-1); P, the price given by the root supplier; and r, the percentage rate of price increment for each distributor or retailer. Then the next line contains N numbers, each number Si is the index of the supplier for the i-th member. Sroot for the root supplier is defined to be -1. All the numbers in a line are separated by a space.</p>
+<p><strong>Output Specification:</strong></p>
+<p>For each test case, print in one line the highest price we can expect from some retailers, accurate up to 2 decimal places, and the number of retailers that sell at the highest price. There must be one space between the two numbers. It is guaranteed that the price will not exceed 1010.</p>
+<p><strong>Sample Input:</strong><br>9 1.80 1.00<br>1 5 4 4 -1 4 5 3 6<br><strong>Sample Output:</strong><br>1.85 2</p>
+<p>分析：闲着没事用了两种方法做，BFS和DFS。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div></pre></td><td class="code"><pre><div class="line">//-------------------------------------------DFS--------------------------</div><div class="line"><span class="comment">#include&lt;iostream&gt;</span></div><div class="line"><span class="comment">#include&lt;vector&gt;</span></div><div class="line"><span class="comment">#include&lt;cmath&gt;</span></div><div class="line">using namespace std;</div><div class="line">int n;//supply chain</div><div class="line">double p; //price</div><div class="line">double r;//rate</div><div class="line">int root, level = 0, leaf = 0;</div><div class="line">vector&lt;vector&lt;int&gt;&gt; v;</div><div class="line"></div><div class="line">void dfs(int root, int index) &#123;</div><div class="line">	<span class="keyword">if</span> (v[root].size() == 0) &#123;</div><div class="line">		<span class="keyword">if</span> (index == level)leaf++;</div><div class="line">		<span class="keyword">if</span> (index &gt; level) &#123;</div><div class="line">			level = index;</div><div class="line">			leaf = 1;</div><div class="line">		&#125;</div><div class="line">		<span class="built_in">return</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">for</span> (int i = 0; i &lt; v[root].size(); ++i) &#123;</div><div class="line">		dfs(v[root][i], index + 1);</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">int <span class="function"><span class="title">main</span></span>() &#123;</div><div class="line">	cin &gt;&gt; n &gt;&gt; p &gt;&gt; r;</div><div class="line">	v.resize(n);</div><div class="line">	<span class="keyword">for</span> (int i = 0; i &lt; n; ++i) &#123;</div><div class="line">		int temp;</div><div class="line">		cin &gt;&gt; temp;</div><div class="line">		<span class="keyword">if</span> (temp == -1) root = i;</div><div class="line">		<span class="keyword">else</span> v[temp].push_back(i);</div><div class="line">	&#125;</div><div class="line">	dfs(root, 0);</div><div class="line">	<span class="built_in">printf</span>(<span class="string">"%.2f %d"</span>, p*pow(1 + r / 100, level), leaf);</div><div class="line">	<span class="built_in">return</span> 0;</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line">//------------------------------------BFS---------------------------</div><div class="line"><span class="comment">#include&lt;iostream&gt;</span></div><div class="line"><span class="comment">#include&lt;vector&gt;</span></div><div class="line"><span class="comment">#include&lt;cmath&gt;</span></div><div class="line"><span class="comment">#include&lt;queue&gt;</span></div><div class="line">using namespace std;</div><div class="line">int n;//supply chain</div><div class="line">double p; //price</div><div class="line">double r;//rate</div><div class="line">int root;</div><div class="line"></div><div class="line">int <span class="function"><span class="title">main</span></span>() &#123;</div><div class="line">	cin &gt;&gt; n &gt;&gt; p &gt;&gt; r;</div><div class="line">	vector&lt;vector&lt;int&gt;&gt; v(n);</div><div class="line">	<span class="keyword">for</span> (int i = 0; i &lt; n; ++i) &#123;</div><div class="line">		int temp;</div><div class="line">		cin &gt;&gt; temp;</div><div class="line">		<span class="keyword">if</span> (temp == -1) root = i;</div><div class="line">		<span class="keyword">else</span> v[temp].push_back(i);</div><div class="line">	&#125;</div><div class="line">	queue&lt;int&gt; q,next;</div><div class="line">	q.push(root);</div><div class="line">	int len,a;</div><div class="line">	int index=0,level=0;//当前层结点数 和 当前层数</div><div class="line">	<span class="keyword">while</span> (!q.empty()) &#123;</div><div class="line">		level++;</div><div class="line">		index = q.size();</div><div class="line">		<span class="keyword">while</span> (!q.empty()) &#123;</div><div class="line">			a = q.front(); q.pop();</div><div class="line">			<span class="keyword">for</span> (int i = 0; i &lt; v[a].size(); ++i)</div><div class="line">				next.push(v[a][i]);</div><div class="line">		&#125;</div><div class="line">		swap(q, next);</div><div class="line">	&#125;</div><div class="line">	<span class="built_in">printf</span>(<span class="string">"%.2f %d"</span>, p*pow(1 + r / 100, level - 1), index);</div><div class="line">	<span class="built_in">return</span> 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">PAT甲级</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/05/08/PAT/PAT-advanced-1090-Highest-Price-in-Supply-Chain-25/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
     <article id="post-c++/acm程序设计相关" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -740,75 +808,6 @@
 
 
   
-    <article id="post-算法/C-DP" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/05/05/算法/C-DP/">C++ DP</a>
-    </h1>
-  
-
-        
-        <a href="/2017/05/05/算法/C-DP/" class="archive-article-date">
-  	<time datetime="2017-05-05T11:36:57.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-05-05</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><p>动态规划与分治法类似，都是通过组合子问题求解原问题。分治法是将原问题分为互不相交 的子问题，递归的求解子问题，再将它们组合起来，求出原问题的解。与之相反，动态规划应用于子问题重叠的情况，即不同的子问题具有公共的子子问题，动态规划算法对每个子子问题只求解一次，将其解保存在表格中，从而不用每次求解该子子问题时都要反复计算。<br>
-        
-          <a class="article-more-a" href="/2017/05/05/算法/C-DP/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">DP</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">算法</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">C++</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/05/05/算法/C-DP/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/46/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/45/">45</a><a class="page-number" href="/page/46/">46</a><span class="page-number current">47</span><a class="page-number" href="/page/48/">48</a><a class="page-number" href="/page/49/">49</a><a class="extend next" rel="next" href="/page/48/">Next &raquo;</a>
@@ -924,6 +923,22 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Android</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">SQL</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Java</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">android</a>
+              </li>
+            
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">HDOJ</a>
               </li>
             
@@ -936,10 +951,6 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">DP</a>
-              </li>
-            
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">算法</a>
               </li>
             
@@ -948,11 +959,15 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">BFS</a>
+                <a href="javascript:void(0)" class="js-tag color3">DP</a>
               </li>
             
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">二分法</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">BFS</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -968,10 +983,6 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Java</a>
-              </li>
-            
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">枚举</a>
               </li>
             
@@ -984,11 +995,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Floyd</a>
+                <a href="javascript:void(0)" class="js-tag color4">字典树</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">字典树</a>
+                <a href="javascript:void(0)" class="js-tag color1">Floyd</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1036,23 +1047,7 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Android</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">SQL</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">android</a>
-              </li>
-            
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">C++</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1064,6 +1059,10 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+              </li>
+            
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">排序</a>
               </li>
             
@@ -1072,19 +1071,19 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">HTML</a>
-              </li>
-            
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">操作系统</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">错题集</a>
+                <a href="javascript:void(0)" class="js-tag color5">HTML</a>
               </li>
             
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">js</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">错题集</a>
               </li>
             
               <li class="article-tag-list-item">
