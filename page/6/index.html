@@ -162,6 +162,70 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-HDOJ/HDOJ-1121-Complete-the-Sequence" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/09/01/HDOJ/HDOJ-1121-Complete-the-Sequence/">HDOJ 1121 Complete the Sequence(差分)</a>
+    </h1>
+  
+
+        
+        <a href="/2017/09/01/HDOJ/HDOJ-1121-Complete-the-Sequence/" class="archive-article-date">
+  	<time datetime="2017-09-01T01:46:38.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-09-01</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong>Problem Description</strong><br>You probably know those quizzes in Sunday magazines: given the sequence 1, 2, 3, 4, 5, what is the next number? Sometimes it is very easy to answer, sometimes it could be pretty hard. Because these “sequence problems” are very popular, ACM wants to implement them into the “Free Time” section of their new WAP portal.<br>ACM programmers have noticed that some of the quizzes can be solved by describing the sequence by polynomials. For example, the sequence 1, 2, 3, 4, 5 can be easily understood as a trivial polynomial. The next number is 6. But even more complex sequences, like 1, 2, 4, 7, 11, can be described by a polynomial. In this case, 1/2.n^2-1/2.n+1 can be used. Note that even if the members of the sequence are integers, polynomial coefficients may be any real numbers.<br>Polynomial is an expression in the following form:<br>P(n) = aD.n^D+aD-1.n^D-1+…+a1.n+a0. If aD &lt;&gt; 0, the number D is called a degree of the polynomial. Note that constant function P(n) = C can be considered as polynomial of degree 0, and the zero function P(n) = 0 is usually defined to have degree -1.</p>
+<p><strong>Input</strong><br>There is a single positive integer T on the first line of input. It stands for the number of test cases to follow. Each test case consists of two lines. First line of each test case contains two integer numbers S and C separated by a single space, 1 &lt;= S &lt; 100, 1 &lt;= C &lt; 100, (S+C) &lt;= 100. The first number, S, stands for the length of the given sequence, the second number, C is the amount of numbers you are to find to complete the sequence.<br>The second line of each test case contains S integer numbers X1, X2, … XS separated by a space. These numbers form the given sequence. The sequence can always be described by a polynomial P(n) such that for every i, Xi = P(i). Among these polynomials, we can find the polynomial Pmin with the lowest possible degree. This polynomial should be used for completing the sequence.</p>
+<p><strong>Output</strong><br>For every test case, your program must print a single line containing C integer numbers, separated by a space. These numbers are the values completing the sequence according to the polynomial of the lowest possible degree. In other words, you are to print values Pmin(S+1), Pmin(S+2), …. Pmin(S+C).<br>It is guaranteed that the results Pmin(S+i) will be non-negative and will fit into the standard integer type.</p>
+<p><strong>Sample Input</strong><br>4<br>6 3<br>1 2 3 4 5 6<br>8 2<br>1 2 4 7 11 16 22 29<br>10 2<br>1 1 1 1 1 1 1 1 1 2<br>1 10<br>3</p>
+<p><strong>Sample Output</strong><br>7 8 9<br>37 46<br>11 56<br>3 3 3 3 3 3 3 3 3 3</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> maxn = <span class="number">105</span>;</div><div class="line"><span class="keyword">int</span> num[maxn][maxn];</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="keyword">int</span> t;</div><div class="line">	<span class="built_in">cin</span> &gt;&gt; t;</div><div class="line">	<span class="keyword">while</span> (t--) &#123;</div><div class="line">		<span class="keyword">int</span> s, c;</div><div class="line">		<span class="built_in">cin</span> &gt;&gt; s &gt;&gt; c;</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; s; ++i)<span class="built_in">cin</span> &gt;&gt; num[<span class="number">0</span>][i];</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; s; ++i)</div><div class="line">			<span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j + i &lt; s; ++j)</div><div class="line">				num[i][j] = num[i - <span class="number">1</span>][j + <span class="number">1</span>] - num[i - <span class="number">1</span>][j];</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= c; ++i)num[s - <span class="number">1</span>][i] = num[s - <span class="number">1</span>][<span class="number">0</span>];</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = s - <span class="number">2</span>; i &gt;= <span class="number">0</span>; --i)</div><div class="line">			<span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; c; ++j)</div><div class="line">				num[i][s - i + j] = num[i + <span class="number">1</span>][s - i + j - <span class="number">1</span>] + num[i][s - i + j - <span class="number">1</span>];</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = s; i &lt; s + c - <span class="number">1</span>; ++i)<span class="built_in">cout</span> &lt;&lt; num[<span class="number">0</span>][i] &lt;&lt; <span class="string">" "</span>;</div><div class="line">		<span class="built_in">cout</span> &lt;&lt; num[<span class="number">0</span>][s + c - <span class="number">1</span>] &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">HDOJ</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/09/01/HDOJ/HDOJ-1121-Complete-the-Sequence/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
     <article id="post-HDOJ/HDOJ-1119-Simple-Algorithmetics" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -736,74 +800,6 @@ Your goal is to decrypt the secret code, i.e. to express a given number X in the
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2017/08/30/HDOJ/HDOJ-1110-Equipment-Box/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
-    <article id="post-HDOJ/HDOJ-1109-Run-Away" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/08/30/HDOJ/HDOJ-1109-Run-Away/">HDOJ 1109 Run Away(模拟退火)</a>
-    </h1>
-  
-
-        
-        <a href="/2017/08/30/HDOJ/HDOJ-1109-Run-Away/" class="archive-article-date">
-  	<time datetime="2017-08-30T00:47:55.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-08-30</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><strong>Problem Description</strong><br>One of the traps we will encounter in the Pyramid is located in the Large Room. A lot of small holes are drilled into the floor. They look completely harmless at the first sight. But when activated, they start to throw out very hot java, uh … pardon, lava. Unfortunately, all known paths to the Center Room (where the Sarcophagus is) contain a trigger that activates the trap. The ACM were not able to avoid that. But they have carefully monitored the positions of all the holes. So it is important to find the place in the Large Room that has the maximal distance from all the holes. This place is the safest in the entire room and the archaeologist has to hide there.</p>
-<p><strong>Input</strong><br>The input consists of T test cases. The number of them (T) is given on the first line of the input file. Each test case begins with a line containing three integers X, Y, M separated by space. The numbers satisfy conditions: 1 &lt;= X,Y &lt;=10000, 1 &lt;= M &lt;= 1000. The numbers X and Yindicate the dimensions of the Large Room which has a rectangular shape. The number M stands for the number of holes. Then exactly M lines follow, each containing two integer numbers Ui and Vi (0 &lt;= Ui &lt;= X, 0 &lt;= Vi &lt;= Y) indicating the coordinates of one hole. There may be several holes at the same position.</p>
-<p><strong>Output</strong><br>Print exactly one line for each test case. The line should contain the sentence “The safest point is (P, Q).” where P and Qare the coordinates of the point in the room that has the maximum distance from the nearest hole, rounded to the nearest number with exactly one digit after the decimal point (0.05 rounds up to 0.1).</p>
-<p><strong>Sample Input</strong><br>3<br>1000 50 1<br>10 10<br>100 100 4<br>10 10<br>10 90<br>90 10<br>90 90<br>3000 3000 4<br>1200 85<br>63 2500<br>2700 2650<br>2990 100</p>
-<p><strong>Sample Output</strong><br>The safest point is (1000.0, 50.0).<br>The safest point is (50.0, 50.0).<br>The safest point is (1433.0, 1669.8).</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;map&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;string&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cstring&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;queue&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;algorithm&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;vector&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cmath&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;ctime&gt;</span></span></div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> maxn = <span class="number">1000</span> + <span class="number">10</span>;</div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> inf = <span class="number">0x3f3f3f3f</span>;</div><div class="line"><span class="keyword">const</span> <span class="keyword">double</span> exps = <span class="number">1e-3</span>;</div><div class="line"><span class="keyword">const</span> <span class="keyword">double</span> pi = <span class="built_in">acos</span>(<span class="number">-1.0</span>);</div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="keyword">double</span> px[maxn], py[maxn];</div><div class="line"><span class="keyword">double</span> fx[maxn], fy[maxn], best[maxn];</div><div class="line"><span class="function"><span class="keyword">double</span> <span class="title">Rand</span><span class="params">(<span class="keyword">double</span> left, <span class="keyword">double</span> right)</span> </span>&#123;</div><div class="line">	<span class="keyword">return</span> (rand() % <span class="number">10000</span>) / <span class="number">10000.0</span>*(right - left) + left;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">double</span> <span class="title">dis</span><span class="params">(<span class="keyword">double</span> x1, <span class="keyword">double</span> y1, <span class="keyword">double</span> x2, <span class="keyword">double</span> y2)</span> </span>&#123;</div><div class="line">	<span class="keyword">return</span> <span class="built_in">sqrt</span>((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="keyword">int</span> t, x, y, m;</div><div class="line">	<span class="built_in">cin</span> &gt;&gt; t;</div><div class="line">	srand(time(<span class="literal">NULL</span>));</div><div class="line">	<span class="keyword">while</span> (t--) &#123;</div><div class="line">		<span class="built_in">scanf</span>(<span class="string">"%d%d%d"</span>, &amp;x, &amp;y, &amp;m);</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= m; ++i)</div><div class="line">			<span class="built_in">scanf</span>(<span class="string">"%lf%lf"</span>, &amp;px[i], &amp;py[i]);</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= <span class="number">30</span>; ++i) &#123;<span class="comment">//在矩形里随机取30个点并设置步长</span></div><div class="line">			fx[i] = Rand(<span class="number">1</span>, x);</div><div class="line">			fy[i] = Rand(<span class="number">1</span>, y);</div><div class="line">			best[i] = inf;</div><div class="line">			<span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">1</span>; j &lt;= m; ++j)</div><div class="line">				best[i] = min(best[i], dis(fx[i], fy[i], px[j], py[j]));</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">double</span> step = max(x, y);<span class="comment">//最长的step</span></div><div class="line">		<span class="keyword">while</span> (step &gt; exps) &#123;</div><div class="line">			<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= <span class="number">30</span>; ++i) &#123;<span class="comment">//初始状态30个</span></div><div class="line">				<span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">1</span>; j &lt;= <span class="number">30</span>; ++j) &#123;<span class="comment">//循环30次</span></div><div class="line">					<span class="keyword">double</span> angel = Rand(<span class="number">0</span>, <span class="number">2</span> * pi);<span class="comment">//枚举所有角度</span></div><div class="line">					<span class="keyword">double</span> newx = fx[i] + <span class="built_in">cos</span>(angel)*step;</div><div class="line">					<span class="keyword">double</span> newy = fy[i] + <span class="built_in">sin</span>(angel)*step;</div><div class="line">					<span class="keyword">if</span> (newx&lt;<span class="number">0</span> || newx&gt;x || newy&lt;<span class="number">0</span> || newy&gt;y)<span class="keyword">continue</span>;</div><div class="line">					<span class="keyword">double</span> d = inf;</div><div class="line">					<span class="keyword">for</span> (<span class="keyword">int</span> k = <span class="number">1</span>; k &lt;= m; ++k)</div><div class="line">						d = min(d, dis(newx, newy, px[k], py[k]));</div><div class="line">					<span class="keyword">if</span> (d &gt; best[i]) &#123;</div><div class="line">						best[i] = d;</div><div class="line">						fx[i] = newx;</div><div class="line">						fy[i] = newy;</div><div class="line">					&#125;</div><div class="line">				&#125;</div><div class="line">			&#125;</div><div class="line">			step *= <span class="number">0.85</span>;<span class="comment">//退火常数</span></div><div class="line">		&#125;</div><div class="line">		<span class="keyword">int</span> t = <span class="number">1</span>;</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= <span class="number">30</span>; ++i)</div><div class="line">			<span class="keyword">if</span> (best[i] &gt;= best[t])</div><div class="line">				t = i;</div><div class="line">		<span class="built_in">printf</span>(<span class="string">"The safest point is (%.1lf, %.1lf).\n"</span>, fx[t], fy[t]);</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">HDOJ</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">算法</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/08/30/HDOJ/HDOJ-1109-Run-Away/">展开全文 >></a>
         </p>
       
 
