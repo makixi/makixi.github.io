@@ -381,10 +381,14 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>To store English words, one method is to use linked lists and store a word letter by letter. To save some space, we may let the words share the same sublist if they share the same suffix. For example, “loading” and “being” are stored as showed in Figure 1.<br><img src="https://github.com/makixi/makixi.github.io/raw/master/img/%E5%88%B7%E9%A2%98%E4%B8%93%E7%94%A8%E5%9B%BE/patadvanced1032.jpg" alt="figure1"><br>
-        
-          <a class="article-more-a" href="/2017/06/19/PAT/PAT-advanced-1032-Sharing/#more">more >></a>
-        
+        <p>To store English words, one method is to use linked lists and store a word letter by letter. To save some space, we may let the words share the same sublist if they share the same suffix. For example, “loading” and “being” are stored as showed in Figure 1.<br><img src="https://github.com/makixi/makixi.github.io/raw/master/img/%E5%88%B7%E9%A2%98%E4%B8%93%E7%94%A8%E5%9B%BE/patadvanced1032.jpg" alt="figure1"><br>You are supposed to find the starting position of the common suffix (e.g. the position of “i” in Figure 1).</p>
+<p><strong>Input Specification:</strong><br>Each input file contains one test case. For each case, the first line contains two addresses of nodes and a positive N (&lt;= 105), where the two addresses are the addresses of the first nodes of the two words, and N is the total number of nodes. The address of a node is a 5-digit positive integer, and NULL is represented by -1.<br>Then N lines follow, each describes a node in the format:<br>Address Data Next<br>where Address is the position of the node, Data is the letter contained by this node which is an English letter chosen from {a-z, A-Z}, and Next is the position of the next node.</p>
+<p><strong>Output Specification:</strong><br>For each case, simply output the 5-digit starting position of the common suffix. If the two words have no common suffix, output “-1” instead.</p>
+<p><strong>Sample Input 1:</strong><br>11111 22222 9<br>67890 i 00002<br>00010 a 12345<br>00003 g -1<br>12345 D 67890<br>00002 n 00003<br>22222 B 23456<br>11111 L 00001<br>23456 e 67890<br>00001 o 00010<br><strong>Sample Output 1:</strong><br>67890<br><strong>Sample Input 2:</strong><br>00001 00002 4<br>00001 a 10001<br>10001 s -1<br>00002 a 10002<br>10002 t -1<br><strong>Sample Output 2:</strong><br>-1</p>
+<p>题目大意：给你两个链表头地址和结点数目，求出他们第一个公共节点的地址，如果没有公共节点就输出-1</p>
+<p>刚开始用暴力破解，两条链表同时遍历找第一个公共点，复杂度是n*n，果然超时。。。<br>后来建立一个新数组flag，在遍历第一条链表的时候来记录第一条链表的访问情况，再去遍历第二条链表，遍历的时候发现当前访问的结点flag为1则是第一个公共点。复杂度n<br>后来还是发现有点超时<br>就把最后的cout改成了printf<br>因为printf比cout省时间。。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="keyword">bool</span> vis[<span class="number">100000</span>];</div><div class="line"><span class="keyword">int</span> nex[<span class="number">100000</span>];</div><div class="line"><span class="keyword">char</span> v[<span class="number">100000</span>];</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="keyword">int</span> ad1,ad2,n;</div><div class="line">	<span class="built_in">scanf</span>(<span class="string">"%d%d%d"</span>,&amp;ad1,&amp;ad2,&amp;n);</div><div class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;n;++i)&#123;</div><div class="line">		<span class="keyword">int</span> tmp;</div><div class="line">		<span class="built_in">scanf</span>(<span class="string">"%d"</span>,&amp;tmp);</div><div class="line">		<span class="built_in">cin</span>&gt;&gt;v[tmp]&gt;&gt;nex[tmp];</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=ad1;i!=<span class="number">-1</span>;i=nex[i])</div><div class="line">		vis[i]=<span class="literal">true</span>;</div><div class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=ad2;i!=<span class="number">-1</span>;i=nex[i])</div><div class="line">		<span class="keyword">if</span>(vis[i])&#123;</div><div class="line">			<span class="built_in">printf</span>(<span class="string">"%05d"</span>,i);</div><div class="line">			<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">		&#125;</div><div class="line">	<span class="built_in">printf</span>(<span class="string">"-1"</span>);</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
       
 
       
@@ -442,10 +446,11 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>Given any string of N (&gt;=5) characters, you are asked to form the characters into the shape of U. For example, “helloworld” can be printed as:<br>
-        
-          <a class="article-more-a" href="/2017/06/19/PAT/PAT-advanced-1031-Hello-World-For-U/#more">more >></a>
-        
+        <p>Given any string of N (&gt;=5) characters, you are asked to form the characters into the shape of U. For example, “helloworld” can be printed as:<br>h  d<br>e  l<br>l  r<br>lowo<br>That is, the characters must be printed in the original order, starting top-down from the left vertical line with n1 characters, then left to right along the bottom line with n2 characters, and finally bottom-up along the vertical line with n3 characters. And more, we would like U to be as squared as possible – that is, it must be satisfied that n1 = n3 = max { k| k &lt;= n2 for all 3 &lt;= n2 &lt;= N } with n1 + n2 + n3 - 2 = N.<br><strong>Input Specification:</strong><br>Each input file contains one test case. Each case contains one string with no less than 5 and no more than 80 characters in a line. The string contains no white space.</p>
+<p><strong>Output Specification:</strong><br>For each test case, print the input string in the shape of U as specified in the description.</p>
+<p><strong>Sample Input:</strong><br>helloworld!<br><strong>Sample Output:</strong><br>h   !<br>e   d<br>l   l<br>lowor</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;string&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="built_in">string</span> a;</div><div class="line">	getline(<span class="built_in">cin</span>, a);</div><div class="line">	<span class="keyword">int</span> n = a.size()+<span class="number">2</span>;</div><div class="line">	<span class="keyword">int</span> n1 = n / <span class="number">3</span>, n2 = n / <span class="number">3</span> + n % <span class="number">3</span>;</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; n1; ++i) &#123;</div><div class="line">			<span class="built_in">cout</span> &lt;&lt; a[i<span class="number">-1</span>];</div><div class="line">			<span class="keyword">for</span> (<span class="keyword">int</span> k = <span class="number">0</span>; k &lt; n2 - <span class="number">2</span>; ++k)</div><div class="line">				<span class="built_in">cout</span> &lt;&lt; <span class="string">" "</span>;</div><div class="line">			<span class="built_in">cout</span> &lt;&lt; a[n<span class="number">-2</span> - i] &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> j=n1;j&lt;n1+n2;j++)</div><div class="line">	<span class="built_in">cout</span> &lt;&lt; a[j - <span class="number">1</span>];</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
       
 
       
@@ -972,6 +977,46 @@ MathJax.Hub.Queue(function() {
           <ul class="article-tag-list" q-show="showTags">
             
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">C++练手题</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">OpenJudge</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">递归</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">DP</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">贪心算法</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">枚举</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">数学</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">POJ</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">位</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">01背包</a>
+              </li>
+            
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">HDOJ</a>
               </li>
             
@@ -980,23 +1025,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">C++练手题</a>
-              </li>
-            
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">算法</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">数学</a>
-              </li>
-            
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">DFS</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">DP</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1012,19 +1045,7 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">贪心算法</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">01背包</a>
-              </li>
-            
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Java</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">枚举</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1040,11 +1061,19 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Floyd</a>
+              </li>
+            
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">PAT甲级</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Floyd</a>
+                <a href="javascript:void(0)" class="js-tag color5">数据结构</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">树</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1056,10 +1085,6 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">递归</a>
-              </li>
-            
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">逻辑</a>
               </li>
             
@@ -1068,23 +1093,7 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">树</a>
-              </li>
-            
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">并查集</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">OpenJudge</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">POJ</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">位</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1104,15 +1113,7 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">数据结构</a>
-              </li>
-            
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">随笔</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">天梯赛</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1124,11 +1125,15 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">操作系统</a>
+                <a href="javascript:void(0)" class="js-tag color4">天梯赛</a>
               </li>
             
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">HTML</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">操作系统</a>
               </li>
             
               <li class="article-tag-list-item">
