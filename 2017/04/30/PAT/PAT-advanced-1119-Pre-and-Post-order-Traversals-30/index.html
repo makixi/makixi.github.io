@@ -15,7 +15,7 @@
 <meta property="og:url" content="http://makixi.github.io/2017/04/30/PAT/PAT-advanced-1119-Pre-and-Post-order-Traversals-30/index.html">
 <meta property="og:site_name" content="Maki">
 <meta property="og:description" content="Suppose that all the keys in a binary tree are distinct positive integers. A unique binary tree can be determined by a given pair of postorder and inorder traversal sequences, or preorder and inorder">
-<meta property="og:updated_time" content="2017-07-05T03:27:39.892Z">
+<meta property="og:updated_time" content="2017-09-15T07:19:13.253Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="PAT advanced 1119.Pre- and Post-order Traversals(30)">
 <meta name="twitter:description" content="Suppose that all the keys in a binary tree are distinct positive integers. A unique binary tree can be determined by a given pair of postorder and inorder traversal sequences, or preorder and inorder">
@@ -182,12 +182,12 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>Suppose that all the keys in a binary tree are distinct positive integers. A unique binary tree can be determined by a given pair of postorder and inorder traversal sequences, or preorder and inorder traversal sequences. However, if only the postorder and preorder traversal sequences are given, the corresponding tree may no longer be unique.</p>
-<p>Now given a pair of postorder and preorder traversal sequences, you are supposed to output the corresponding inorder traversal sequence of the tree. If the tree is not unique, simply output any one of them.</p>
+        <p>Suppose that all the keys in a binary tree are distinct positive integers. A unique binary tree can be determined by a given pair of postorder and inorder traversal sequences, or preorder and inorder traversal sequences. However, if only the postorder and preorder traversal sequences are given, the corresponding tree may no longer be unique.<br>Now given a pair of postorder and preorder traversal sequences, you are supposed to output the corresponding inorder traversal sequence of the tree. If the tree is not unique, simply output any one of them.</p>
 <p><strong>Input Specification:</strong><br>Each input file contains one test case. For each case, the first line gives a positive integer N (&lt;=30), the total number of nodes in the binary tree. The second line gives the preorder sequence and the third line gives the postorder sequence. All the numbers in a line are separated by a space.</p>
 <p><strong>Output Specification:</strong><br>For each test case, first printf in a line “Yes” if the tree is unique, or “No” if not. Then print in the next line the inorder traversal sequence of the corresponding binary tree. If the solution is not unique, any answer would do. It is guaranteed that at least one solution exists. All the numbers in a line must be separated by exactly one space, and there must be no extra space at the end of the line.</p>
 <p><strong>Sample Input 1:</strong><br>7<br>1 2 3 4 6 7 5<br>2 6 7 4 5 3 1<br><strong>Sample Output 1:</strong><br>Yes<br>2 1 6 4 7 3 5<br><strong>Sample Input 2:</strong><br>4<br>1 2 3 4<br>2 4 3 1<br><strong>Sample Output 2:</strong><br>No<br>2 1 3 4</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#include&lt;iostream&gt;</span></div><div class="line"><span class="comment">#include&lt;vector&gt;</span></div><div class="line">using namespace std;</div><div class="line">int n;</div><div class="line">bool flag = 1;</div><div class="line">vector&lt;int&gt; pre, post,<span class="keyword">in</span>;</div><div class="line"></div><div class="line">int FindLast(int start,int end,int value) &#123;</div><div class="line">	<span class="keyword">for</span> (int i = start; i &lt;= end; ++i) &#123;</div><div class="line">		<span class="keyword">if</span> (pre[i] == value) <span class="built_in">return</span> i;</div><div class="line">	&#125;</div><div class="line">	<span class="built_in">return</span> -1;</div><div class="line">&#125;</div><div class="line"></div><div class="line">void In(int prel, int prer, int postl, int postr) &#123;</div><div class="line">	<span class="keyword">if</span> (prel == prer) &#123;</div><div class="line">		in.push_back(pre[prer]);</div><div class="line">		<span class="built_in">return</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">else</span> &#123;</div><div class="line">		<span class="keyword">if</span> (pre[prel] == post[postr]) &#123;</div><div class="line">			int x = FindLast(prel+1, prer, post[postr - 1]);</div><div class="line">			<span class="keyword">if</span> (x - prel &gt; 1) &#123;</div><div class="line">				In(prel + 1, x - 1, postl, postl + x - 2 - prel);</div><div class="line">				in.push_back(post[postr]);</div><div class="line">				In(x, prer, postl + x - 1 - prel, postr - 1);</div><div class="line">			&#125;</div><div class="line">			<span class="keyword">else</span> &#123;</div><div class="line">				flag = 0;</div><div class="line">				in.push_back(post[postr]);</div><div class="line">				In(x, prer, postl - prel + x - 1, postr - 1);</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">int <span class="function"><span class="title">main</span></span>() &#123;</div><div class="line">	cin &gt;&gt; n;</div><div class="line">	pre.resize(n);</div><div class="line">	post.resize(n);</div><div class="line">	<span class="keyword">for</span> (int i = 0; i &lt; n; ++i)cin &gt;&gt; pre[i];</div><div class="line">	<span class="keyword">for</span> (int i = 0; i &lt; n; ++i)cin &gt;&gt; post[i];</div><div class="line">	In(0,n-1,0,n-1);</div><div class="line">	<span class="keyword">if</span> (flag == 0) cout &lt;&lt; <span class="string">"No"</span> &lt;&lt; endl;</div><div class="line">	<span class="keyword">else</span> cout &lt;&lt; <span class="string">"Yes"</span> &lt;&lt; endl;</div><div class="line">	cout &lt;&lt; <span class="keyword">in</span>[0];</div><div class="line">	<span class="keyword">for</span> (int i = 1; i &lt; in.size(); ++i)</div><div class="line">		cout &lt;&lt; <span class="string">" "</span> &lt;&lt; <span class="keyword">in</span>[i];</div><div class="line">	cout&lt;&lt;endl;</div><div class="line">	<span class="built_in">return</span> 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>看看除了叶子结点以外是否有结点只有一个子节点</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;vector&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="keyword">int</span> n;</div><div class="line"><span class="keyword">bool</span> flag = <span class="number">1</span>;</div><div class="line"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; pre, post,in;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">FindLast</span><span class="params">(<span class="keyword">int</span> start,<span class="keyword">int</span> end,<span class="keyword">int</span> value)</span> </span>&#123;</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = start; i &lt;= end; ++i)</div><div class="line">		<span class="keyword">if</span> (pre[i] == value) <span class="keyword">return</span> i;</div><div class="line">	<span class="keyword">return</span> <span class="number">-1</span>;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">In</span><span class="params">(<span class="keyword">int</span> prel, <span class="keyword">int</span> prer, <span class="keyword">int</span> postl, <span class="keyword">int</span> postr)</span> </span>&#123;</div><div class="line">	<span class="keyword">if</span> (prel == prer) &#123;</div><div class="line">		in.push_back(pre[prer]);</div><div class="line">		<span class="keyword">return</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">if</span> (pre[prel] == post[postr]) &#123;</div><div class="line">		<span class="keyword">int</span> x = FindLast(prel+<span class="number">1</span>, prer, post[postr - <span class="number">1</span>]);</div><div class="line">		<span class="keyword">if</span> (x - prel &gt; <span class="number">1</span>) &#123;</div><div class="line">			In(prel + <span class="number">1</span>, x - <span class="number">1</span>, postl, postl + x - <span class="number">2</span> - prel);</div><div class="line">			in.push_back(post[postr]);</div><div class="line">			In(x, prer, postl + x - <span class="number">1</span> - prel, postr - <span class="number">1</span>);</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">else</span> &#123;</div><div class="line">			flag = <span class="number">0</span>;</div><div class="line">			in.push_back(post[postr]);</div><div class="line">			In(x, prer, postl - prel + x - <span class="number">1</span>, postr - <span class="number">1</span>);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="built_in">cin</span> &gt;&gt; n;</div><div class="line">	pre.resize(n);</div><div class="line">	post.resize(n);</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; ++i)<span class="built_in">cin</span> &gt;&gt; pre[i];</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; ++i)<span class="built_in">cin</span> &gt;&gt; post[i];</div><div class="line">	In(<span class="number">0</span>,n<span class="number">-1</span>,<span class="number">0</span>,n<span class="number">-1</span>);</div><div class="line">	<span class="keyword">if</span> (flag == <span class="number">0</span>) <span class="built_in">cout</span> &lt;&lt; <span class="string">"No"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	<span class="keyword">else</span> <span class="built_in">cout</span> &lt;&lt; <span class="string">"Yes"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	<span class="built_in">cout</span> &lt;&lt; in[<span class="number">0</span>];</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; in.size(); ++i)</div><div class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">" "</span> &lt;&lt; in[i];</div><div class="line">	<span class="built_in">cout</span>&lt;&lt;<span class="built_in">endl</span>;</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 
       
 
@@ -435,39 +435,7 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">OpenJudge</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">DP</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">递归</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">贪心算法</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">枚举</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">数学</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">POJ</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">位</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">01背包</a>
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -479,11 +447,19 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">数学</a>
+              </li>
+            
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">算法</a>
               </li>
             
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">DFS</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">DP</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -499,7 +475,19 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">贪心算法</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">01背包</a>
+              </li>
+            
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Java</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">枚举</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -539,6 +527,10 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">递归</a>
+              </li>
+            
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">逻辑</a>
               </li>
             
@@ -548,6 +540,18 @@ MathJax.Hub.Queue(function() {
             
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">并查集</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">OpenJudge</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">POJ</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">位</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -564,10 +568,6 @@ MathJax.Hub.Queue(function() {
             
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">C++</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
               </li>
             
               <li class="article-tag-list-item">
