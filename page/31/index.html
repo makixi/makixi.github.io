@@ -162,6 +162,129 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-算法/网络流初步" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/07/26/算法/网络流初步/">网络流初步</a>
+    </h1>
+  
+
+        
+        <a href="/2017/07/26/算法/网络流初步/" class="archive-article-date">
+  	<time datetime="2017-07-26T04:52:52.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-26</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="增广路算法"><a href="#增广路算法" class="headerlink" title="增广路算法"></a>增广路算法</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">queue</span>&lt;<span class="keyword">int</span>&gt; q;</div><div class="line"><span class="built_in">memset</span>(flow,<span class="number">0</span>,<span class="keyword">sizeof</span>(flow));</div><div class="line">f=<span class="number">0</span>;</div><div class="line">f(;;)&#123;</div><div class="line">	<span class="built_in">memset</span>(a,<span class="number">0</span>,<span class="keyword">sizeof</span>(a));</div><div class="line">	a[s]=INF;</div><div class="line">	q.push(a);</div><div class="line">	<span class="keyword">while</span>(!q.empty())&#123;</div><div class="line">		<span class="keyword">int</span> u=q.front();q.pop();</div><div class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> v=<span class="number">1</span>;v&lt;=n;++v)</div><div class="line">			<span class="keyword">if</span>(!a[v]&amp;&amp;cap[u][v]&gt;flow[u][v])&#123;</div><div class="line">				p[v]=u;q.push(v);	<span class="comment">//记录v的父亲</span></div><div class="line">				a[v]=a[u]&lt;?cap[u][v]-flow[u][v];	<span class="comment">//s-v路径中的最小残量</span></div><div class="line">			&#125;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">if</span>(a[t]==<span class="number">0</span>)<span class="keyword">break</span>;</div><div class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> u=t;u!=s;u=p[u])&#123;</div><div class="line">		flow[p[u]][u]+=a[t];</div><div class="line">		flow[u][p[u]]-=a[t];</div><div class="line">	&#125;</div><div class="line">	f+=a[t];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="最小费用最大流问题"><a href="#最小费用最大流问题" class="headerlink" title="最小费用最大流问题"></a>最小费用最大流问题</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">queue</span>&lt;<span class="keyword">int</span>&gt; q;</div><div class="line"><span class="keyword">int</span> d[maxn];</div><div class="line"><span class="built_in">memset</span>(flow,<span class="number">0</span>,<span class="keyword">sizeof</span>(flow));</div><div class="line">c=f=<span class="number">0</span>;</div><div class="line"><span class="keyword">for</span>(;;)&#123;</div><div class="line">	<span class="comment">//bellman-ford算法</span></div><div class="line">	<span class="keyword">bool</span> inq[maxn];</div><div class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;n;++i)</div><div class="line">		d[i]=(i==s?<span class="number">0</span>:INF);</div><div class="line">	<span class="built_in">memset</span>(inq,<span class="number">0</span>,<span class="keyword">sizeof</span>(inq));</div><div class="line">	q.push(s);</div><div class="line">	<span class="keyword">while</span>(!q.empty())&#123;</div><div class="line">		<span class="keyword">int</span> u=q.front();q.pop();</div><div class="line">		inq[u]=<span class="literal">false</span>;</div><div class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> v=<span class="number">0</span>;v&lt;n;++v)</div><div class="line">			<span class="keyword">if</span>(cap[u][v]&gt;flow[u][v]&amp;&amp;d[v]&gt;d[u]+cost[u][v])&#123;</div><div class="line">				d[v]=d[u]+cost[u][v];</div><div class="line">				p[v]=u;</div><div class="line">				<span class="keyword">if</span>(!inq[v])&#123;</div><div class="line">					inq[v]=<span class="literal">true</span>;</div><div class="line">					q.push(v);</div><div class="line">				&#125;</div><div class="line">			&#125;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">if</span>(d[t]==INF)<span class="keyword">break</span>;</div><div class="line">	<span class="keyword">int</span> a=INF;</div><div class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> u=t;u!=s;u=p[u])</div><div class="line">		a&lt;?=cap[p[u]][u]-flow[p[u]][u];</div><div class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> u=t;u!=s;u=p[u])&#123;</div><div class="line">		flow[p[u]][u]+=a;</div><div class="line">		flow[u][p[u]]-=a;</div><div class="line">	&#125;</div><div class="line">	c+=d[t]*a;</div><div class="line">	f+=a;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">算法</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/07/26/算法/网络流初步/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
+    <article id="post-HDOJ/HDOJ-1015-Safecracker" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/07/26/HDOJ/HDOJ-1015-Safecracker/">HDOJ 1015 Safecracker</a>
+    </h1>
+  
+
+        
+        <a href="/2017/07/26/HDOJ/HDOJ-1015-Safecracker/" class="archive-article-date">
+  	<time datetime="2017-07-26T04:14:46.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-26</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong>Problem Description</strong><br>=== Op tech briefing, 2002/11/02 06:42 CST ===<br>“The item is locked in a Klein safe behind a painting in the second-floor library. Klein safes are extremely rare; most of them, along with Klein and his factory, were destroyed in World War II. Fortunately old Brumbaugh from research knew Klein’s secrets and wrote them down before he died. A Klein safe has two distinguishing features: a combination lock that uses letters instead of numbers, and an engraved quotation on the door. A Klein quotation always contains between five and twelve distinct uppercase letters, usually at the beginning of sentences, and mentions one or more numbers. Five of the uppercase letters form the combination that opens the safe. By combining the digits from all the numbers in the appropriate way you get a numeric target. (The details of constructing the target number are classified.) To find the combination you must select five letters v, w, x, y, and z that satisfy the following equation, where each letter is replaced by its ordinal position in the alphabet (A=1, B=2, …, Z=26). The combination is then vwxyz. If there is more than one solution then the combination is the one that is lexicographically greatest, i.e., the one that would appear last in a dictionary.”<br>v - w^2 + x^3 - y^4 + z^5 = target<br>“For example, given target 1 and letter set ABCDEFGHIJKL, one possible solution is FIECB, since 6 - 9^2 + 5^3 - 3^4 + 2^5 = 1. There are actually several solutions in this case, and the combination turns out to be LKEBA. Klein thought it was safe to encode the combination within the engraving, because it could take months of effort to try all the possibilities even if you knew the secret. But of course computers didn’t exist then.”</p>
+<p>=== Op tech directive, computer division, 2002/11/02 12:30 CST ===<br>“Develop a program to find Klein combinations in preparation for field deployment. Use standard test methodology as per departmental regulations. Input consists of one or more lines containing a positive integer target less than twelve million, a space, then at least five and at most twelve distinct uppercase letters. The last line will contain a target of zero and the letters END; this signals the end of the input. For each line output the Klein combination, break ties with lexicographic order, or ‘no solution’ if there is no correct combination. Use the exact format shown below.”</p>
+<p><strong>Sample Input</strong><br>1 ABCDEFGHIJKL<br>11700519 ZAYEXIWOVU<br>3072997 SOUGHT<br>1234567 THEQUICKFROG<br>0 END</p>
+<p><strong>Sample Output</strong><br>LKEBA<br>YOXUZ<br>GHOST<br>no solution</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;string&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cmath&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cstdlib&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;algorithm&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="keyword">typedef</span> <span class="keyword">long</span> <span class="keyword">long</span> ll;</div><div class="line"><span class="function"><span class="keyword">bool</span> <span class="title">cmp</span><span class="params">(<span class="keyword">char</span> a,<span class="keyword">char</span> b)</span></span>&#123;</div><div class="line">	<span class="keyword">return</span> a&gt;b;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</div><div class="line">	ll target;</div><div class="line">	<span class="built_in">string</span> str;</div><div class="line">	<span class="keyword">bool</span> success;</div><div class="line">	<span class="keyword">int</span> len;</div><div class="line">	<span class="keyword">while</span>(<span class="built_in">cin</span>&gt;&gt;target&gt;&gt;str&amp;&amp;(target||str!=<span class="string">"END"</span>))&#123;</div><div class="line">		success=<span class="literal">false</span>;</div><div class="line">		len=str.length();</div><div class="line">		sort(str.begin(),str.end(),cmp);</div><div class="line">		<span class="comment">//cout&lt;&lt;str&lt;&lt;endl;</span></div><div class="line">		ll *a=(ll*)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(ll)*len);</div><div class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;len;++i)</div><div class="line">			a[i]=str[i]-<span class="string">'A'</span>+<span class="number">1</span>;</div><div class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i1=<span class="number">0</span>;i1&lt;len;++i1)&#123;</div><div class="line">			<span class="keyword">for</span>(<span class="keyword">int</span> i2=<span class="number">0</span>;i2&lt;len;++i2)&#123;</div><div class="line">				<span class="keyword">if</span>(i2==i1)<span class="keyword">continue</span>;</div><div class="line">				<span class="keyword">for</span>(<span class="keyword">int</span> i3=<span class="number">0</span>;i3&lt;len;++i3)&#123;</div><div class="line">					<span class="keyword">if</span>(i3==i2||i3==i1)<span class="keyword">continue</span>;</div><div class="line">					<span class="keyword">for</span>(<span class="keyword">int</span> i4=<span class="number">0</span>;i4&lt;len;++i4)&#123;</div><div class="line">						<span class="keyword">if</span>(i4==i1||i4==i3||i4==i2)<span class="keyword">continue</span>;</div><div class="line">						<span class="keyword">for</span>(<span class="keyword">int</span> i5=<span class="number">0</span>;i5&lt;len;++i5)&#123;</div><div class="line">							<span class="keyword">if</span>(i5==i1||i5==i4||i5==i2||i5==i3)<span class="keyword">continue</span>;</div><div class="line">							<span class="keyword">if</span>(</div><div class="line">								a[i1]-</div><div class="line">								<span class="built_in">pow</span>(a[i2],<span class="number">2</span>)+</div><div class="line">								<span class="built_in">pow</span>(a[i3],<span class="number">3</span>)-</div><div class="line">								<span class="built_in">pow</span>(a[i4],<span class="number">4</span>)+</div><div class="line">								<span class="built_in">pow</span>(a[i5],<span class="number">5</span>)</div><div class="line">								==target)&#123;</div><div class="line">								<span class="built_in">cout</span>&lt;&lt;str[i1]&lt;&lt;str[i2]&lt;&lt;str[i3]&lt;&lt;str[i4]&lt;&lt;str[i5]&lt;&lt;<span class="built_in">endl</span>;</div><div class="line">								success=<span class="literal">true</span>;</div><div class="line">								<span class="keyword">break</span>;</div><div class="line">							&#125;</div><div class="line">						&#125;</div><div class="line">						<span class="keyword">if</span>(success)<span class="keyword">break</span>;</div><div class="line">					&#125;</div><div class="line">					<span class="keyword">if</span>(success)<span class="keyword">break</span>;</div><div class="line">				&#125;</div><div class="line">				<span class="keyword">if</span>(success)<span class="keyword">break</span>;</div><div class="line">			&#125;</div><div class="line">			<span class="keyword">if</span>(success)<span class="keyword">break</span>;</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">if</span>(!success)<span class="built_in">cout</span>&lt;&lt;<span class="string">"no solution"</span>&lt;&lt;<span class="built_in">endl</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">HDOJ</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/07/26/HDOJ/HDOJ-1015-Safecracker/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
     <article id="post-PAT/PAT-advanced-1046-Shortest-Distance" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -692,134 +815,6 @@
 
 
   
-    <article id="post-练手/考研题/编程题-成绩排序" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/07/24/练手/考研题/编程题-成绩排序/">编程题-成绩排序</a>
-    </h1>
-  
-
-        
-        <a href="/2017/07/24/练手/考研题/编程题-成绩排序/" class="archive-article-date">
-  	<time datetime="2017-07-24T10:02:51.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-24</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><strong>题目描述</strong><br>题目：输入任意（用户，成绩）序列，可以获得成绩从高到低或从低到高的排列,<strong>相同成绩都按先录入排列在前的规则处理。</strong><br>   例示：<br>   jack      70<br>   peter     96<br>   Tom       70<br>   smith     67<br>   从高到低  成绩<br>   peter     96<br>   jack      70<br>   Tom       70<br>   smith     67<br>   从低到高<br>   smith     67<br>   Tom       70<br>   jack      70<br>   peter     96</p>
-<p><strong>输入描述:</strong><br>输入多行，先输入要排序的人的个数，然后输入排序方法0（降序）或者1（升序）再分别输入他们的名字和成绩，以一个空格隔开</p>
-<p><strong>输出描述:</strong><br>按照指定方式输出名字和成绩，名字和成绩之间以一个空格隔开</p>
-<p><strong>输入</strong><br>3<br>0<br>fang 90<br>yang 50<br>ning 70</p>
-<p><strong>输出</strong><br>fang 90<br>ning 70<br>yang 50</p>
-<p>稳定排序stable_sort()<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;vector&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;string&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;algorithm&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">node</span>&#123;</span></div><div class="line">	<span class="built_in">string</span> name;</div><div class="line">	<span class="keyword">int</span> score;</div><div class="line">&#125;;</div><div class="line"><span class="built_in">vector</span>&lt;node&gt; stu;</div><div class="line"><span class="function"><span class="keyword">bool</span> <span class="title">cmp0</span><span class="params">(node a,node b)</span></span>&#123;</div><div class="line">	<span class="keyword">return</span> a.score&gt;b.score;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">bool</span> <span class="title">cmp1</span><span class="params">(node a,node b)</span></span>&#123;</div><div class="line">	<span class="keyword">return</span> a.score&lt;b.score;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</div><div class="line">  <span class="keyword">int</span> n,way,score;</div><div class="line">  <span class="built_in">string</span> name;</div><div class="line">  node tmp;</div><div class="line">  <span class="keyword">while</span>(<span class="built_in">cin</span>&gt;&gt;n)&#123;</div><div class="line">  	<span class="built_in">cin</span>&gt;&gt;way;</div><div class="line">  	stu.clear();</div><div class="line">  	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;n;++i)&#123;</div><div class="line">  		<span class="built_in">cin</span>&gt;&gt;name&gt;&gt;score;</div><div class="line">  		tmp.name=name;tmp.score=score;</div><div class="line">  		stu.push_back(tmp);</div><div class="line">	  &#125;</div><div class="line">	<span class="keyword">if</span>(way==<span class="number">0</span>)stable_sort(stu.begin(),stu.end(),cmp0);</div><div class="line">	<span class="keyword">else</span> <span class="keyword">if</span>(way==<span class="number">1</span>)stable_sort(stu.begin(),stu.end(),cmp1);</div><div class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;n;++i)&#123;</div><div class="line">		<span class="built_in">cout</span>&lt;&lt;stu[i].name&lt;&lt;<span class="string">" "</span>&lt;&lt;stu[i].score&lt;&lt;<span class="built_in">endl</span>;</div><div class="line">	&#125;</div><div class="line">  &#125;</div><div class="line">  <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">C++练手题</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/07/24/练手/考研题/编程题-成绩排序/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
-    <article id="post-HDOJ/HDOJ-1013-Digital-Roots" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/07/24/HDOJ/HDOJ-1013-Digital-Roots/">HDOJ 1013 Digital Roots</a>
-    </h1>
-  
-
-        
-        <a href="/2017/07/24/HDOJ/HDOJ-1013-Digital-Roots/" class="archive-article-date">
-  	<time datetime="2017-07-24T06:20:31.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-24</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><strong>Problem Description</strong><br>The digital root of a positive integer is found by summing the digits of the integer. If the resulting value is a single digit then that digit is the digital root. If the resulting value contains two or more digits, those digits are summed and the process is repeated. This is continued as long as necessary to obtain a single digit.<br>For example, consider the positive integer 24. Adding the 2 and the 4 yields a value of 6. Since 6 is a single digit, 6 is the digital root of 24. Now consider the positive integer 39. Adding the 3 and the 9 yields 12. Since 12 is not a single digit, the process must be repeated. Adding the 1 and the 2 yeilds 3, a single digit and also the digital root of 39.</p>
-<p><strong>Input</strong><br>The input file will contain a list of positive integers, one per line. The end of the input will be indicated by an integer value of zero.</p>
-<p><strong>Output</strong><br>For each integer in the input, output its digital root on a separate line of the output.</p>
-<p><strong>Sample Input</strong><br>24<br>39<br>0</p>
-<p><strong>Sample Output</strong><br>6<br>3</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;string&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</div><div class="line">	<span class="built_in">string</span> num;</div><div class="line">	<span class="keyword">int</span> tmp;</div><div class="line">	<span class="keyword">while</span>(<span class="built_in">cin</span>&gt;&gt;num&amp;&amp;num!=<span class="string">"0"</span>)&#123;</div><div class="line">		<span class="keyword">while</span>(num.length()&gt;<span class="number">1</span>)&#123;</div><div class="line">			tmp=<span class="number">0</span>;</div><div class="line">			<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;num.length();++i)</div><div class="line">				tmp+=num[i]-<span class="string">'0'</span>;</div><div class="line">			<span class="keyword">char</span> str[<span class="number">10</span>];</div><div class="line">			<span class="built_in">sprintf</span>(str,<span class="string">"%d"</span>,tmp);</div><div class="line">			num=str;</div><div class="line">		&#125;</div><div class="line">		<span class="built_in">cout</span>&lt;&lt;num&lt;&lt;<span class="built_in">endl</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">HDOJ</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/07/24/HDOJ/HDOJ-1013-Digital-Roots/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/30/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/29/">29</a><a class="page-number" href="/page/30/">30</a><span class="page-number current">31</span><a class="page-number" href="/page/32/">32</a><a class="page-number" href="/page/33/">33</a><span class="space">&hellip;</span><a class="page-number" href="/page/51/">51</a><a class="extend next" rel="next" href="/page/32/">Next &raquo;</a>
@@ -935,7 +930,55 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+                <a href="javascript:void(0)" class="js-tag color5">OpenJudge</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">DP</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">递归</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">贪心算法</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">枚举</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">数学</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">POJ</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">位</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">01背包</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Android</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Java</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">SQL</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">android</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -947,19 +990,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">数学</a>
-              </li>
-            
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">算法</a>
               </li>
             
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">DFS</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">DP</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -972,22 +1007,6 @@ MathJax.Hub.Queue(function() {
             
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Hash</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">贪心算法</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">01背包</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Java</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">枚举</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1027,10 +1046,6 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">递归</a>
-              </li>
-            
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">逻辑</a>
               </li>
             
@@ -1043,35 +1058,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">OpenJudge</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">POJ</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">位</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Android</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">SQL</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">android</a>
-              </li>
-            
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">C++</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">天梯赛</a>
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1080,6 +1071,10 @@ MathJax.Hub.Queue(function() {
             
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">分治</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">天梯赛</a>
               </li>
             
               <li class="article-tag-list-item">
