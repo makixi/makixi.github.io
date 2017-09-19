@@ -6,18 +6,18 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://makixi.github.io">
-  <title>POJ 3259 Wormholes(Bellman-Ford) | Maki</title>
+  <title>POJ 3259 Wormholes(Bellman-Ford/Spfa) | Maki</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="要求判断任意两点都能仅通过正边就互相可达的有向图(图中有重边）中是否存在负权环Sample Input23 3 11 2 21 3 42 3 13 1 3 3 2 11 2 32 3 43 1 8Sample OutputNOYES 每个test case 第一行：N M W (N&amp;lt;=500,M&amp;lt;=2500,W&amp;lt;=200)N个点M条双向正权边W条单向负权边第一个test case">
 <meta name="keywords" content="POJ">
 <meta property="og:type" content="article">
-<meta property="og:title" content="POJ 3259 Wormholes(Bellman-Ford)">
+<meta property="og:title" content="POJ 3259 Wormholes(Bellman-Ford/Spfa)">
 <meta property="og:url" content="http://makixi.github.io/2017/09/18/POJ/POJ-3259-Wormholes/index.html">
 <meta property="og:site_name" content="Maki">
 <meta property="og:description" content="要求判断任意两点都能仅通过正边就互相可达的有向图(图中有重边）中是否存在负权环Sample Input23 3 11 2 21 3 42 3 13 1 3 3 2 11 2 32 3 43 1 8Sample OutputNOYES 每个test case 第一行：N M W (N&amp;lt;=500,M&amp;lt;=2500,W&amp;lt;=200)N个点M条双向正权边W条单向负权边第一个test case">
-<meta property="og:updated_time" content="2017-09-18T07:07:10.248Z">
+<meta property="og:updated_time" content="2017-09-18T23:50:11.143Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="POJ 3259 Wormholes(Bellman-Ford)">
+<meta name="twitter:title" content="POJ 3259 Wormholes(Bellman-Ford/Spfa)">
 <meta name="twitter:description" content="要求判断任意两点都能仅通过正边就互相可达的有向图(图中有重边）中是否存在负权环Sample Input23 3 11 2 21 3 42 3 13 1 3 3 2 11 2 32 3 43 1 8Sample OutputNOYES 每个test case 第一行：N M W (N&amp;lt;=500,M&amp;lt;=2500,W&amp;lt;=200)N个点M条双向正权边W条单向负权边第一个test case">
   
     <link rel="alternative" href="/atom.xml" title="Maki" type="application/atom+xml">
@@ -169,7 +169,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      POJ 3259 Wormholes(Bellman-Ford)
+      POJ 3259 Wormholes(Bellman-Ford/Spfa)
     </h1>
   
 
@@ -186,6 +186,7 @@
 <p>3 2 1<br>1 2 3<br>2 3 4<br>3 1 8<br><strong>Sample Output</strong><br>NO<br>YES</p>
 <p>每个test case 第一行：<br>N M W (N&lt;=500,M&lt;=2500,W&lt;=200)<br>N个点<br>M条双向正权边<br>W条单向负权边<br>第一个test case 最后一行<br>3 1 3<br>是单向负权边，3-&gt;1的边权值是-3</p>
 <p>如果存在从源点可达的负权值回路，则最短路径不存在，因为可以重复走这个回路，使得路径长度无穷小。<br>判断dist[u]+w(u,k)&lt;dist[k]是否成立，如果成立，则说明存在从源点可达的负权值回路<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;vector&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;cstring&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="keyword">int</span> t,n,m,w;</div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> inf = <span class="number">0x3f3f3f3f</span>;</div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Edge</span> &#123;</span></div><div class="line">	<span class="keyword">int</span> s,e,w;<span class="comment">//start end weight</span></div><div class="line">	Edge(<span class="keyword">int</span> ss,<span class="keyword">int</span> ee,<span class="keyword">int</span> ww):s(ss),e(ee),w(ww) &#123; &#125;</div><div class="line">	Edge() &#123; &#125;</div><div class="line">&#125;;</div><div class="line"><span class="built_in">vector</span>&lt;Edge&gt; edge;</div><div class="line"><span class="keyword">int</span> dis[<span class="number">1010</span>];</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">Bellman_ford</span><span class="params">(<span class="keyword">int</span> v)</span> </span>&#123;</div><div class="line">	<span class="built_in">memset</span>(dis,inf,<span class="keyword">sizeof</span>(dis));</div><div class="line">	dis[v] = <span class="number">0</span>;</div><div class="line">	<span class="keyword">for</span>( <span class="keyword">int</span> k = <span class="number">1</span>; k &lt; n; ++k)  <span class="comment">//经过不超过k条边</span></div><div class="line">		<span class="keyword">for</span>( <span class="keyword">int</span> i = <span class="number">0</span>;i &lt; edge.size(); ++i) &#123;</div><div class="line">			<span class="keyword">int</span> s = edge[i].s;</div><div class="line">			<span class="keyword">int</span> e = edge[i].e;</div><div class="line">			<span class="keyword">if</span>( dis[s] + edge[i].w &lt; dis[e])</div><div class="line">				dis[e] = dis[s] + edge[i].w;</div><div class="line">		&#125;</div><div class="line">	<span class="keyword">for</span>( <span class="keyword">int</span> i = <span class="number">0</span>;i &lt; edge.size(); ++ i) &#123;</div><div class="line">		<span class="keyword">int</span> s = edge[i].s;</div><div class="line">		<span class="keyword">int</span> e = edge[i].e;</div><div class="line">		<span class="keyword">if</span>( dis[s] + edge[i].w &lt; dis[e])</div><div class="line">			<span class="keyword">return</span> <span class="literal">true</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="built_in">cin</span> &gt;&gt; t;</div><div class="line">	<span class="keyword">while</span>( t--) &#123;</div><div class="line">		edge.clear();</div><div class="line">		<span class="built_in">cin</span> &gt;&gt; n &gt;&gt; m &gt;&gt; w;</div><div class="line">		<span class="keyword">for</span>( <span class="keyword">int</span> i = <span class="number">0</span>; i &lt; m; ++ i) &#123;</div><div class="line">			<span class="keyword">int</span> st,des,d;</div><div class="line">			<span class="built_in">cin</span> &gt;&gt; st &gt;&gt; des &gt;&gt; d;</div><div class="line">			edge.push_back(Edge(st,des,d)); <span class="comment">//双向</span></div><div class="line">			edge.push_back(Edge(des,st,d));</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">for</span>( <span class="keyword">int</span> i = <span class="number">0</span>;i &lt; w; ++i) &#123;</div><div class="line">			<span class="keyword">int</span> st,des,d;</div><div class="line">			<span class="built_in">cin</span> &gt;&gt; st &gt;&gt; des &gt;&gt; d;</div><div class="line">			edge.push_back(Edge(st,des,-t));</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">if</span>( Bellman_ford(<span class="number">1</span>))<span class="built_in">cout</span> &lt;&lt; <span class="string">"YES"</span> &lt;&lt;<span class="built_in">endl</span>;<span class="comment">//从1可以到达所有点</span></div><div class="line">		<span class="keyword">else</span> <span class="built_in">cout</span> &lt;&lt; <span class="string">"NO"</span> &lt;&lt;<span class="built_in">endl</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;vector&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;queue&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;cstring&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="keyword">int</span> n, m, w;</div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> inf = <span class="number">0x3f3f3f3f</span>;</div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> maxn = <span class="number">1000</span> + <span class="number">10</span>;</div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Edge</span> &#123;</span></div><div class="line">	<span class="keyword">int</span> e, w;<span class="comment">//end and weight</span></div><div class="line">	Edge(<span class="keyword">int</span> ee, <span class="keyword">int</span> ww) :e(ee), w(ww) &#123; &#125;</div><div class="line">	Edge() &#123; &#125;</div><div class="line">&#125;;</div><div class="line"><span class="built_in">vector</span>&lt;Edge&gt; v[maxn];</div><div class="line"><span class="keyword">int</span> updateTimes[maxn];</div><div class="line"><span class="keyword">int</span> dis[maxn];</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">Spfa</span><span class="params">(<span class="keyword">int</span> u)</span> </span>&#123;</div><div class="line">	dis[u] = <span class="number">0</span>;</div><div class="line">	<span class="built_in">queue</span>&lt;<span class="keyword">int</span>&gt; q; q.push(u);</div><div class="line">	<span class="built_in">memset</span>(updateTimes, <span class="number">0</span>, <span class="keyword">sizeof</span>(updateTimes));</div><div class="line">	<span class="keyword">while</span> (!q.empty()) &#123;</div><div class="line">		<span class="keyword">int</span> s = q.front(); q.pop();</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; v[s].size(); ++i) &#123;</div><div class="line">			<span class="keyword">int</span> e = v[s][i].e;</div><div class="line">			<span class="keyword">if</span> (dis[e] &gt; dis[s] + v[s][i].w) &#123;</div><div class="line">				dis[e] = dis[s] + v[s][i].w;</div><div class="line">				q.push(e);</div><div class="line">				++updateTimes[e];</div><div class="line">				<span class="keyword">if</span> (updateTimes[e] &gt;= n) <span class="keyword">return</span> <span class="literal">true</span>;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="keyword">int</span> T;</div><div class="line">	<span class="built_in">cin</span> &gt;&gt; T;</div><div class="line">	<span class="keyword">while</span> (T--) &#123;</div><div class="line">		<span class="built_in">memset</span>(dis, inf, <span class="keyword">sizeof</span>(dis));</div><div class="line">		<span class="built_in">cin</span> &gt;&gt; n &gt;&gt; m &gt;&gt; w;</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;<span class="number">1000</span>; ++i)</div><div class="line">			v[i].clear();</div><div class="line">		<span class="keyword">int</span> st, des, wei;</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; m; ++i) &#123;</div><div class="line">			<span class="built_in">cin</span> &gt;&gt; st &gt;&gt; des &gt;&gt; wei;</div><div class="line">			v[st].push_back(Edge(des, wei));</div><div class="line">			v[des].push_back(Edge(st, wei));</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; w; ++i) &#123;</div><div class="line">			<span class="built_in">cin</span> &gt;&gt; st &gt;&gt; des &gt;&gt; wei;</div><div class="line">			v[st].push_back(Edge(des, -wei));</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">if</span> (Spfa(<span class="number">1</span>)) <span class="built_in">cout</span> &lt;&lt; <span class="string">"YES"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">		<span class="keyword">else</span> <span class="built_in">cout</span> &lt;&lt; <span class="string">"NO"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 
       
 
@@ -304,6 +305,11 @@
       </div>
     </a>
   
+  
+    <a href="/2017/09/18/POJ/九度-挽救灾区/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">九度 挽救灾区(多重背包)</div>
+      <i class="icon-circle-right"></i>
+    </a>
   
 </nav>
 
@@ -432,19 +438,19 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">STL</a>
-              </li>
-            
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">数学</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">算法</a>
+                <a href="javascript:void(0)" class="js-tag color4">STL</a>
               </li>
             
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">DFS</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">算法</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -496,22 +502,6 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">OpenJudge</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">递归</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">POJ</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">位</a>
-              </li>
-            
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">PAT甲级</a>
               </li>
             
@@ -532,6 +522,10 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">递归</a>
+              </li>
+            
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">逻辑</a>
               </li>
             
@@ -541,6 +535,18 @@ MathJax.Hub.Queue(function() {
             
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">并查集</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">OpenJudge</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">POJ</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">位</a>
               </li>
             
               <li class="article-tag-list-item">
