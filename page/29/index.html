@@ -162,6 +162,70 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-练手/考研题/编程题-WW-s-Cipher" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/08/02/练手/考研题/编程题-WW-s-Cipher/">编程题-WW&#39;s Cipher</a>
+    </h1>
+  
+
+        
+        <a href="/2017/08/02/练手/考研题/编程题-WW-s-Cipher/" class="archive-article-date">
+  	<time datetime="2017-08-02T10:56:02.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-08-02</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong>题目描述</strong><br>Weird Wally’s Wireless Widgets, Inc. manufactures an eclectic assortment of small, wireless, network capable devices, ranging from dog collars, to pencils, to fishing bobbers. All these devices have very small memories. Encryption algorithms like Rijndael, the candidate for the Advanced Encryption Standard (AES) are demonstrably secure but they don’t fit in such a tiny memory. In order to provide some security for transmissions to and from the devices, WWWW uses the following algorithm, which you are to implement. Encrypting a message requires three integer keys, k1, k2, and k3. The letters [a-i] form one group, [j-r] a second group, and everything else ([s-z] and underscore) the third group. Within each group the letters are rotated left by ki positions in the message. Each group is rotated independently of the other two. Decrypting the message means doing a right rotation by ki positions within each group. Consider the message the_quick_brown_fox encrypted with ki values of 2, 3 and 1. The encrypted string is _icuo_bfnwhoq<em>kxert. The figure below shows the decrypting right rotations for one character in each of the three character groups.<br><img src="https://github.com/makixi/makixi.github.io/raw/master/img/%E5%88%B7%E9%A2%98%E4%B8%93%E7%94%A8%E5%9B%BE/W&#39;s%20Cipher1.png" alt="figure1"><br>Looking at all the letters in the group [a-i] we see {i,c,b,f,h,e} appear at positions {2,3,7,8,11,17} within the encrypted message. After a right rotation of k1=2, these positions contain the letters {h,e,i,c,b,f}. The table below shows the intermediate strings that come from doing all the rotations in the first group, then all rotations in the second group, then all the rotations in the third group. Rotating letters in one group will not change any letters in any of the other groups.<br><img src="https://github.com/makixi/makixi.github.io/raw/master/img/%E5%88%B7%E9%A2%98%E4%B8%93%E7%94%A8%E5%9B%BE/W&#39;s%20Cipher2.gif" alt="figure2"><br>All input strings contain only lowercase letters and underscores(</em>). Each string will be at most 80 characters long. The ki are all positive integers in the range 1-100.</p>
+<p><strong>输入描述:</strong><br>Input consists of information for one or more encrypted messages. Each problem begins with one line containing k1, k2, and k3 followed by a line containing the encrypted message. The end of the input is signalled by a line with all key values of 0.</p>
+<p><strong>输出描述:</strong><br>For each encrypted message, the output is a single line containing the decrypted string.</p>
+<p><strong>输入</strong><br>2 3 1<br>_icuo_bfnwhoq_kxert<br>1 1 1<br>bcalmkyzx<br>3 7 4<br>wcb_mxfep_dorul_eov_qtkrhe_ozany_dgtoh_u_eji<br>2 4 3<br>cjvdksaltbmu<br>0 0 0</p>
+<p><strong>输出</strong><br>the_quick_brown_fox<br>abcklmxyz<br>the_quick_brown_fox_jumped_over_the_lazy_dog<br>ajsbktcludmv</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;cstring&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="function"><span class="keyword">bool</span> <span class="title">samegroup</span><span class="params">(<span class="keyword">char</span> a,<span class="keyword">char</span> b)</span></span>&#123;</div><div class="line">    <span class="comment">//k1</span></div><div class="line">    <span class="keyword">if</span>(a &gt;= <span class="string">'a'</span> &amp;&amp; a &lt;= <span class="string">'i'</span> &amp;&amp; b &gt;= <span class="string">'a'</span> &amp;&amp; b &lt;= <span class="string">'i'</span> ) <span class="keyword">return</span> <span class="literal">true</span>;</div><div class="line">    <span class="comment">//k2</span></div><div class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(a &gt;= <span class="string">'j'</span> &amp;&amp; a &lt;= <span class="string">'r'</span> &amp;&amp; b &gt;= <span class="string">'j'</span> &amp;&amp; b &lt;= <span class="string">'r'</span> ) <span class="keyword">return</span> <span class="literal">true</span>;</div><div class="line">    <span class="comment">//k3</span></div><div class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(((a &gt;= <span class="string">'s'</span> &amp;&amp; a &lt;= <span class="string">'z'</span>) || a ==<span class="string">'_'</span>)&amp;&amp; ((b &gt;= <span class="string">'s'</span> &amp;&amp; b &lt;= <span class="string">'z'</span>) || b==<span class="string">'_'</span>) ) <span class="keyword">return</span> <span class="literal">true</span>;</div><div class="line">    <span class="keyword">else</span> <span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">decode</span><span class="params">(<span class="keyword">char</span> a[],<span class="keyword">char</span> aa[],<span class="keyword">int</span> k1,<span class="keyword">int</span> k2 ,<span class="keyword">int</span> k3)</span></span>&#123;</div><div class="line">    <span class="keyword">int</span> len = <span class="built_in">strlen</span>(a);</div><div class="line">    <span class="keyword">int</span> b[<span class="number">100</span>] = &#123;<span class="number">0</span>&#125;;</div><div class="line">    <span class="built_in">memset</span>(b,<span class="number">0</span>,<span class="number">100</span>);</div><div class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>;i&lt;len;i++)&#123;</div><div class="line">        <span class="keyword">if</span>(a[i]&lt;= <span class="string">'i'</span> &amp;&amp; a[i]!=<span class="string">'_'</span>) b[i] = k1;</div><div class="line">        <span class="keyword">else</span> <span class="keyword">if</span>(a[i] &lt;= <span class="string">'r'</span> &amp;&amp; a[i]!=<span class="string">'_'</span>) b[i] = k2;</div><div class="line">        <span class="keyword">else</span> b[i] = k3;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; len; i++)&#123;</div><div class="line">        <span class="keyword">if</span>(b[i] == <span class="number">0</span>)&#123;</div><div class="line">            aa[i] = a[i];</div><div class="line">            <span class="keyword">continue</span>;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">int</span> j = i+<span class="number">1</span>;</div><div class="line">        <span class="keyword">while</span>(b[i])&#123;</div><div class="line">            <span class="keyword">if</span>(j&gt;=len) j = <span class="number">0</span>;</div><div class="line">            <span class="keyword">for</span>(;j &lt; len;j++)&#123;</div><div class="line">                <span class="keyword">if</span>(samegroup(a[i],a[j])) b[i]--;</div><div class="line">                <span class="keyword">if</span>(b[i] == <span class="number">0</span>) <span class="keyword">break</span>;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        aa[j] = a[i];</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</div><div class="line">     <span class="keyword">int</span> k1 = <span class="number">0</span>,k2 = <span class="number">0</span>,k3 = <span class="number">0</span>;</div><div class="line">     <span class="keyword">char</span> aa[<span class="number">100</span>] = &#123;<span class="number">0</span>&#125;;</div><div class="line">     <span class="keyword">char</span> a[<span class="number">100</span>] = &#123;<span class="number">0</span>&#125;;</div><div class="line">     <span class="keyword">while</span>(<span class="built_in">cin</span>&gt;&gt;k1&gt;&gt;k2&gt;&gt;k3)&#123;</div><div class="line">         <span class="keyword">if</span>(k1 == <span class="number">0</span> &amp;&amp; k2 == <span class="number">0</span> &amp;&amp; k3 == <span class="number">0</span>) <span class="keyword">break</span>;</div><div class="line">          <span class="built_in">memset</span>(a,<span class="number">0</span>,<span class="number">100</span>);</div><div class="line">          <span class="built_in">memset</span>(aa,<span class="number">0</span>,<span class="number">100</span>);</div><div class="line">          <span class="built_in">cin</span>&gt;&gt;a;</div><div class="line">          decode(a,aa,k1,k2,k3);</div><div class="line">          <span class="built_in">cout</span>&lt;&lt;aa&lt;&lt;<span class="built_in">endl</span>;</div><div class="line">     &#125;</div><div class="line">     <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">C++练手题</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/08/02/练手/考研题/编程题-WW-s-Cipher/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
     <article id="post-练手/考研题/编程题-进制转换" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -764,70 +828,6 @@
 
 
   
-    <article id="post-HDOJ/HDOJ-1020-Encoding" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/08/01/HDOJ/HDOJ-1020-Encoding/">HDOJ 1020 Encoding</a>
-    </h1>
-  
-
-        
-        <a href="/2017/08/01/HDOJ/HDOJ-1020-Encoding/" class="archive-article-date">
-  	<time datetime="2017-08-01T02:02:20.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-08-01</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><strong>Problem Description</strong><br>Given a string containing only ‘A’ - ‘Z’, we could encode it using the following method:<br>1.Each sub-string containing k same characters should be encoded to “kX” where “X” is the only character in this sub-string.<br>2.If the length of the sub-string is 1, ‘1’ should be ignored.</p>
-<p><strong>Input</strong><br>The first line contains an integer N (1 &lt;= N &lt;= 100) which indicates the number of test cases. The next N lines contain N strings. Each string consists of only ‘A’ - ‘Z’ and the length is less than 10000.</p>
-<p><strong>Output</strong><br>For each test case, output the encoded string in a line.</p>
-<p><strong>Sample Input</strong><br>2<br>ABC<br>ABBCCC</p>
-<p><strong>Sample Output</strong><br>ABC<br>A2B3C</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;string&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</div><div class="line">	<span class="keyword">int</span> n,cnt;</div><div class="line">	<span class="built_in">string</span> str;</div><div class="line">	<span class="built_in">scanf</span>(<span class="string">"%d"</span>,&amp;n);</div><div class="line">	<span class="keyword">while</span>(n--)&#123;</div><div class="line">		<span class="built_in">cin</span>&gt;&gt;str;</div><div class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;str.length();++i)&#123;</div><div class="line">			cnt=<span class="number">0</span>;</div><div class="line">			<span class="keyword">do</span>&#123;++cnt;&#125;<span class="keyword">while</span>(str[i]==str[i+cnt]);</div><div class="line">			<span class="keyword">if</span>(cnt!=<span class="number">1</span>)<span class="built_in">cout</span>&lt;&lt;cnt;</div><div class="line">			<span class="built_in">cout</span>&lt;&lt;str[i];</div><div class="line">			i+=cnt<span class="number">-1</span>;</div><div class="line">		&#125;</div><div class="line">		<span class="built_in">cout</span>&lt;&lt;<span class="built_in">endl</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">HDOJ</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/08/01/HDOJ/HDOJ-1020-Encoding/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/28/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/27/">27</a><a class="page-number" href="/page/28/">28</a><span class="page-number current">29</span><a class="page-number" href="/page/30/">30</a><a class="page-number" href="/page/31/">31</a><span class="space">&hellip;</span><a class="page-number" href="/page/53/">53</a><a class="extend next" rel="next" href="/page/30/">Next &raquo;</a>
@@ -943,23 +943,7 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">OpenJudge</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">DP</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">递归</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">贪心算法</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">枚举</a>
+                <a href="javascript:void(0)" class="js-tag color5">HDOJ</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -967,51 +951,7 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">POJ</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Floyd</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">位</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">01背包</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Android</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Java</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">SQL</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">C++</a>
-              </li>
-            
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">STL</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">算法</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">数据结构</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">HDOJ</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1019,7 +959,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">二分法</a>
+                <a href="javascript:void(0)" class="js-tag color3">DP</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">算法</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1031,6 +975,26 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">DBFS</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">贪心算法</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">01背包</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Java</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">枚举</a>
+              </li>
+            
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">Dijkstra</a>
               </li>
             
@@ -1039,15 +1003,23 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Floyd</a>
+              </li>
+            
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">组合数学</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+                <a href="javascript:void(0)" class="js-tag color1">PAT甲级</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">天梯赛</a>
+                <a href="javascript:void(0)" class="js-tag color4">二分法</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">数据结构</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1059,11 +1031,55 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">并查集</a>
+                <a href="javascript:void(0)" class="js-tag color4">AVL</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">递归</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">逻辑</a>
               </li>
             
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">堆</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">并查集</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">OpenJudge</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">POJ</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">位</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Android</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">SQL</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">C++</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">天梯赛</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1083,23 +1099,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">js</a>
-              </li>
-            
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">错题集</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">逻辑</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">PAT甲级</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">AVL</a>
+                <a href="javascript:void(0)" class="js-tag color3">js</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1108,10 +1112,6 @@ MathJax.Hub.Queue(function() {
             
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">组合数</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">DBFS</a>
               </li>
             
             <div class="clearfix"></div>
