@@ -162,6 +162,288 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-HDOJ/HDOJ-1010-Tempter-of-the-Bone" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/07/21/HDOJ/HDOJ-1010-Tempter-of-the-Bone/">HDOJ 1010 Tempter of the Bone</a>
+    </h1>
+  
+
+        
+        <a href="/2017/07/21/HDOJ/HDOJ-1010-Tempter-of-the-Bone/" class="archive-article-date">
+  	<time datetime="2017-07-21T02:13:48.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-21</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong>Problem Description</strong><br>The doggie found a bone in an ancient maze, which fascinated him a lot. However, when he picked it up, the maze began to shake, and the doggie could feel the ground sinking. He realized that the bone was a trap, and he tried desperately to get out of this maze.<br>The maze was a rectangle with sizes N by M. There was a door in the maze. At the beginning, the door was closed and it would open at the T-th second for a short period of time (less than 1 second). Therefore the doggie had to arrive at the door on exactly the T-th second. In every second, he could move one block to one of the upper, lower, left and right neighboring blocks. Once he entered a block, the ground of this block would start to sink and disappear in the next second. He could not stay at one block for more than one second, nor could he move into a visited block. Can the poor doggie survive? Please help him.</p>
+<p><strong>Input</strong><br>The input consists of multiple test cases. The first line of each test case contains three integers N, M, and T (1 &lt; N, M &lt; 7; 0 &lt; T &lt; 50), which denote the sizes of the maze and the time at which the door will open, respectively. The next N lines give the maze layout, with each line containing M characters. A character is one of the following:<br>‘X’: a block of wall, which the doggie cannot enter;<br>‘S’: the start point of the doggie;<br>‘D’: the Door; or<br>‘.’: an empty block.<br>The input is terminated with three 0’s. This test case is not to be processed.</p>
+<p><strong>Output</strong><br>For each test case, print in one line “YES” if the doggie can survive, or “NO” otherwise.</p>
+<p><strong>Sample Input</strong><br>4 4 5<br>S.X.<br>..X.<br>..XD<br>….<br>3 4 5<br>S.X.<br>..X.<br>…D<br>0 0 0</p>
+<p><strong>Sample Output</strong><br>NO<br>YES</p>
+<p>刚开始以为是最小时间 用了BFS<br>后来发现是规定时间到达D 只能用DFS<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cmath&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cstring&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> maxsize=<span class="number">10</span>;</div><div class="line"><span class="keyword">char</span> table[maxsize][maxsize];</div><div class="line"><span class="keyword">int</span> n,m,t;</div><div class="line"><span class="keyword">int</span> dx,dy;</div><div class="line"><span class="keyword">bool</span> success;</div><div class="line"><span class="keyword">int</span> add[<span class="number">4</span>][<span class="number">2</span>]=&#123;&#123;<span class="number">0</span>,<span class="number">1</span>&#125;,&#123;<span class="number">0</span>,<span class="number">-1</span>&#125;,&#123;<span class="number">1</span>,<span class="number">0</span>&#125;,&#123;<span class="number">-1</span>,<span class="number">0</span>&#125;&#125;;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">dfs</span><span class="params">(<span class="keyword">int</span> x,<span class="keyword">int</span> y,<span class="keyword">int</span> step)</span></span>&#123;</div><div class="line">	<span class="keyword">if</span>(x==dx&amp;&amp;y==dy&amp;&amp;step==t)&#123;</div><div class="line">		success=<span class="literal">true</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">if</span>(success)</div><div class="line">		<span class="keyword">return</span>;</div><div class="line">	<span class="keyword">int</span> tmp=t-step-<span class="built_in">abs</span>(x-dx)-<span class="built_in">abs</span>(y-dy);	<span class="comment">// (t-step) 与 abs(dx-x)+abs(y-dy) 的奇偶性必须相同</span></div><div class="line">	<span class="keyword">if</span>(tmp&lt;<span class="number">0</span>||tmp&amp;<span class="number">1</span>)<span class="keyword">return</span>;	<span class="comment">//偶数再继续</span></div><div class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">4</span>;++i)&#123;</div><div class="line">		<span class="keyword">int</span> tmpx=x+add[i][<span class="number">0</span>];</div><div class="line">		<span class="keyword">int</span> tmpy=y+add[i][<span class="number">1</span>];</div><div class="line">		<span class="keyword">if</span>(table[tmpx][tmpy]!=<span class="string">'X'</span>)&#123;</div><div class="line">			table[tmpx][tmpy]=<span class="string">'X'</span>;</div><div class="line">			dfs(tmpx,tmpy,step+<span class="number">1</span>);</div><div class="line">			table[tmpx][tmpy]=<span class="string">'.'</span>;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</div><div class="line">	<span class="keyword">int</span> x,y,wall;</div><div class="line">	<span class="keyword">while</span>(<span class="built_in">cin</span>&gt;&gt;n&gt;&gt;m&gt;&gt;t&amp;&amp;(n!=<span class="number">0</span>||m!=<span class="number">0</span>||t!=<span class="number">0</span>))&#123;</div><div class="line">		<span class="built_in">memset</span>(table,<span class="string">'X'</span>,<span class="keyword">sizeof</span>(table));</div><div class="line">		wall=<span class="number">0</span>;</div><div class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=n;++i)</div><div class="line">			<span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">1</span>;j&lt;=m;++j)&#123;</div><div class="line">				<span class="built_in">cin</span>&gt;&gt;table[i][j];</div><div class="line">				<span class="keyword">if</span>(table[i][j]==<span class="string">'S'</span>)&#123;</div><div class="line">					x=i;y=j;</div><div class="line">				&#125;<span class="keyword">else</span> <span class="keyword">if</span>(table[i][j]==<span class="string">'D'</span>)&#123;</div><div class="line">					dx=i;dy=j;</div><div class="line">				&#125;<span class="keyword">else</span> <span class="keyword">if</span>(table[i][j]==<span class="string">'X'</span>)</div><div class="line">					++wall;</div><div class="line">			&#125;</div><div class="line">		<span class="keyword">if</span>(n*m-wall&lt;=t)&#123;</div><div class="line">			<span class="built_in">cout</span>&lt;&lt;<span class="string">"NO"</span>&lt;&lt;<span class="built_in">endl</span>;</div><div class="line">			<span class="keyword">continue</span>;</div><div class="line">		&#125;</div><div class="line">		success=<span class="literal">false</span>;</div><div class="line">		table[x][y]=<span class="string">'X'</span>;</div><div class="line">		dfs(x,y,<span class="number">0</span>);</div><div class="line">		<span class="keyword">if</span>(success)</div><div class="line">			<span class="built_in">cout</span>&lt;&lt;<span class="string">"YES"</span>&lt;&lt;<span class="built_in">endl</span>;</div><div class="line">		<span class="keyword">else</span></div><div class="line">			<span class="built_in">cout</span>&lt;&lt;<span class="string">"NO"</span>&lt;&lt;<span class="built_in">endl</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">HDOJ</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">DFS</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/07/21/HDOJ/HDOJ-1010-Tempter-of-the-Bone/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
+    <article id="post-PAT/PAT-advanced-1034-Head-of-a-Gang" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/07/21/PAT/PAT-advanced-1034-Head-of-a-Gang/">PAT advanced 1034 Head of a Gang</a>
+    </h1>
+  
+
+        
+        <a href="/2017/07/21/PAT/PAT-advanced-1034-Head-of-a-Gang/" class="archive-article-date">
+  	<time datetime="2017-07-21T01:32:21.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-21</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>One way that the police finds the head of a gang is to check people’s phone calls. If there is a phone call between A and B, we say that A and B is related. The weight of a relation is defined to be the total time length of all the phone calls made between the two persons. A “Gang” is a cluster of more than 2 persons who are related to each other with total relation weight being greater than a given threshold K. In each gang, the one with maximum total weight is the head. Now given a list of phone calls, you are supposed to find the gangs and the heads.</p>
+<p><strong>Input Specification:</strong><br>Each input file contains one test case. For each case, the first line contains two positive numbers N and K (both less than or equal to 1000), the number of phone calls and the weight threthold, respectively. Then N lines follow, each in the following format:</p>
+<ul>
+<li>Name1 Name2 Time<br>where Name1 and Name2 are the names of people at the two ends of the call, and Time is the length of the call. A name is a string of three capital letters chosen from A-Z. A time length is a positive integer which is no more than 1000 minutes.</li>
+</ul>
+<p><strong>Output Specification:</strong><br>For each test case, first print in a line the total number of gangs. Then for each gang, print in a line the name of the head and the total number of the members. It is guaranteed that the head is unique for each gang. The output must be sorted according to the alphabetical order of the names of the heads.</p>
+<p><strong>Sample Input 1:</strong><br>8 59<br>AAA BBB 10<br>BBB AAA 20<br>AAA CCC 40<br>DDD EEE 5<br>EEE DDD 70<br>FFF GGG 30<br>GGG HHH 20<br>HHH FFF 10</p>
+<p><strong>Sample Output 1:</strong><br>2<br>AAA 3<br>GGG 3</p>
+<p><strong>Sample Input 2:</strong><br>8 70<br>AAA BBB 10<br>BBB AAA 20<br>AAA CCC 40<br>DDD EEE 5<br>EEE DDD 70<br>FFF GGG 30<br>GGG HHH 20<br>HHH FFF 10</p>
+<p><strong>Sample Output 2:</strong><br>0</p>
+<p>给你一堆通话记录<br>如果一个团伙人数超过2人并且通话总权值超过k，令团伙里面的自身权值的最大值为头目，输出所有满足条件的团伙的头目，和他们团伙里面的人数</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;map&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;string&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="keyword">int</span> n;		<span class="comment">//number of phone calls</span></div><div class="line"><span class="keyword">int</span> k;		<span class="comment">//the weight threthold</span></div><div class="line"><span class="keyword">int</span> index=<span class="number">0</span>;</div><div class="line"><span class="keyword">int</span> allweight,nodenum,mark;</div><div class="line"><span class="built_in">map</span>&lt;<span class="built_in">string</span>,<span class="keyword">int</span>&gt; cti;</div><div class="line"><span class="built_in">map</span>&lt;<span class="keyword">int</span>,<span class="built_in">string</span>&gt; itc;</div><div class="line"><span class="built_in">map</span>&lt;<span class="built_in">string</span>,<span class="keyword">int</span>&gt; res;</div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> maxnum=<span class="number">2010</span>;</div><div class="line"><span class="keyword">int</span> table[maxnum][maxnum]=&#123;<span class="number">0</span>&#125;;</div><div class="line"><span class="keyword">int</span> nodeweight[maxnum]=&#123;<span class="number">0</span>&#125;;</div><div class="line"><span class="keyword">bool</span> vis[maxnum]=&#123;<span class="literal">false</span>&#125;;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">StringtoInt</span><span class="params">(<span class="built_in">string</span> s)</span></span>&#123;</div><div class="line">	<span class="keyword">if</span>(cti[s]==<span class="number">0</span>)&#123;</div><div class="line">		index+=<span class="number">1</span>;</div><div class="line">		cti[s]=index;</div><div class="line">		itc[index]=s;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> cti[s];</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">dfs</span><span class="params">(<span class="keyword">int</span> node,<span class="keyword">int</span> &amp;head)</span></span>&#123;</div><div class="line">	vis[node]=<span class="literal">true</span>;</div><div class="line">	nodenum++;</div><div class="line">	<span class="keyword">if</span>(nodeweight[node]&gt;nodeweight[head])</div><div class="line">		head=node;</div><div class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=n;++i)&#123;</div><div class="line">		<span class="keyword">if</span>(table[node][i]&gt;<span class="number">0</span>)</div><div class="line">			&#123;</div><div class="line">			allweight+=table[node][i];</div><div class="line">			table[node][i]=table[i][node]=<span class="number">0</span>;	<span class="comment">//防止多次计算</span></div><div class="line">			<span class="keyword">if</span>(!vis[i])</div><div class="line">				dfs(i,head);</div><div class="line">			&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</div><div class="line">	<span class="built_in">string</span> name1,name2;</div><div class="line">	<span class="keyword">int</span> weight;</div><div class="line">	<span class="built_in">cin</span>&gt;&gt;n&gt;&gt;k;</div><div class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;n;++i)&#123;</div><div class="line">		<span class="built_in">cin</span>&gt;&gt;name1&gt;&gt;name2&gt;&gt;weight;</div><div class="line">		<span class="keyword">int</span> id1=StringtoInt(name1);</div><div class="line">		<span class="keyword">int</span> id2=StringtoInt(name2);</div><div class="line">		table[id1][id2]+=weight;table[id2][id1]+=weight;</div><div class="line">		nodeweight[id1]+=weight;nodeweight[id2]+=weight;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=n;++i)&#123;</div><div class="line">		<span class="keyword">if</span>(!vis[i])&#123;</div><div class="line">			allweight=<span class="number">0</span>,nodenum=<span class="number">0</span>,mark=i;</div><div class="line">			dfs(i,mark);</div><div class="line">			<span class="keyword">if</span>(allweight&gt;k&amp;&amp;nodenum&gt;<span class="number">2</span>)</div><div class="line">					res[itc[mark]]=nodenum;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	<span class="built_in">cout</span>&lt;&lt;res.size()&lt;&lt;<span class="built_in">endl</span>;</div><div class="line">	<span class="keyword">for</span>(<span class="built_in">map</span>&lt;<span class="built_in">string</span>,<span class="keyword">int</span>&gt;::iterator it=res.begin();it!=res.end();++it)</div><div class="line">		<span class="built_in">cout</span>&lt;&lt;it-&gt;first&lt;&lt;<span class="string">" "</span>&lt;&lt;it-&gt;second&lt;&lt;<span class="built_in">endl</span>;</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>又用并查集写了一版<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;map&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;string&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cstring&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;algorithm&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> maxn=<span class="number">2020</span>;</div><div class="line"><span class="keyword">int</span> call[maxn][maxn];</div><div class="line"><span class="keyword">bool</span> vis[maxn];</div><div class="line"><span class="keyword">int</span> total[maxn];</div><div class="line"><span class="keyword">int</span> father[maxn];</div><div class="line"><span class="keyword">int</span> child[maxn];</div><div class="line"><span class="keyword">int</span> w[maxn];<span class="comment">//weight</span></div><div class="line"><span class="keyword">int</span> curr;</div><div class="line"><span class="built_in">map</span>&lt;<span class="built_in">string</span>,<span class="keyword">int</span>&gt; sti;</div><div class="line"><span class="built_in">map</span>&lt;<span class="built_in">string</span>,<span class="keyword">int</span>&gt; res;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">StringtoInt</span><span class="params">(<span class="built_in">string</span> s)</span></span>&#123;</div><div class="line">	<span class="keyword">if</span>(sti[s]==<span class="number">0</span>)&#123;</div><div class="line">		curr+=<span class="number">1</span>;</div><div class="line">		sti[s]=curr;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> sti[s];</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">find</span><span class="params">(<span class="keyword">int</span> x)</span></span>&#123;</div><div class="line">	<span class="keyword">int</span> a=x;</div><div class="line">	<span class="keyword">while</span>(x!=father[x])x=father[x];</div><div class="line">	<span class="keyword">while</span>(a!=father[a])&#123;</div><div class="line">		<span class="keyword">int</span> tmp=a;</div><div class="line">		a=father[a];</div><div class="line">		father[tmp]=x;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> x;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">unite</span><span class="params">(<span class="keyword">int</span> a,<span class="keyword">int</span> b)</span></span>&#123;</div><div class="line">	<span class="keyword">int</span> x=find(a);</div><div class="line">	<span class="keyword">int</span> y=find(b);</div><div class="line">	<span class="keyword">if</span>(x!=y)</div><div class="line">		<span class="keyword">if</span>(total[x]&gt;total[y])&#123;</div><div class="line">			father[y]=x;</div><div class="line">			child[x]+=child[y];</div><div class="line">			w[x]+=w[y];</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">else</span>&#123;</div><div class="line">			father[x]=y;</div><div class="line">			child[y]+=child[x];</div><div class="line">			w[y]+=w[x];</div><div class="line">		&#125;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">init</span><span class="params">(<span class="keyword">int</span> n)</span></span>&#123;</div><div class="line">	<span class="built_in">string</span> a,b;</div><div class="line">	<span class="keyword">int</span> weight;</div><div class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;n;++i)&#123;</div><div class="line">		<span class="built_in">cin</span>&gt;&gt;a&gt;&gt;b&gt;&gt;weight;</div><div class="line">		<span class="keyword">int</span> id1=StringtoInt(a);</div><div class="line">		<span class="keyword">int</span> id2=StringtoInt(b);</div><div class="line">		call[id1][id2]+=weight;</div><div class="line">		call[id2][id1]+=weight;</div><div class="line">		total[id1]+=weight;</div><div class="line">		total[id2]+=weight;</div><div class="line">		w[id1]+=weight;</div><div class="line">		w[id2]+=weight;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;curr;++i)</div><div class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> j=i+<span class="number">1</span>;j&lt;=curr;++j)</div><div class="line">			<span class="keyword">if</span>(call[i][j])unite(i,j);</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</div><div class="line">	<span class="keyword">int</span> n,k;</div><div class="line">	<span class="built_in">cin</span>&gt;&gt;n&gt;&gt;k;</div><div class="line">	curr=<span class="number">0</span>;</div><div class="line">	fill(child,child+maxn,<span class="number">1</span>);</div><div class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;maxn;++i)father[i]=i;</div><div class="line">	init(n);</div><div class="line">	<span class="keyword">int</span> cnt=<span class="number">0</span>;</div><div class="line">	<span class="keyword">for</span>(<span class="built_in">map</span>&lt;<span class="built_in">string</span>,<span class="keyword">int</span>&gt;::iterator it=sti.begin();it!=sti.end();++it)</div><div class="line">		<span class="keyword">if</span>(father[it-&gt;second]==it-&gt;second&amp;&amp;child[it-&gt;second]&gt;<span class="number">2</span>&amp;&amp;w[it-&gt;second]*<span class="number">1.0</span>/<span class="number">2</span>&gt;k)&#123;</div><div class="line">			++cnt;</div><div class="line">			res[it-&gt;first]=it-&gt;second;</div><div class="line">		&#125;</div><div class="line">	<span class="built_in">cout</span>&lt;&lt;cnt&lt;&lt;<span class="built_in">endl</span>;</div><div class="line">	<span class="keyword">for</span>(<span class="built_in">map</span>&lt;<span class="built_in">string</span>,<span class="keyword">int</span>&gt;::iterator it=res.begin();it!=res.end();++it)</div><div class="line">			<span class="built_in">cout</span>&lt;&lt;it-&gt;first&lt;&lt;<span class="string">" "</span>&lt;&lt;child[it-&gt;second]&lt;&lt;<span class="built_in">endl</span>;</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">DFS</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">PAT甲级</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/07/21/PAT/PAT-advanced-1034-Head-of-a-Gang/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
+    <article id="post-PAT/PAT-advanced-1067-Sort-with-Swap-0-25" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/07/20/PAT/PAT-advanced-1067-Sort-with-Swap-0-25/">PAT advanced 1067.Sort with Swap(0,*)(25)</a>
+    </h1>
+  
+
+        
+        <a href="/2017/07/20/PAT/PAT-advanced-1067-Sort-with-Swap-0-25/" class="archive-article-date">
+  	<time datetime="2017-07-20T07:09:01.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-20</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Given any permutation of the numbers {0, 1, 2,…, N-1}, it is easy to sort them in increasing order. But what if Swap(0, *) is the ONLY operation that is allowed to use? For example, to sort {4, 0, 2, 1, 3} we may apply the swap operations in the following way:<br>Swap(0, 1) =&gt; {4, 1, 2, 0, 3}<br>Swap(0, 3) =&gt; {4, 1, 2, 3, 0}<br>Swap(0, 4) =&gt; {0, 1, 2, 3, 4}<br>Now you are asked to find the minimum number of swaps need to sort the given permutation of the first N nonnegative integers.</p>
+<p><strong>Input Specification:</strong><br>Each input file contains one test case, which gives a positive N (&lt;=10^5) followed by a permutation sequence of {0, 1, …, N-1}. All the numbers in a line are separated by a space.</p>
+<p><strong>Output Specification:</strong><br>For each case, simply print in a line the minimum number of swaps need to sort the given permutation.</p>
+<p><strong>Sample Input:</strong><br>10 3 5 7 2 6 4 9 0 8 1<br><strong>Sample Output:</strong><br>9</p>
+<p>贪心算法</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;vector&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="keyword">int</span> pos[<span class="number">100000</span>];<span class="comment">//记录位置</span></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</div><div class="line">	<span class="keyword">int</span> n,cnt=<span class="number">0</span>,res=<span class="number">0</span>,tmp;</div><div class="line">	<span class="built_in">cin</span>&gt;&gt;n;</div><div class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;n;++i)&#123;</div><div class="line">		<span class="built_in">cin</span>&gt;&gt;tmp;</div><div class="line">		pos[tmp]=i;</div><div class="line">		<span class="keyword">if</span>(tmp!=i&amp;&amp;pos[tmp]!=<span class="number">0</span>)++cnt;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">int</span> index=<span class="number">1</span>;</div><div class="line">	<span class="keyword">while</span>(cnt)</div><div class="line">		<span class="keyword">if</span>(!pos[<span class="number">0</span>])&#123;<span class="comment">//0的位置在0，先把0和第一个无序的数换位</span></div><div class="line">			<span class="keyword">while</span>(pos[index]==index&amp;&amp;index&lt;n)++index;</div><div class="line">			swap(pos[<span class="number">0</span>],pos[index]);</div><div class="line">			++index;</div><div class="line">			++res;</div><div class="line">		&#125;<span class="keyword">else</span>&#123;<span class="comment">//0的位置不在0</span></div><div class="line">			swap(pos[<span class="number">0</span>],pos[pos[<span class="number">0</span>]]);</div><div class="line">			++res;</div><div class="line">			--cnt;</div><div class="line">		&#125;</div><div class="line">	<span class="built_in">cout</span>&lt;&lt;res;</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>数学方法<br>注意极端情况<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/*</span></div><div class="line">		三种环</div><div class="line">		1.只有一个元素：不需要交换</div><div class="line">		2.环里有n个元素，包括0：需要n-1次交换</div><div class="line">		3.第i个环里有ni个元素，不包括0：先把0换到环里，再进行(ni+1)-1次交换——一共ni+1次交换</div><div class="line">		求和一下</div><div class="line">		n-s+k-2</div><div class="line">		n元素个数 s单元环 k多元环</div><div class="line">*/</div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> maxnum=<span class="number">100001</span>;</div><div class="line"><span class="keyword">int</span> a[maxnum];</div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</div><div class="line">	<span class="keyword">int</span> n,s=<span class="number">0</span>,k=<span class="number">0</span>;</div><div class="line">	<span class="built_in">scanf</span>(<span class="string">"%d"</span>,&amp;n);</div><div class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;n;++i)&#123;</div><div class="line">		<span class="built_in">scanf</span>(<span class="string">"%d"</span>,&amp;a[i]);</div><div class="line">		<span class="keyword">if</span>(a[i]==i&amp;&amp;a[i]!=<span class="number">0</span>)</div><div class="line">			++s;		<span class="comment">//单元环+1</span></div><div class="line">	&#125;</div><div class="line">	<span class="keyword">int</span> random=n-s,index=<span class="number">0</span>,tmp;</div><div class="line">	<span class="keyword">while</span>(random)&#123;</div><div class="line">		<span class="comment">//index=0;		加上这句超时。。</span></div><div class="line">		<span class="keyword">while</span>(a[index]==index)</div><div class="line">			++index;	<span class="comment">//找到一个不符合的作为多元环起点</span></div><div class="line">		<span class="keyword">while</span>(a[index]!=index)&#123;</div><div class="line">			tmp=index;</div><div class="line">			index=a[tmp];</div><div class="line">			a[tmp]=tmp;</div><div class="line">			--random;</div><div class="line">		&#125;</div><div class="line">		++k;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">if</span>(k==<span class="number">0</span>)</div><div class="line">		<span class="built_in">cout</span>&lt;&lt;<span class="string">"0"</span>;	<span class="comment">//辣鸡测试点毁我青春</span></div><div class="line">	<span class="keyword">else</span></div><div class="line">		<span class="built_in">cout</span>&lt;&lt;n-s+k<span class="number">-2</span>;</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">贪心算法</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">PAT甲级</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/07/20/PAT/PAT-advanced-1067-Sort-with-Swap-0-25/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
+    <article id="post-POJ/OpenJudge-8758-2的幂次方表示" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/07/20/POJ/OpenJudge-8758-2的幂次方表示/">OpenJudge 8758 2的幂次方表示</a>
+    </h1>
+  
+
+        
+        <a href="/2017/07/20/POJ/OpenJudge-8758-2的幂次方表示/" class="archive-article-date">
+  	<time datetime="2017-07-20T04:37:31.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-20</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong>描述</strong><br>任何一个正整数都可以用2的幂次方表示。例如：<br>    $137=2^7+2^3+2^0$<br>同时约定方次用括号来表示，即ab可表示为a(b)。由此可知，137可表示为：<br>    2(7)+2(3)+2(0)<br>进一步：$7=2^2+2+2^0（2^1用2表示）$<br>        $3=2+2^0$<br>所以最后137可表示为：<br>    2(2(2)+2+2(0))+2(2+2(0))+2(0)<br>又如：<br>    $1315=2^(10)+2^8+2^5+2+1$<br>所以1315最后可表示为：<br>    2(2(2+2(0))+2)+2(2(2+2(0)))+2(2(2)+2(0))+2+2(0)</p>
+<p><strong>输入</strong><br>一个正整数n（n≤20000）。</p>
+<p><strong>输出</strong><br>一行，符合约定的n的0，2表示（在表示中不能有空格）。</p>
+<p><strong>样例输入</strong><br>137</p>
+<p><strong>样例输出</strong><br>2(2(2)+2+2(0))+2(2+2(0))+2(0)</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">solve</span><span class="params">(<span class="keyword">int</span> num,<span class="keyword">int</span> n)</span></span>&#123;</div><div class="line">	<span class="keyword">if</span>(num==<span class="number">0</span>)<span class="keyword">return</span>;</div><div class="line">	<span class="keyword">int</span> r=num%<span class="number">2</span>;</div><div class="line">	num=num&gt;&gt;<span class="number">1</span>;</div><div class="line">	solve(num,n+<span class="number">1</span>);</div><div class="line">	<span class="keyword">if</span>(num&amp;&amp;r)<span class="built_in">cout</span>&lt;&lt;<span class="string">"+"</span>;</div><div class="line">	<span class="keyword">if</span>(r)&#123;</div><div class="line">		<span class="keyword">if</span>(n==<span class="number">1</span>)<span class="built_in">cout</span>&lt;&lt;<span class="string">"2"</span>;</div><div class="line">		<span class="keyword">else</span>&#123;</div><div class="line">			<span class="built_in">cout</span>&lt;&lt;<span class="string">"2("</span>;</div><div class="line">			<span class="keyword">if</span>(n==<span class="number">0</span>)<span class="built_in">cout</span>&lt;&lt;<span class="string">"0"</span>;</div><div class="line">			<span class="keyword">else</span> solve(n,<span class="number">0</span>);</div><div class="line">			<span class="built_in">cout</span>&lt;&lt;<span class="string">")"</span>;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</div><div class="line">	<span class="keyword">int</span> num;</div><div class="line">	<span class="built_in">cin</span>&gt;&gt;num;</div><div class="line">	solve(num,<span class="number">0</span>);</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="keyword">int</span> pos[<span class="number">32</span>];</div><div class="line"><span class="function"><span class="keyword">inline</span> <span class="keyword">int</span> <span class="title">GetBit</span><span class="params">(<span class="keyword">int</span> n,<span class="keyword">int</span> i)</span></span>&#123;</div><div class="line">	<span class="keyword">return</span> (n&gt;&gt;i)&amp;<span class="number">1</span>;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">print</span><span class="params">(<span class="keyword">int</span> n)</span></span>&#123;</div><div class="line">	<span class="keyword">bool</span> first=<span class="literal">true</span>;</div><div class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">15</span>;i&gt;=<span class="number">0</span>;--i)&#123;</div><div class="line">		<span class="keyword">if</span>(GetBit(n,i))&#123;</div><div class="line">			<span class="keyword">if</span>(!first)<span class="built_in">cout</span>&lt;&lt;<span class="string">"+"</span>;</div><div class="line">			<span class="keyword">else</span> first=<span class="literal">false</span>;</div><div class="line">			<span class="keyword">if</span>(!i)<span class="built_in">cout</span>&lt;&lt;<span class="string">"2(0)"</span>;</div><div class="line">			<span class="keyword">else</span> <span class="keyword">if</span>(i==<span class="number">1</span>)<span class="built_in">cout</span>&lt;&lt;<span class="string">"2"</span>;</div><div class="line">			<span class="keyword">else</span>&#123;</div><div class="line">				<span class="built_in">cout</span>&lt;&lt;<span class="string">"2("</span>;</div><div class="line">				print(i);</div><div class="line">				<span class="built_in">cout</span>&lt;&lt;<span class="string">")"</span>;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</div><div class="line">	<span class="keyword">int</span> n;</div><div class="line">	<span class="built_in">cin</span>&gt;&gt;n;</div><div class="line">	print(n);</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cmath&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="comment">//</span></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">solve</span><span class="params">(<span class="keyword">int</span> n)</span> </span>&#123;</div><div class="line">	<span class="keyword">int</span> cnt = <span class="number">0</span>;</div><div class="line">	<span class="keyword">while</span> (<span class="built_in">pow</span>(<span class="number">2</span>, cnt) &lt;= n)++cnt;</div><div class="line">	--cnt;</div><div class="line">	<span class="keyword">if</span> (!cnt) &#123;</div><div class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"2(0)"</span>;</div><div class="line">		<span class="keyword">return</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">if</span> (cnt == <span class="number">1</span>)<span class="built_in">cout</span> &lt;&lt; <span class="string">"2"</span>;</div><div class="line">	<span class="keyword">else</span> &#123;</div><div class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"2("</span>;</div><div class="line">		solve(cnt);</div><div class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">")"</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">if</span> (n - <span class="built_in">pow</span>(<span class="number">2</span>, cnt)) &#123;</div><div class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"+"</span>;</div><div class="line">		solve(n - <span class="built_in">pow</span>(<span class="number">2</span>, cnt));</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="keyword">int</span> n;</div><div class="line">	<span class="keyword">while</span> (<span class="built_in">cin</span> &gt;&gt; n) &#123;</div><div class="line">		solve(n);</div><div class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">OpenJudge</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">递归</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/07/20/POJ/OpenJudge-8758-2的幂次方表示/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
     <article id="post-POJ/OpenJudge-1750-全排列" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -467,11 +749,11 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">递归</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">OpenJudge</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">OpenJudge</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">递归</a>
         		</li>
       		
 		</ul>
@@ -573,280 +855,9 @@
 
 
   
-    <article id="post-POJ/POJ-1013-Counterfeit-Dollar" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/07/19/POJ/POJ-1013-Counterfeit-Dollar/">POJ 1013 Counterfeit Dollar</a>
-    </h1>
-  
-
-        
-        <a href="/2017/07/19/POJ/POJ-1013-Counterfeit-Dollar/" class="archive-article-date">
-  	<time datetime="2017-07-19T03:09:35.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-19</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><strong>Description</strong><br>Sally Jones has a dozen Voyageur silver dollars. However, only eleven of the coins are true silver dollars; one coin is counterfeit even though its color and size make it indistinguishable from the real silver dollars. The counterfeit coin has a different weight from the other coins but Sally does not know if it is heavier or lighter than the real coins.<br>Happily, Sally has a friend who loans her a very accurate balance scale. The friend will permit Sally three weighings to find the counterfeit coin. For instance, if Sally weighs two coins against each other and the scales balance then she knows these two coins are true. Now if Sally weighs<br>one of the true coins against a third coin and the scales do not balance then Sally knows the third coin is counterfeit and she can tell whether it is light or heavy depending on whether the balance on which it is placed goes up or down, respectively.<br>By choosing her weighings carefully, Sally is able to ensure that she will find the counterfeit coin with exactly three weighings.</p>
-<p><strong>Input</strong><br>The first line of input is an integer n (n &gt; 0) specifying the number of cases to follow. Each case consists of three lines of input, one for each weighing. Sally has identified each of the coins with the letters A–L. Information on a weighing will be given by two strings of letters and then one of the words <code>up&#39;&#39;,</code>down’’, or ``even’’. The first string of letters will represent the coins on the left balance; the second string, the coins on the right balance. (Sally will always place the same number of coins on the right balance as on the left balance.) The word in the third position will tell whether the right side of the balance goes up, down, or remains even.</p>
-<p><strong>Output</strong><br>For each case, the output will identify the counterfeit coin by its letter and tell whether it is heavy or light. The solution will always be uniquely determined.</p>
-<p><strong>Sample Input</strong><br>1<br>ABCD EFGH even<br>ABCI EFJK up<br>ABIJ EFGH even</p>
-<p><strong>Sample Output</strong><br>K is the counterfeit coin and it is light.</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cstring&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="keyword">char</span> Left[<span class="number">3</span>][<span class="number">7</span>];</div><div class="line"><span class="keyword">char</span> Right[<span class="number">3</span>][<span class="number">7</span>];</div><div class="line"><span class="keyword">char</span> result[<span class="number">3</span>][<span class="number">7</span>];</div><div class="line"><span class="function"><span class="keyword">bool</span> <span class="title">IsFake</span><span class="params">(<span class="keyword">char</span> c, <span class="keyword">bool</span> light)</span> </span>&#123;</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">3</span>; ++i) &#123;</div><div class="line">		<span class="keyword">char</span> *pLeft, *pRight;</div><div class="line">		<span class="keyword">if</span> (light) &#123;</div><div class="line">			pLeft = Left[i];</div><div class="line">			pRight = Right[i];</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">else</span> &#123;</div><div class="line">			pLeft = Right[i];</div><div class="line">			pRight = Left[i];</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">switch</span> (result[i][<span class="number">0</span>])</div><div class="line">		&#123;</div><div class="line">		<span class="keyword">case</span> <span class="string">'u'</span>:</div><div class="line">			<span class="keyword">if</span> (<span class="built_in">strchr</span>(pRight, c) == <span class="literal">NULL</span>)</div><div class="line">				<span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">			<span class="keyword">break</span>;</div><div class="line">		<span class="keyword">case</span> <span class="string">'e'</span>:</div><div class="line">			<span class="keyword">if</span> (<span class="built_in">strchr</span>(pLeft, c) || <span class="built_in">strchr</span>(pRight, c))</div><div class="line">				<span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">			<span class="keyword">break</span>;</div><div class="line">		<span class="keyword">case</span> <span class="string">'d'</span>:</div><div class="line">			<span class="keyword">if</span> (<span class="built_in">strchr</span>(pLeft, c) == <span class="literal">NULL</span>)</div><div class="line">				<span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">			<span class="keyword">break</span>;</div><div class="line">		<span class="keyword">default</span>:</div><div class="line">			<span class="keyword">break</span>;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> <span class="literal">true</span>;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="keyword">int</span> t;</div><div class="line">	<span class="built_in">cin</span> &gt;&gt; t;</div><div class="line">	<span class="keyword">while</span> (t--) &#123;</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">3</span>; ++i)</div><div class="line">			<span class="built_in">cin</span> &gt;&gt; Left[i] &gt;&gt; Right[i] &gt;&gt; result[i];</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">char</span> c = <span class="string">'A'</span>; c &lt;= <span class="string">'L'</span>; ++c) &#123;</div><div class="line">			<span class="keyword">if</span> (IsFake(c, <span class="literal">true</span>)) &#123;</div><div class="line">				<span class="built_in">cout</span> &lt;&lt; c &lt;&lt; <span class="string">" is the counterfeit coin and it is light."</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">				<span class="keyword">break</span>;</div><div class="line">			&#125;</div><div class="line">			<span class="keyword">else</span> <span class="keyword">if</span> (IsFake(c, <span class="literal">false</span>)) &#123;</div><div class="line">				<span class="built_in">cout</span> &lt;&lt; c &lt;&lt; <span class="string">" is the counterfeit coin and it is heavy."</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">				<span class="keyword">break</span>;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">枚举</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">POJ</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/07/19/POJ/POJ-1013-Counterfeit-Dollar/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
-    <article id="post-PAT/PAT-advanced-1028-List-Sorting" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/07/19/PAT/PAT-advanced-1028-List-Sorting/">PAT advanced 1028 List Sorting</a>
-    </h1>
-  
-
-        
-        <a href="/2017/07/19/PAT/PAT-advanced-1028-List-Sorting/" class="archive-article-date">
-  	<time datetime="2017-07-19T01:51:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-19</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Excel can sort records according to any column. Now you are supposed to imitate this function.</p>
-<p><strong>Input</strong><br>Each input file contains one test case. For each case, the first line contains two integers N (&lt;=100000) and C, where N is the number of records and C is the column that you are supposed to sort the records with. Then N lines follow, each contains a record of a student. A student’s record consists of his or her distinct ID (a 6-digit number), name (a string with no more than 8 characters without space), and grade (an integer between 0 and 100, inclusive).</p>
-<p><strong>Output</strong><br>For each test case, output the sorting result in N lines. That is, if C = 1 then the records must be sorted in increasing order according to ID’s; if C = 2 then the records must be sorted in non-decreasing order according to names; and if C = 3 then the records must be sorted in non-decreasing order according to grades. If there are several students who have the same name or grade, they must be sorted according to their ID’s in increasing order.</p>
-<p><strong>Sample Input 1</strong><br>3 1<br>000007 James 85<br>000010 Amy 90<br>000001 Zoe 60</p>
-<p><strong>Sample Output 1</strong><br>000001 Zoe 60<br>000007 James 85<br>000010 Amy 90</p>
-<p><strong>Sample Input 2</strong><br>4 2<br>000007 James 85<br>000010 Amy 90<br>000001 Zoe 60<br>000002 James 98</p>
-<p><strong>Sample Output 2</strong><br>000010 Amy 90<br>000002 James 98<br>000007 James 85<br>000001 Zoe 60</p>
-<p><strong>Sample Input 3</strong><br>4 3<br>000007 James 85<br>000010 Amy 90<br>000001 Zoe 60<br>000002 James 90</p>
-<p><strong>Sample Output 3</strong><br>000001 Zoe 60<br>000007 James 85<br>000002 James 90<br>000010 Amy 90</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;algorithm&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cstring&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="keyword">int</span> n, c;</div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> maxnum = <span class="number">100001</span>;</div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">node</span> &#123;</span></div><div class="line">	<span class="keyword">int</span> id;</div><div class="line">	<span class="keyword">char</span> name[<span class="number">10</span>];</div><div class="line">	<span class="keyword">int</span> grade;</div><div class="line">&#125;;</div><div class="line">node stu[maxnum];</div><div class="line"><span class="function"><span class="keyword">bool</span> <span class="title">cmp</span><span class="params">(node a,node b)</span> </span>&#123;</div><div class="line">	<span class="keyword">if</span> (c == <span class="number">1</span>)</div><div class="line">		<span class="keyword">return</span> a.id &lt; b.id;</div><div class="line">	<span class="keyword">if</span> (c == <span class="number">2</span>)</div><div class="line">		<span class="keyword">return</span> <span class="built_in">strcmp</span>(a.name, b.name) &lt;= <span class="number">0</span>;</div><div class="line">	<span class="keyword">return</span> a.grade &lt;= b.grade;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="built_in">cin</span> &gt;&gt; n &gt;&gt; c;</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; ++i)</div><div class="line">		<span class="built_in">scanf</span>(<span class="string">"%d %s %d"</span>, &amp;stu[i].id, &amp;stu[i].name, &amp;stu[i].grade);</div><div class="line">	sort(stu, stu+n, cmp);</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; ++i)</div><div class="line">		<span class="built_in">printf</span>(<span class="string">"%06d %s %d\n"</span>, stu[i].id, stu[i].name, stu[i].grade);</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">PAT甲级</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/07/19/PAT/PAT-advanced-1028-List-Sorting/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
-    <article id="post-HDOJ/HDOJ-1007-Quoit-Design" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/07/19/HDOJ/HDOJ-1007-Quoit-Design/">HDOJ 1007 Quoit Design(最近点对问题)</a>
-    </h1>
-  
-
-        
-        <a href="/2017/07/19/HDOJ/HDOJ-1007-Quoit-Design/" class="archive-article-date">
-  	<time datetime="2017-07-19T00:42:43.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-19</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><strong>Problem Description</strong><br>Have you ever played quoit in a playground? Quoit is a game in which flat rings are pitched at some toys, with all the toys encircled awarded.<br>In the field of Cyberground, the position of each toy is fixed, and the ring is carefully designed so it can only encircle one toy at a time. On the other hand, to make the game look more attractive, the ring is designed to have the largest radius. Given a configuration of the field, you are supposed to find the radius of such a ring.<br>Assure that all the toys are points on a plane. A point is encircled by the ring if the distance between the point and the center of the ring is strictly less than the radius of the ring. If two toys are placed at the same point, the radius of the ring is considered to be 0.</p>
-<p><strong>Input</strong><br>The input consists of several test cases. For each case, the first line contains an integer N (2 &lt;= N &lt;= 100,000), the total number of toys in the field. Then N lines follow, each contains a pair of (x, y) which are the coordinates of a toy. The input is terminated by N = 0.</p>
-<p><strong>Output</strong><br>For each test case, print in one line the radius of the ring required by the Cyberground manager, accurate up to 2 decimal places.</p>
-<p><strong>Sample Input</strong><br>2<br>0 0<br>1 1<br>2<br>1 1<br>1 1<br>3<br>-1.5 0<br>0 0<br>0 1.5<br>0</p>
-<p><strong>Sample Output</strong><br>0.71<br>0.00<br>0.75<br><a href="http://blog.csdn.net/lonelycatcher/article/details/7973046" target="_blank" rel="external">最近点对问题</a><br>用vector会超时。。<br>用cincout也超时<br>望天<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cmath&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;algorithm&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="keyword">int</span> n;</div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> INF=<span class="number">0x3f3f3f3f</span>;</div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">node</span>&#123;</span></div><div class="line">	<span class="keyword">double</span> x,y;</div><div class="line">&#125;;</div><div class="line">node dot[<span class="number">100001</span>];</div><div class="line"><span class="keyword">int</span> tmp[<span class="number">100001</span>];</div><div class="line"><span class="function"><span class="keyword">bool</span> <span class="title">cmpx</span><span class="params">(node a,node b)</span></span>&#123;</div><div class="line">	<span class="keyword">if</span>(a.x!=b.y)</div><div class="line">		<span class="keyword">return</span> a.x&lt;b.x;</div><div class="line">	<span class="keyword">return</span> a.y&lt;b.y;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">bool</span> <span class="title">cmpy</span><span class="params">(<span class="keyword">int</span> a,<span class="keyword">int</span> b)</span></span>&#123;</div><div class="line">	<span class="keyword">return</span> dot[a].y&lt;dot[b].y;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">double</span> <span class="title">dis</span><span class="params">(<span class="keyword">int</span> a,<span class="keyword">int</span> b)</span></span>&#123;</div><div class="line">	<span class="keyword">return</span> <span class="built_in">sqrt</span>(<span class="built_in">pow</span>(dot[a].x-dot[b].x,<span class="number">2</span>)+<span class="built_in">pow</span>(dot[a].y-dot[b].y,<span class="number">2</span>));</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">double</span> <span class="title">findClose</span><span class="params">(<span class="keyword">int</span> l,<span class="keyword">int</span> r)</span></span>&#123;</div><div class="line">	<span class="keyword">double</span> d=INF;</div><div class="line">	<span class="keyword">if</span>(l==r)<span class="keyword">return</span> d;</div><div class="line">	<span class="keyword">if</span>(l+<span class="number">1</span>==r)</div><div class="line">		<span class="keyword">return</span> dis(l,r);</div><div class="line">	<span class="keyword">int</span> mid=(l+r)&gt;&gt;<span class="number">1</span>;</div><div class="line">	d=min(findClose(l,mid),findClose(mid+<span class="number">1</span>,r));</div><div class="line">	<span class="keyword">int</span> index=<span class="number">0</span>;</div><div class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=l;i&lt;=r;++i)</div><div class="line">		<span class="keyword">if</span>(<span class="built_in">fabs</span>(dot[i].x-dot[mid].x)&lt;d)</div><div class="line">			tmp[index++]=i;</div><div class="line">	sort(tmp,tmp+index,cmpy);</div><div class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;index;++i)&#123;</div><div class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> j=i+<span class="number">1</span>;j&lt;index&amp;&amp;dot[tmp[j]].y-dot[tmp[i]].y&lt;d;++j)&#123;</div><div class="line">			<span class="keyword">double</span> distance=dis(tmp[i],tmp[j]);</div><div class="line">			d=min(d,distance);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> d;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</div><div class="line">	<span class="keyword">while</span>(<span class="built_in">scanf</span>(<span class="string">"%d"</span>,&amp;n)!=EOF&amp;&amp;n)&#123;</div><div class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;n;++i)</div><div class="line">			<span class="built_in">scanf</span>(<span class="string">"%lf%lf"</span>,&amp;dot[i].x,&amp;dot[i].y);</div><div class="line">		sort(dot,dot+n,cmpx);</div><div class="line">		<span class="built_in">printf</span>(<span class="string">"%.2lf\n"</span>,findClose(<span class="number">0</span>,n<span class="number">-1</span>)/<span class="number">2</span>);</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">HDOJ</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">算法</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/07/19/HDOJ/HDOJ-1007-Quoit-Design/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
-    <article id="post-错题/组合数学及逻辑相关" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/07/18/错题/组合数学及逻辑相关/">组合数学及逻辑错题~ 7.18更新</a>
-    </h1>
-  
-
-        
-        <a href="/2017/07/18/错题/组合数学及逻辑相关/" class="archive-article-date">
-  	<time datetime="2017-07-18T13:26:15.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-18</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="有三个黑气球，其中只有一个黑气球中有金币，你可以任意选择任何一个气球，而主持人在剩下的气球中打破一个气球，然后告诉你里边没有金币-你还有一次机会，既可以坚持选择，也可以换另外一个未打破的气球。如果你选择换的话获得金币的概率为"><a href="#有三个黑气球，其中只有一个黑气球中有金币，你可以任意选择任何一个气球，而主持人在剩下的气球中打破一个气球，然后告诉你里边没有金币-你还有一次机会，既可以坚持选择，也可以换另外一个未打破的气球。如果你选择换的话获得金币的概率为" class="headerlink" title="有三个黑气球，其中只有一个黑气球中有金币，你可以任意选择任何一个气球，而主持人在剩下的气球中打破一个气球，然后告诉你里边没有金币:你还有一次机会，既可以坚持选择，也可以换另外一个未打破的气球。如果你选择换的话获得金币的概率为()"></a>有三个黑气球，其中只有一个黑气球中有金币，你可以任意选择任何一个气球，而主持人在剩下的气球中打破一个气球，然后告诉你里边没有金币:你还有一次机会，既可以坚持选择，也可以换另外一个未打破的气球。如果你选择换的话获得金币的概率为()</h2><p>2/3<br>如果你第一次选择有金币的气球（1/3的概率），那么你换了之后肯定得不到金币，所以这种情况下得到金币的概率是1/3*0=0。如果你第一次选择没有金币的气球（2/3的概率），那么你换了之后，剩下的那个没有破的气球里面就是金币，所以这种情况下得到金币的概率是2/3*1=2/3。总概率0+2/3=2/3</p>
-<h2 id="6支笔，其笔身和笔帽颜色相同：但6支笔颜色各不相同，求全部笔身都戴错笔帽的可能性有多少种？"><a href="#6支笔，其笔身和笔帽颜色相同：但6支笔颜色各不相同，求全部笔身都戴错笔帽的可能性有多少种？" class="headerlink" title="6支笔，其笔身和笔帽颜色相同：但6支笔颜色各不相同，求全部笔身都戴错笔帽的可能性有多少种？"></a>6支笔，其笔身和笔帽颜色相同：但6支笔颜色各不相同，求全部笔身都戴错笔帽的可能性有多少种？</h2><p>265<br>排列组合的错排公式,D(n) = n! - n!/1! + n!/2! - n!/3! + …</p>
-<h2 id="a和b两个人每天都会在7点-8点之间到同一个车站乘坐公交车，a坐101路公交车，每5分钟一班【7-00-7-05……】，b坐102路公交车，每10分钟一班【7-03-7-13…】，问a和b碰面的概率是多少？（-）"><a href="#a和b两个人每天都会在7点-8点之间到同一个车站乘坐公交车，a坐101路公交车，每5分钟一班【7-00-7-05……】，b坐102路公交车，每10分钟一班【7-03-7-13…】，问a和b碰面的概率是多少？（-）" class="headerlink" title="a和b两个人每天都会在7点-8点之间到同一个车站乘坐公交车，a坐101路公交车，每5分钟一班【7:00,7:05……】，b坐102路公交车，每10分钟一班【7:03,7:13…】，问a和b碰面的概率是多少？（ ）"></a>a和b两个人每天都会在7点-8点之间到同一个车站乘坐公交车，a坐101路公交车，每5分钟一班【7:00,7:05……】，b坐102路公交车，每10分钟一班【7:03,7:13…】，问a和b碰面的概率是多少？（ ）</h2><p><img src="https://github.com/makixi/makixi.github.io/raw/master/img/%E5%88%B7%E9%A2%98%E4%B8%93%E7%94%A8%E5%9B%BE/niuke1.png" alt="niuke"><br>143/1200</p>
-<h2 id="站在地球上的某一点，向南走一公里，然后向东走一公里，最后向北走一公里，回到了原点。地球上有多少个满足这样条件的点"><a href="#站在地球上的某一点，向南走一公里，然后向东走一公里，最后向北走一公里，回到了原点。地球上有多少个满足这样条件的点" class="headerlink" title="站在地球上的某一点，向南走一公里，然后向东走一公里，最后向北走一公里，回到了原点。地球上有多少个满足这样条件的点?"></a>站在地球上的某一点，向南走一公里，然后向东走一公里，最后向北走一公里，回到了原点。地球上有多少个满足这样条件的点?</h2><p>无数个<br>距离南极点很近的一个圈上也满足这个条件。在这个圆圈上，向南走一公里，然后向东走一公里恰好绕南极点一圈，向北走一公里回到原点。所以地球上总共有无数点满足这个条件。<br>或者首先，在地球表面上，南北走向是沿着经度方向，东西是沿着纬度方向。如果你一直往北走就会达到北极点，往南走就到了南极点。因此，向南走一公里，然后向东走一公里，最后向北走一公里，回到了原点，一种情况就是，出发点是在北极点，这样向南走一公里，然后向东走任意几公里，最后向北走一公里，最后都会回到北极点；其次，可以这么认为如果从A点向南走一公里到达B点，那么若向东走一公里能回到B，那么最后向北走一公里，就能回到了原点A。这样就可以先找出在南北极点附近找出绕一周只有1公里的圈，那么这个圈落在南极附近时，只要往北推1公里，此时该圈上的点都能满足；若这个圈落在北极附近时，能不能往北推1公里我就不分析了。反正在南极附近能找到任意多个点就能回到这个问题了。</p>
-<h2 id="一架飞机在满油的情况下可以绕地球飞-0-5-圈，假设飞机与飞机之间可以互相加油，请问在确保所有飞机够油飞回起点的情况下，最少需要几架飞机才可以让其中一架飞机成功绕地球飞行一圈？"><a href="#一架飞机在满油的情况下可以绕地球飞-0-5-圈，假设飞机与飞机之间可以互相加油，请问在确保所有飞机够油飞回起点的情况下，最少需要几架飞机才可以让其中一架飞机成功绕地球飞行一圈？" class="headerlink" title="一架飞机在满油的情况下可以绕地球飞 0.5 圈，假设飞机与飞机之间可以互相加油，请问在确保所有飞机够油飞回起点的情况下，最少需要几架飞机才可以让其中一架飞机成功绕地球飞行一圈？"></a>一架飞机在满油的情况下可以绕地球飞 0.5 圈，假设飞机与飞机之间可以互相加油，请问在确保所有飞机够油飞回起点的情况下，最少需要几架飞机才可以让其中一架飞机成功绕地球飞行一圈？</h2><p>（提示1：地球是圆的！提示2：飞机可以重复使用！）<br>3架共同出航，A1/8圈后返航，1/4圈油分给BC；B继续1/8圈至1/4圈处后返航，1/8圈油给C；C继续飞行1/2圈至3/4圈处空油。<br>C飞行至1/2圈时，AB反向共同出航，A1/8圈后至7/8圈处返航，1/8圈给B(加满)；B继续飞行1/8圈后至3/4圈处恰遇C，B给C1/8圈油共同返航；于此同时A重新反向出发再次至7/8圈处恰遇C，给C1/8圈油后，3机共同返航。</p>
-<h2 id="某单位组织党员参加党史，党风廉政建设，科学发展观和业务能力四项培训，要求每名党员参加且只能参加其中的两项，无论如何安排，都至少有-5-名党员参加的培训完全相同，请问该单位至少有多少名党员？"><a href="#某单位组织党员参加党史，党风廉政建设，科学发展观和业务能力四项培训，要求每名党员参加且只能参加其中的两项，无论如何安排，都至少有-5-名党员参加的培训完全相同，请问该单位至少有多少名党员？" class="headerlink" title="某单位组织党员参加党史，党风廉政建设，科学发展观和业务能力四项培训，要求每名党员参加且只能参加其中的两项，无论如何安排，都至少有 5 名党员参加的培训完全相同，请问该单位至少有多少名党员？"></a>某单位组织党员参加党史，党风廉政建设，科学发展观和业务能力四项培训，要求每名党员参加且只能参加其中的两项，无论如何安排，都至少有 5 名党员参加的培训完全相同，请问该单位至少有多少名党员？</h2><p>25<br>4门课程，每人选2门，有6中选法；此时根据抽屉原理，将这6中选法想象为6个抽屉，在每个抽屉中放入4个党员，则有24名党员；此时，再多来一名党员，则无论将其安排在哪个抽屉，6个抽屉中都必有一个里面装的是5名党员。所以，该机关至少有24+1=25名党员</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">组合数学</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">逻辑</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/07/18/错题/组合数学及逻辑相关/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/36/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/35/">35</a><a class="page-number" href="/page/36/">36</a><span class="page-number current">37</span><a class="page-number" href="/page/38/">38</a><a class="page-number" href="/page/39/">39</a><span class="space">&hellip;</span><a class="page-number" href="/page/54/">54</a><a class="extend next" rel="next" href="/page/38/">Next &raquo;</a>
+      <a class="extend prev" rel="prev" href="/page/36/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/35/">35</a><a class="page-number" href="/page/36/">36</a><span class="page-number current">37</span><a class="page-number" href="/page/38/">38</a><a class="page-number" href="/page/39/">39</a><span class="space">&hellip;</span><a class="page-number" href="/page/55/">55</a><a class="extend next" rel="next" href="/page/38/">Next &raquo;</a>
     </nav>
   
 
@@ -953,6 +964,10 @@ MathJax.Hub.Queue(function() {
             <input type="checkbox" q-on="click:toggleTag(e)" q-attr="checked:showTags">
           </label>
           <ul class="article-tag-list" q-show="showTags">
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">OpenJudge</a>
+              </li>
             
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">C++练手题</a>
@@ -1067,10 +1082,6 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">OpenJudge</a>
-              </li>
-            
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">POJ</a>
               </li>
             
@@ -1095,15 +1106,15 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">天梯赛</a>
-              </li>
-            
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">排序</a>
               </li>
             
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">分治</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">天梯赛</a>
               </li>
             
               <li class="article-tag-list-item">
