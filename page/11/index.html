@@ -162,6 +162,71 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-HDOJ/HDOJ-1111-Secret-Code" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/08/30/HDOJ/HDOJ-1111-Secret-Code/">HDOJ 1111 Secret Code(复数)</a>
+    </h1>
+  
+
+        
+        <a href="/2017/08/30/HDOJ/HDOJ-1111-Secret-Code/" class="archive-article-date">
+  	<time datetime="2017-08-30T01:57:50.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-08-30</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong>Problem Description</strong><br>The Sarcophagus itself is locked by a secret numerical code. When somebody wants to open it, he must know the code and set it exactly on the top of the Sarcophagus. A very intricate mechanism then opens the cover. If an incorrect code is entered, the tickets inside would catch fire immediately and they would have been lost forever. The code (consisting of up to 100 integers) was hidden in the Alexandrian Library but unfortunately, as you probably know, the library burned down completely.<br>But an almost unknown archaeologist has obtained a copy of the code something during the 18th century. He was afraid that the code could get to the <code>wrong people&#39;&#39; so he has encoded the numbers in a very special way. He took a random complex number B that was greater (in absolute value) than any of the encoded numbers. Then he counted the numbers as the digits of the system with basis B. That means the sequence of numbers an, an-1, ..., a1, a0 was encoded as the number X = a0 + a1B + a2B2 + ...+ anBn.
+Your goal is to decrypt the secret code, i.e. to express a given number X in the number system to the base B. In other words, given the numbers X and Byou are to determine the</code>digit’’ a0 through an.</p>
+<p><strong>Input</strong><br>The input consists of T test cases. The number of them (T) is given on the first line of the input file. Each test case consists of one single line containing four integer numbers Xr, Xi, Br, Bi (|Xr|,|Xi| &lt;= 1000000, |Br|,|Bi| &lt;= 16). These numbers indicate the real and complex components of numbers X and B, i.e. X = Xr + i.Xi, B = Br + i.Bi. B is the basis of the system (|B| &gt; 1), X is the number you have to express.</p>
+<p><strong>Output</strong><br>Your program must output a single line for each test case. The line should contain the ``digits’’ an, an-1, …, a1, a0, separated by commas. The following conditions must be satisfied:<br>for all i in {0, 1, 2, …n}: 0 &lt;= ai &lt; |B|<br>X = a0 + a1B + a2B2 + …+ anBn<br>if n &gt; 0 then an &lt;&gt; 0<br>n &lt;= 100<br>If there are no numbers meeting these criteria, output the sentence “The code cannot be decrypted.”. If there are more possibilities, print any of them.</p>
+<p><strong>Sample Input</strong><br>4<br>-935 2475 -11 -15<br>1 0 -3 -2<br>93 16 3 2<br>191 -192 11 -12</p>
+<p><strong>Sample Output</strong><br>8,11,18<br>1<br>The code cannot be decrypted.<br>16,15</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;map&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;string&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cstring&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;queue&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;algorithm&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;vector&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cmath&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> ll long long</span></div><div class="line">ll xr,xi,br,bi;</div><div class="line">ll b,total;</div><div class="line">ll res[<span class="number">110</span>];</div><div class="line"><span class="keyword">bool</span> success;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">dfs</span><span class="params">(ll r,ll i,ll step)</span></span>&#123;</div><div class="line">	<span class="keyword">if</span>(step&gt;<span class="number">100</span>||success)<span class="keyword">return</span>;</div><div class="line">	<span class="keyword">if</span>(r==<span class="number">0</span>&amp;&amp;i==<span class="number">0</span>)&#123;</div><div class="line">		success=<span class="literal">true</span>;</div><div class="line">		total=step;</div><div class="line">		<span class="keyword">return</span>;</div><div class="line">	&#125;</div><div class="line">	ll x,y;</div><div class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j*j&lt;b;j++)&#123;</div><div class="line">        x=(r-j)*br+i*bi;</div><div class="line">        y=i*br-(r-j)*bi;</div><div class="line">        res[step]=j;</div><div class="line">        <span class="keyword">if</span>(x%b==<span class="number">0</span>&amp;&amp;y%b==<span class="number">0</span>)dfs(x/b,y/b,step+<span class="number">1</span>);</div><div class="line">        <span class="keyword">if</span>(success)<span class="keyword">return</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</div><div class="line">	<span class="keyword">int</span> t;</div><div class="line">	<span class="built_in">scanf</span>(<span class="string">"%d"</span>,&amp;t);</div><div class="line">	<span class="keyword">while</span>(t--)&#123;</div><div class="line">		success=<span class="literal">false</span>;</div><div class="line">		<span class="built_in">cin</span>&gt;&gt;xr&gt;&gt;xi&gt;&gt;br&gt;&gt;bi;</div><div class="line">		b=br*br+bi*bi;</div><div class="line">		dfs(xr,xi,<span class="number">0</span>);</div><div class="line">		<span class="keyword">if</span>(!success)</div><div class="line">			<span class="built_in">printf</span>(<span class="string">"The code cannot be decrypted.\n"</span>);</div><div class="line">		<span class="keyword">else</span>&#123;</div><div class="line">            <span class="built_in">cout</span>&lt;&lt;res[total<span class="number">-1</span>];</div><div class="line">        	<span class="keyword">for</span>(<span class="keyword">int</span> i=total<span class="number">-2</span>;i&gt;=<span class="number">0</span>;i--)</div><div class="line">            	<span class="built_in">cout</span>&lt;&lt;<span class="string">','</span>&lt;&lt;res[i];</div><div class="line">            <span class="built_in">printf</span>(<span class="string">"\n"</span>);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">HDOJ</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/08/30/HDOJ/HDOJ-1111-Secret-Code/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
     <article id="post-HDOJ/HDOJ-1103-Word-Amalgamation" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -773,70 +838,6 @@
 
 
   
-    <article id="post-HDOJ/HDOJ-1102-Constructing-Roads" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/08/28/HDOJ/HDOJ-1102-Constructing-Roads/">HDOJ 1102 Constructing Roads(最小生成树)</a>
-    </h1>
-  
-
-        
-        <a href="/2017/08/28/HDOJ/HDOJ-1102-Constructing-Roads/" class="archive-article-date">
-  	<time datetime="2017-08-28T08:28:51.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-08-28</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><strong>Problem Description</strong><br>There are N villages, which are numbered from 1 to N, and you should build some roads such that every two villages can connect to each other. We say two village A and B are connected, if and only if there is a road between A and B, or there exists a village C such that there is a road between A and C, and C and B are connected.<br>We know that there are already some roads between some villages and your job is the build some roads such that all the villages are connect and the length of all the roads built is minimum.</p>
-<p><strong>Input</strong><br>The first line is an integer N (3 &lt;= N &lt;= 100), which is the number of villages. Then come N lines, the i-th of which contains N integers, and the j-th of these N integers is the distance (the distance should be an integer within [1, 1000]) between village i and village j.<br>Then there is an integer Q (0 &lt;= Q &lt;= N * (N + 1) / 2). Then come Q lines, each line contains two integers a and b (1 &lt;= a &lt; b &lt;= N), which means the road between village a and village b has been built.</p>
-<p><strong>Output</strong><br>You should output a line contains an integer, which is the length of all the roads to be built such that all the villages are connected, and this value is minimum.</p>
-<p><strong>Sample Input</strong><br>3<br>0 990 692<br>990 0 179<br>692 179 0<br>1<br>1 2</p>
-<p><strong>Sample Output</strong><br>179</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;algorithm&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;map&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;queue&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cmath&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;vector&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> maxn = <span class="number">101</span>;</div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> inf = <span class="number">0x3f3f3f3f</span>;</div><div class="line"><span class="keyword">int</span> e[maxn][maxn];</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="keyword">int</span> n, q;</div><div class="line">	<span class="keyword">while</span> (<span class="built_in">cin</span> &gt;&gt; n) &#123;</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; ++i)</div><div class="line">			<span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">1</span>; j &lt;= n; ++j)</div><div class="line">				<span class="built_in">cin</span> &gt;&gt; e[i][j];</div><div class="line">		<span class="built_in">cin</span> &gt;&gt; q;</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; q; ++i) &#123;</div><div class="line">			<span class="keyword">int</span> a, b;</div><div class="line">			<span class="built_in">cin</span> &gt;&gt; a &gt;&gt; b;</div><div class="line">			e[a][b] = e[b][a] = <span class="number">0</span>;</div><div class="line">		&#125;</div><div class="line">		<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; v;</div><div class="line">		v.push_back(<span class="number">1</span>);</div><div class="line">		<span class="keyword">int</span> res = <span class="number">0</span>;</div><div class="line">		<span class="keyword">while</span> (v.size() &lt; n)&#123;</div><div class="line">			<span class="keyword">int</span> minn = inf, u;</div><div class="line">			<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; v.size(); ++i)</div><div class="line">				<span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">1</span>; j &lt;= n; ++j)</div><div class="line">					<span class="keyword">if</span> ((find(v.begin(), v.end(), j) == v.end()) &amp;&amp; (e[v[i]][j] &lt; minn)) &#123;</div><div class="line">						minn = e[v[i]][j];</div><div class="line">						u = j;</div><div class="line">					&#125;</div><div class="line">			v.push_back(u);</div><div class="line">			res += minn;</div><div class="line">		&#125;</div><div class="line">		<span class="built_in">cout</span> &lt;&lt; res &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">HDOJ</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/08/28/HDOJ/HDOJ-1102-Constructing-Roads/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/10/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><a class="page-number" href="/page/10/">10</a><span class="page-number current">11</span><a class="page-number" href="/page/12/">12</a><a class="page-number" href="/page/13/">13</a><span class="space">&hellip;</span><a class="page-number" href="/page/55/">55</a><a class="extend next" rel="next" href="/page/12/">Next &raquo;</a>
@@ -1121,6 +1122,10 @@ MathJax.Hub.Queue(function() {
             
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">组合数</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">A*</a>
               </li>
             
             <div class="clearfix"></div>
