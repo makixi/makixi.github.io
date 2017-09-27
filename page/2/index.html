@@ -162,6 +162,79 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-POJ/OpenJudge-画家问题" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/09/23/POJ/OpenJudge-画家问题/">OpenJudge 画家问题</a>
+    </h1>
+  
+
+        
+        <a href="/2017/09/23/POJ/OpenJudge-画家问题/" class="archive-article-date">
+  	<time datetime="2017-09-23T03:25:51.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-09-23</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong>描述</strong><br>有一个正方形的墙，由N*N个正方形的砖组成，其中一些砖是白色的，另外一些砖是黄色的。Bob是个画家，想把全部的砖都涂成黄色。但他的画笔不好使。当他用画笔涂画第(i, j)个位置的砖时， 位置(i-1, j)、 (i+1, j)、 (i, j-1)、 (i, j+1)上的砖都会改变颜色。请你帮助Bob计算出最少需要涂画多少块砖，才能使所有砖的颜色都变成黄色。</p>
+<p><strong>输入</strong><br>第一行是一个整数n (1≤n ≤15)，表示墙的大小。接下来的n行表示墙的初始状态。每一行包含n个字符。第i行的第j个字符表示位于位置(i,j)上的砖的颜色。“w”表示白砖，“y”表示黄砖。</p>
+<p><strong>输出</strong><br>一行，如果Bob能够将所有的砖都涂成黄色，则输出最少需要涂画的砖数，否则输出“inf”。</p>
+<p><strong>样例输入</strong><br>5<br>wwwww<br>wwwww<br>wwwww<br>wwwww<br>wwwww</p>
+<p><strong>样例输出</strong><br>15</p>
+<p>这个辣鸡题目害我没理解清楚意思WA一小时<br>改变颜色的意思是y变w，w变y<br>这什么辣鸡画笔画过的地方还会褪色？？气死</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cstdio&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cstring&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;algorithm&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> maxn = <span class="number">16</span>;</div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> inf = <span class="number">0x3f3f3f3f</span>;</div><div class="line"><span class="keyword">int</span> ori[maxn], curr[maxn];</div><div class="line"><span class="keyword">int</span> n, mincnt;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">getbit</span><span class="params">(<span class="keyword">int</span> c, <span class="keyword">int</span> i)</span> </span>&#123;</div><div class="line">	<span class="keyword">return</span> (c &gt;&gt; i) &amp; <span class="number">1</span>;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">setbit</span><span class="params">(<span class="keyword">int</span> &amp;c, <span class="keyword">int</span> i,<span class="keyword">int</span> v)</span> </span>&#123;</div><div class="line">	<span class="keyword">if</span>(v)c |= (<span class="number">1</span> &lt;&lt; i);</div><div class="line">	<span class="keyword">else</span> c &amp;= ~(<span class="number">1</span> &lt;&lt; i);</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">flipbit</span><span class="params">(<span class="keyword">int</span> &amp;c, <span class="keyword">int</span> i)</span> </span>&#123;</div><div class="line">	c ^= (<span class="number">1</span> &lt;&lt; i);</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="built_in">cin</span> &gt;&gt; n;</div><div class="line">	mincnt = inf;</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; ++i) &#123;</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; n; ++j) &#123;</div><div class="line">			<span class="keyword">char</span> c; <span class="built_in">cin</span> &gt;&gt; c;</div><div class="line">			<span class="keyword">if</span> (c == <span class="string">'w'</span>)setbit(ori[i], j, <span class="number">1</span>);<span class="comment">//white</span></div><div class="line">			<span class="keyword">else</span>  setbit(ori[i], j, <span class="number">0</span>);<span class="comment">//yellow</span></div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> ii = <span class="number">0</span>; ii &lt; (<span class="number">1</span> &lt;&lt; n); ++ii) &#123;</div><div class="line">		<span class="keyword">int</span> cnt = <span class="number">0</span>, switchs = ii;</div><div class="line">		<span class="built_in">memcpy</span>(curr, ori, <span class="keyword">sizeof</span>(curr));</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; ++i) &#123;<span class="comment">//行</span></div><div class="line">			<span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; n; ++j) &#123;<span class="comment">//每行中的每一位</span></div><div class="line">				<span class="keyword">if</span> (getbit(switchs, j)) &#123;<span class="comment">//方法中需要涂第j位</span></div><div class="line">					++cnt;</div><div class="line">					<span class="keyword">if</span> (j &gt; <span class="number">0</span>)flipbit(curr[i], j - <span class="number">1</span>);<span class="comment">//左</span></div><div class="line">					flipbit(curr[i], j);<span class="comment">//中</span></div><div class="line">					<span class="keyword">if</span> (j &lt; n - <span class="number">1</span>)flipbit(curr[i], j + <span class="number">1</span>);<span class="comment">//右</span></div><div class="line">				&#125;</div><div class="line">			&#125;</div><div class="line">			<span class="keyword">if</span> (i &lt; n - <span class="number">1</span>)curr[i + <span class="number">1</span>] ^= switchs;<span class="comment">//下方被影响</span></div><div class="line">			switchs = curr[i];</div><div class="line">			<span class="keyword">if</span> (cnt &gt;= mincnt)<span class="keyword">continue</span>;</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">if</span> (curr[n - <span class="number">1</span>] == <span class="number">0</span>) &#123;</div><div class="line">			mincnt = min(mincnt, cnt);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">if</span> (mincnt == inf)<span class="built_in">cout</span> &lt;&lt; <span class="string">"inf"</span>;</div><div class="line">	<span class="keyword">else</span> <span class="built_in">cout</span> &lt;&lt; mincnt;</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">枚举</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">OpenJudge</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">位</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/09/23/POJ/OpenJudge-画家问题/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
     <article id="post-POJ/OpenJudge-Sudoku" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -755,72 +828,6 @@
 
 
   
-    <article id="post-POJ/POJ-1474-Video-Surveillance" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/09/22/POJ/POJ-1474-Video-Surveillance/">POJ 1474 Video Surveillance(半平面交，多边形的核)</a>
-    </h1>
-  
-
-        
-        <a href="/2017/09/22/POJ/POJ-1474-Video-Surveillance/" class="archive-article-date">
-  	<time datetime="2017-09-22T05:32:40.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-09-22</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><strong>Description</strong><br>A friend of yours has taken the job of security officer at the Star-Buy Company, a famous depart- ment store. One of his tasks is to install a video surveillance system to guarantee the security of the customers (and the security of the merchandise of course) on all of the store’s countless floors. As the company has only a limited budget, there will be only one camera on every floor. But these cameras may turn around to look in every direction.<br>The first problem is to choose where to install the camera for every floor. The only requirement is that every part of the room must be visible from there. In the following figure the left floor can be completely surveyed from the position indicated by a dot, while for the right floor, there is no such position, the given position failing to see the lower left part of the floor.<br>Before trying to install the cameras, your friend first wants to know whether there is indeed a suitable position for them. He therefore asks you to write a program that, given a ground plan, de- termines whether there is a position from which the whole floor is visible. All floor ground plans form rectangular polygons, whose edges do not intersect each other and touch each other only at the corners.</p>
-<p><strong>Input</strong><br>The input contains several floor descriptions. Every description starts with the number n of vertices that bound the floor (4 &lt;= n &lt;= 100). The next n lines contain two integers each, the x and y coordinates for the n vertices, given in clockwise order. All vertices will be distinct and at corners of the polygon. Thus the edges alternate between horizontal and vertical.<br>A zero value for n indicates the end of the input.</p>
-<p><strong>Output</strong><br>For every test case first output a line with the number of the floor, as shown in the sample output. Then print a line stating “Surveillance is possible.” if there exists a position from which the entire floor can be observed, or print “Surveillance is impossible.” if there is no such position.<br>Print a blank line after each test case.</p>
-<p><strong>Sample Input</strong><br>4<br>0 0<br>0 1<br>1 1<br>1 0<br>8<br>0 0<br>0 2<br>1 2<br>1 1<br>2 1<br>2 2<br>3 2<br>3 0<br>0</p>
-<p><strong>Sample Output</strong><br>Floor #1<br>Surveillance is possible.</p>
-<p>Floor #2<br>Surveillance is impossible.</p>
-<p>给出一个简单多边形，其各边与坐标轴平行，询问其是否存在一点，可以看到所有的边。<br><a href="半平面交">http://blog.csdn.net/accry/article/details/6070621</a></p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cstdio&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cstdlib&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cstring&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cmath&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;algorithm&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> eps 1e-10</span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> maxn = <span class="number">110</span>;</div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">node</span> &#123;</span></div><div class="line">	<span class="keyword">double</span> x, y;</div><div class="line">	<span class="keyword">double</span> <span class="keyword">operator</span> ^(<span class="keyword">const</span> node &amp;a) &#123;</div><div class="line">		<span class="keyword">return</span> x*a.y - y*a.x;</div><div class="line">	&#125;</div><div class="line">&#125;v[maxn], p[maxn], q[maxn];</div><div class="line"><span class="keyword">int</span> n, endcnt, tempcnt;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">init</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; ++i) p[i] = v[i];</div><div class="line">	p[n + <span class="number">1</span>] = p[<span class="number">1</span>]; p[<span class="number">0</span>] = p[n];</div><div class="line">	endcnt = n;<span class="comment">//最终切割得到的多边形的顶点数，初始化为多边形的顶点的个数</span></div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">getline</span><span class="params">(node p1, node p2, <span class="keyword">double</span> &amp;a, <span class="keyword">double</span> &amp;b, <span class="keyword">double</span> &amp;c)</span> </span>&#123;<span class="comment">//两点确定一条直线，a、b、c为其系数</span></div><div class="line">	a = p2.y - p1.y;</div><div class="line">	b = p1.x - p2.x;</div><div class="line">	c = p2^p1;</div><div class="line">&#125;</div><div class="line"><span class="function">node <span class="title">getinter</span><span class="params">(node p1, node p2, <span class="keyword">double</span> a, <span class="keyword">double</span> b, <span class="keyword">double</span> c)</span> </span>&#123;</div><div class="line">	<span class="keyword">double</span> u = <span class="built_in">fabs</span>(a*p1.x + b*p1.y + c);</div><div class="line">	<span class="keyword">double</span> v = <span class="built_in">fabs</span>(a*p2.x + b*p2.y + c);</div><div class="line">	node temp;</div><div class="line">	temp.x = (p1.x*v + p2.x*u) / (u + v);</div><div class="line">	temp.y = (p1.y*v + p2.y*u) / (u + v);</div><div class="line">	<span class="keyword">return</span> temp;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">cut</span><span class="params">(<span class="keyword">double</span> a, <span class="keyword">double</span> b, <span class="keyword">double</span> c)</span> </span>&#123;</div><div class="line">	tempcnt = <span class="number">0</span>;</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= endcnt; ++i) &#123;</div><div class="line">		<span class="keyword">if</span> (a*p[i].x + b*p[i].y + c &gt;= <span class="number">0</span>)q[++tempcnt] = p[i];</div><div class="line">		<span class="keyword">else</span> &#123;</div><div class="line">			<span class="keyword">if</span> (a*p[i - <span class="number">1</span>].x + b*p[i - <span class="number">1</span>].y + c&gt;<span class="number">0</span>)</div><div class="line">				q[++tempcnt] = getinter(p[i], p[i - <span class="number">1</span>], a, b, c);</div><div class="line">			<span class="keyword">if</span> (a*p[i + <span class="number">1</span>].x + b*p[i + <span class="number">1</span>].y + c&gt;<span class="number">0</span>)</div><div class="line">				q[++tempcnt] = getinter(p[i], p[i + <span class="number">1</span>], a, b, c);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= tempcnt; ++i)</div><div class="line">		p[i] = q[i];</div><div class="line">	p[tempcnt + <span class="number">1</span>] = p[<span class="number">1</span>]; p[<span class="number">0</span>] = p[tempcnt];</div><div class="line">	endcnt = tempcnt;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">slove</span><span class="params">()</span> </span>&#123;</div><div class="line">	v[n + <span class="number">1</span>] = v[<span class="number">1</span>];</div><div class="line">	init();</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; ++i) &#123;</div><div class="line">		<span class="keyword">double</span> a, b, c;</div><div class="line">		getline(v[i], v[i + <span class="number">1</span>], a, b, c);</div><div class="line">		cut(a, b, c);</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">if</span> (endcnt &lt;= <span class="number">0</span>) <span class="built_in">printf</span>(<span class="string">"Surveillance is impossible.\n"</span>);</div><div class="line">	<span class="keyword">else</span> <span class="built_in">printf</span>(<span class="string">"Surveillance is possible.\n"</span>);</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</div><div class="line">	<span class="keyword">int</span> t = <span class="number">1</span>, i;</div><div class="line">	<span class="keyword">while</span> (<span class="built_in">scanf</span>(<span class="string">"%d"</span>, &amp;n), n) &#123;</div><div class="line">		<span class="keyword">for</span> (i = <span class="number">1</span>; i &lt;= n; ++i)</div><div class="line">			<span class="built_in">scanf</span>(<span class="string">"%lf%lf"</span>, &amp;v[i].x, &amp;v[i].y);</div><div class="line">		<span class="built_in">printf</span>(<span class="string">"Floor #%d\n"</span>, t++);</div><div class="line">		slove();</div><div class="line">		<span class="built_in">printf</span>(<span class="string">"\n"</span>);</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">POJ</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/09/22/POJ/POJ-1474-Video-Surveillance/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/55/">55</a><a class="extend next" rel="next" href="/page/3/">Next &raquo;</a>
@@ -932,6 +939,10 @@ MathJax.Hub.Queue(function() {
           <ul class="article-tag-list" q-show="showTags">
             
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">POJ</a>
+              </li>
+            
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">C++练手题</a>
               </li>
             
@@ -940,11 +951,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">数学</a>
+                <a href="javascript:void(0)" class="js-tag color4">STL</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">STL</a>
+                <a href="javascript:void(0)" class="js-tag color3">数学</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -952,11 +963,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">DP</a>
+                <a href="javascript:void(0)" class="js-tag color4">DFS</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">DFS</a>
+                <a href="javascript:void(0)" class="js-tag color3">DP</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1040,11 +1051,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">堆</a>
+                <a href="javascript:void(0)" class="js-tag color3">逻辑</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">逻辑</a>
+                <a href="javascript:void(0)" class="js-tag color2">堆</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1057,10 +1068,6 @@ MathJax.Hub.Queue(function() {
             
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">位</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">POJ</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1092,11 +1099,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">操作系统</a>
+                <a href="javascript:void(0)" class="js-tag color5">HTML</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">HTML</a>
+                <a href="javascript:void(0)" class="js-tag color5">操作系统</a>
               </li>
             
               <li class="article-tag-list-item">
