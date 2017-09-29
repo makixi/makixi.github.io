@@ -162,6 +162,71 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-POJ/POJ-1190-生日蛋糕-DFS枚举" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/08/28/POJ/POJ-1190-生日蛋糕-DFS枚举/">POJ 1190 生日蛋糕(DFS枚举+剪枝)</a>
+    </h1>
+  
+
+        
+        <a href="/2017/08/28/POJ/POJ-1190-生日蛋糕-DFS枚举/" class="archive-article-date">
+  	<time datetime="2017-08-28T05:25:41.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-08-28</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong>Description</strong><br>7月17日是Mr.W的生日，ACM-THU为此要制作一个体积为Nπ的M层生日蛋糕，每层都是一个圆柱体。<br>设从下往上数第i(1 &lt;= i &lt;= M)层蛋糕是半径为Ri, 高度为Hi的圆柱。当i &lt; M时，要求Ri &gt; Ri+1且Hi &gt; Hi+1。<br>由于要在蛋糕上抹奶油，为尽可能节约经费，我们希望蛋糕外表面（最下一层的下底面除外）的面积Q最小。<br>令Q = Sπ<br>请编程对给出的N和M，找出蛋糕的制作方案（适当的Ri和Hi的值），使S最小。<br>（除Q外，以上所有数据皆为正整数）</p>
+<p><strong>Input</strong><br>有两行，第一行为N（N &lt;= 10000），表示待制作的蛋糕的体积为Nπ；第二行为M(M &lt;= 20)，表示蛋糕的层数为M。</p>
+<p><strong>Output</strong><br>仅一行，是一个正整数S（若无解则S = 0）。</p>
+<p><strong>Sample Input</strong><br>100<br>2</p>
+<p><strong>Sample Output</strong><br>68</p>
+<p><strong>Hint</strong><br>圆柱公式<br>体积V = πR2H<br>侧面积A’ = 2πRH<br>底面积A = πR2</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;algorithm&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;map&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;queue&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cmath&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;vector&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> maxn = <span class="number">202</span>;</div><div class="line"><span class="keyword">int</span> dx[] = &#123; <span class="number">0</span>,<span class="number">0</span>,<span class="number">1</span>,<span class="number">-1</span> &#125;;</div><div class="line"><span class="keyword">int</span> dy[] = &#123; <span class="number">1</span>,<span class="number">-1</span>,<span class="number">0</span>,<span class="number">0</span> &#125;;</div><div class="line"><span class="keyword">int</span> minArea = <span class="number">1</span> &lt;&lt; <span class="number">30</span>;</div><div class="line"><span class="keyword">int</span> area = <span class="number">0</span>;</div><div class="line"><span class="keyword">int</span> M, N;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">dfs</span><span class="params">(<span class="keyword">int</span>, <span class="keyword">int</span>, <span class="keyword">int</span>, <span class="keyword">int</span>)</span></span>;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">dfs</span><span class="params">(<span class="keyword">int</span> v, <span class="keyword">int</span> n, <span class="keyword">int</span> r, <span class="keyword">int</span> h)</span> </span>&#123;</div><div class="line">	<span class="comment">//n层 体积v 最底层半径不超过r　高度不超过ｈ</span></div><div class="line">	<span class="keyword">if</span> (n == <span class="number">0</span>) &#123;</div><div class="line">		<span class="keyword">if</span> (v)<span class="keyword">return</span>;</div><div class="line">		minArea = min(minArea, area); <span class="keyword">return</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">if</span> (v &lt;= <span class="number">0</span>)<span class="keyword">return</span>;</div><div class="line">	<span class="keyword">int</span> minm = <span class="number">0</span>;</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; ++i)minm += i*i*i;</div><div class="line">	<span class="keyword">if</span> (v &lt; minm)<span class="keyword">return</span>;</div><div class="line">	minm -= n*n*n;</div><div class="line">	<span class="keyword">int</span> maxr = (<span class="keyword">int</span>)<span class="built_in">sqrt</span>((v - minm)*<span class="number">1.0</span> / n) &lt; r ? (<span class="keyword">int</span>)<span class="built_in">sqrt</span>((v - minm)*<span class="number">1.0</span> / n) : r;</div><div class="line">	<span class="keyword">int</span> maxh, tmp;</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = maxr; i &gt;= n; --i) &#123;</div><div class="line">		<span class="keyword">if</span> (n == M)area = <span class="built_in">pow</span>(i, <span class="number">2</span>);</div><div class="line">		maxh = (v - minm) / (i*i)&lt;h ? (v - minm) / (i*i) : h;</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> j = maxh; j &gt;= n; j--)&#123;</div><div class="line">			tmp = <span class="number">0</span>;</div><div class="line">			<span class="keyword">for</span> (<span class="keyword">int</span> k = <span class="number">0</span>; k &lt;= n - <span class="number">1</span>; k++)</div><div class="line">				tmp += (i - k)*(i - k)*(j - k);</div><div class="line">			<span class="keyword">if</span> (v&gt;tmp)<span class="keyword">break</span>;</div><div class="line">			<span class="keyword">int</span> tempv = v - i*i*j;</div><div class="line">			<span class="keyword">if</span> (n == M)</div><div class="line">				<span class="keyword">if</span> (i*i&lt;minArea)</div><div class="line">					area = i*i;</div><div class="line">				<span class="keyword">else</span>&#123;</div><div class="line">					tempv = v;</div><div class="line">					<span class="keyword">continue</span>;</div><div class="line">				&#125;</div><div class="line">			area += <span class="number">2</span> * i*j;</div><div class="line">			<span class="keyword">if</span> (area&gt;minArea)&#123;</div><div class="line">				tempv = v;</div><div class="line">				area -= <span class="number">2</span> * i*j;</div><div class="line">				<span class="keyword">continue</span>;</div><div class="line">			&#125;</div><div class="line">			dfs(tempv, n - <span class="number">1</span>, i - <span class="number">1</span>, j - <span class="number">1</span>);</div><div class="line">			area -= <span class="number">2</span> * i*j;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="built_in">cin</span> &gt;&gt; N &gt;&gt; M;</div><div class="line">	dfs(N, M, <span class="number">1000</span>, <span class="number">1000</span>);</div><div class="line">	<span class="keyword">if</span> (minArea == <span class="number">1</span> &lt;&lt; <span class="number">30</span>)<span class="built_in">cout</span> &lt;&lt; <span class="number">0</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	<span class="keyword">else</span> <span class="built_in">cout</span> &lt;&lt; minArea &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">POJ</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/08/28/POJ/POJ-1190-生日蛋糕-DFS枚举/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
     <article id="post-HDOJ/HDOJ-1100-Trees-Made-to-Order" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -744,70 +809,6 @@
 
 
   
-    <article id="post-HDOJ/HDOJ-1085-Holding-Bin-Laden-Captive" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/08/26/HDOJ/HDOJ-1085-Holding-Bin-Laden-Captive/">HDOJ 1085 Holding Bin-Laden Captive!(母函数)</a>
-    </h1>
-  
-
-        
-        <a href="/2017/08/26/HDOJ/HDOJ-1085-Holding-Bin-Laden-Captive/" class="archive-article-date">
-  	<time datetime="2017-08-26T07:59:25.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-08-26</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><strong>Problem Description</strong><br>We all know that Bin-Laden is a notorious terrorist, and he has disappeared for a long time. But recently, it is reported that he hides in Hang Zhou of China!<br>“Oh, God! How terrible! ”<br>Don’t be so afraid, guys. Although he hides in a cave of Hang Zhou, he dares not to go out. Laden is so bored recent years that he fling himself into some math problems, and he said that if anyone can solve his problem, he will give himself up!<br>Ha-ha! Obviously, Laden is too proud of his intelligence! But, what is his problem?<br>“Given some Chinese Coins (硬币) (three kinds– 1, 2, 5), and their number is num_1, num_2 and num_5 respectively, please output the minimum value that you cannot pay with given coins.”<br>You, super ACMer, should solve the problem easily, and don’t forget to take $25000000 from Bush!</p>
-<p><strong>Input</strong><br>Input contains multiple test cases. Each test case contains 3 positive integers num_1, num_2 and num_5 (0&lt;=num_i&lt;=1000). A test case containing 0 0 0 terminates the input and this test case is not to be processed.</p>
-<p><strong>Output</strong><br>Output the minimum positive value that one cannot pay with given coins, one line for one case.</p>
-<p><strong>Sample Input</strong><br>1 1 3<br>0 0 0</p>
-<p><strong>Sample Output</strong><br>4</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cstring&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> maxn 8010</span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="keyword">int</span> c1[maxn],c2[maxn];</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</div><div class="line">	<span class="keyword">int</span> num[<span class="number">4</span>],val[<span class="number">4</span>]=&#123;<span class="number">0</span>,<span class="number">1</span>,<span class="number">2</span>,<span class="number">5</span>&#125;;</div><div class="line">	<span class="keyword">while</span>(<span class="built_in">scanf</span>(<span class="string">"%d%d%d"</span>,&amp;num[<span class="number">1</span>],&amp;num[<span class="number">2</span>],&amp;num[<span class="number">3</span>])&amp;&amp;(num[<span class="number">1</span>]+num[<span class="number">2</span>]+num[<span class="number">3</span>]))&#123;</div><div class="line">		<span class="built_in">memset</span>(c1,<span class="number">0</span>,<span class="keyword">sizeof</span>(c1));</div><div class="line">		<span class="built_in">memset</span>(c2,<span class="number">0</span>,<span class="keyword">sizeof</span>(c2));</div><div class="line">		<span class="keyword">int</span> sum=num[<span class="number">1</span>]+num[<span class="number">2</span>]*<span class="number">2</span>+num[<span class="number">3</span>]*<span class="number">5</span>;</div><div class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;=num[<span class="number">1</span>];++i)</div><div class="line">			c1[i]=<span class="number">1</span>;</div><div class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">2</span>;i&lt;=<span class="number">3</span>;++i)&#123;</div><div class="line">			<span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;=sum;++j)</div><div class="line">				<span class="keyword">for</span>(<span class="keyword">int</span> k=<span class="number">0</span>,used=<span class="number">0</span>;k+j&lt;=sum&amp;&amp;used&lt;=num[i];k+=val[i],used++)</div><div class="line">					c2[k+j]+=c1[j];</div><div class="line">			<span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;=sum;++j)&#123;</div><div class="line">				c1[j]=c2[j];</div><div class="line">				c2[j]=<span class="number">0</span>;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;=sum+<span class="number">1</span>;++j)</div><div class="line">			<span class="keyword">if</span>(c1[j]==<span class="number">0</span>)&#123;</div><div class="line">				<span class="built_in">printf</span>(<span class="string">"%d\n"</span>,j);</div><div class="line">				<span class="keyword">break</span>;</div><div class="line">			&#125;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">HDOJ</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/08/26/HDOJ/HDOJ-1085-Holding-Bin-Laden-Captive/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/12/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="page-number" href="/page/12/">12</a><span class="page-number current">13</span><a class="page-number" href="/page/14/">14</a><a class="page-number" href="/page/15/">15</a><span class="space">&hellip;</span><a class="page-number" href="/page/56/">56</a><a class="extend next" rel="next" href="/page/14/">Next &raquo;</a>
@@ -955,11 +956,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">二分法</a>
+                <a href="javascript:void(0)" class="js-tag color4">BFS</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">BFS</a>
+                <a href="javascript:void(0)" class="js-tag color4">二分法</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -975,11 +976,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">01背包</a>
+                <a href="javascript:void(0)" class="js-tag color5">Java</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Java</a>
+                <a href="javascript:void(0)" class="js-tag color5">01背包</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1079,7 +1080,7 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">操作系统</a>
+                <a href="javascript:void(0)" class="js-tag color4">错题集</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1087,11 +1088,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">错题集</a>
+                <a href="javascript:void(0)" class="js-tag color3">js</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">js</a>
+                <a href="javascript:void(0)" class="js-tag color5">操作系统</a>
               </li>
             
               <li class="article-tag-list-item">
