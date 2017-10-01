@@ -162,6 +162,74 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-HDOJ/HDOJ-1115-Lifting-the-Stone" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/08/31/HDOJ/HDOJ-1115-Lifting-the-Stone/">HDOJ 1115 Lifting the Stone(算重心)</a>
+    </h1>
+  
+
+        
+        <a href="/2017/08/31/HDOJ/HDOJ-1115-Lifting-the-Stone/" class="archive-article-date">
+  	<time datetime="2017-08-31T02:40:08.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-08-31</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong>Problem Description</strong><br>There are many secret openings in the floor which are covered by a big heavy stone. When the stone is lifted up, a special mechanism detects this and activates poisoned arrows that are shot near the opening. The only possibility is to lift the stone very slowly and carefully. The ACM team must connect a rope to the stone and then lift it using a pulley. Moreover, the stone must be lifted all at once; no side can rise before another. So it is very important to find the centre of gravity and connect the rope exactly to that point. The stone has a polygonal shape and its height is the same throughout the whole polygonal area. Your task is to find the centre of gravity for the given polygon.</p>
+<p><strong>Input</strong><br>The input consists of T test cases. The number of them (T) is given on the first line of the input file. Each test case begins with a line containing a single integer N (3 &lt;= N &lt;= 1000000) indicating the number of points that form the polygon. This is followed by N lines, each containing two integers Xi and Yi (|Xi|, |Yi| &lt;= 20000). These numbers are the coordinates of the i-th point. When we connect the points in the given order, we get a polygon. You may assume that the edges never touch each other (except the neighboring ones) and that they never cross. The area of the polygon is never zero, i.e. it cannot collapse into a single line.</p>
+<p><strong>Output</strong><br>Print exactly one line for each test case. The line should contain exactly two numbers separated by one space. These numbers are the coordinates of the centre of gravity. Round the coordinates to the nearest number with exactly two digits after the decimal point (0.005 rounds up to 0.01). Note that the centre of gravity may be outside the polygon, if its shape is not convex. If there is such a case in the input data, print the centre anyway.</p>
+<p><strong>Sample Input</strong><br>2<br>4<br>5 0<br>0 5<br>-5 0<br>0 -5<br>4<br>1 1<br>11 1<br>11 11<br>1 11</p>
+<p><strong>Sample Output</strong><br>0.00 0.00<br>6.00 6.00</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;map&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;string&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cstring&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;queue&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;algorithm&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;vector&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cmath&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;ctime&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> inf = <span class="number">0x3f3f3f3f</span>;</div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">node</span> &#123;</span></div><div class="line">	<span class="keyword">double</span> x, y;</div><div class="line">&#125;;</div><div class="line"><span class="function"><span class="keyword">double</span> <span class="title">getarea</span><span class="params">(node a, node b, node c)</span> </span>&#123;</div><div class="line">	<span class="keyword">return</span> ((b.x - a.x)*(c.y - a.y) - (b.y - a.y)*(c.x - a.x)) / <span class="number">2</span>;<span class="comment">//向量叉乘</span></div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="keyword">int</span> t, n;</div><div class="line">	<span class="built_in">cin</span> &gt;&gt; t;</div><div class="line">	<span class="keyword">while</span> (t--) &#123;</div><div class="line">		<span class="built_in">cin</span> &gt;&gt; n;</div><div class="line">		node a, b, c;</div><div class="line">		<span class="built_in">cin</span> &gt;&gt; a.x &gt;&gt; a.y &gt;&gt; b.x &gt;&gt; b.y;</div><div class="line">		<span class="keyword">double</span> x = <span class="number">0</span>, y = <span class="number">0</span>, area = <span class="number">0</span>;</div><div class="line">		<span class="keyword">double</span> tmparea;</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">3</span>; i &lt;= n; ++i) &#123;</div><div class="line">			<span class="built_in">cin</span> &gt;&gt; c.x &gt;&gt; c.y;</div><div class="line">			tmparea = getarea(a, b, c);</div><div class="line">			area += tmparea;</div><div class="line">			x += (a.x + b.x + c.x)*tmparea / <span class="number">3</span>;</div><div class="line">			y += (a.y + b.y + c.y)*tmparea / <span class="number">3</span>;</div><div class="line">			b = c;</div><div class="line">		&#125;</div><div class="line">		<span class="built_in">printf</span>(<span class="string">"%.2lf %.2lf\n"</span>, x / area, y / area);</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">HDOJ</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">数学</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/08/31/HDOJ/HDOJ-1115-Lifting-the-Stone/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
     <article id="post-数据结构/关于树状数组" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -769,70 +837,6 @@ Your goal is to decrypt the secret code, i.e. to express a given number X in the
 
 
   
-    <article id="post-HDOJ/HDOJ-1106-排序-STL" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/08/29/HDOJ/HDOJ-1106-排序-STL/">HDOJ 1106 排序(STL)</a>
-    </h1>
-  
-
-        
-        <a href="/2017/08/29/HDOJ/HDOJ-1106-排序-STL/" class="archive-article-date">
-  	<time datetime="2017-08-29T02:52:04.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-08-29</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><strong>Problem Description</strong><br>输入一行数字，如果我们把这行数字中的‘5’都看成空格，那么就得到一行用空格分割的若干非负整数（可能有些整数以‘0’开头，这些头部的‘0’应该被忽略掉，除非这个整数就是由若干个‘0’组成的，这时这个整数就是0）。<br>你的任务是：对这些分割得到的整数，依从小到大的顺序排序输出。</p>
-<p><strong>Input</strong><br>输入包含多组测试用例，每组输入数据只有一行数字（数字之间没有空格），这行数字的长度不大于1000。<br>输入数据保证：分割得到的非负整数不会大于100000000；输入数据不可能全由‘5’组成。</p>
-<p><strong>Output</strong><br>对于每个测试用例，输出分割得到的整数排序的结果，相邻的两个整数之间用一个空格分开，每组输出占一行。</p>
-<p><strong>Sample Input</strong><br>0051231232050775</p>
-<p><strong>Sample Output</strong><br>0 77 12312320</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;map&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;string&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cstring&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;queue&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;algorithm&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;vector&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cmath&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> ll long long</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</div><div class="line">	<span class="built_in">string</span> str;</div><div class="line">	<span class="keyword">while</span>(<span class="built_in">cin</span>&gt;&gt;str)&#123;</div><div class="line">		<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; v;</div><div class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>,be=<span class="number">0</span>;i&lt;str.length();++i)&#123;</div><div class="line">			<span class="keyword">if</span>(str[i]==<span class="string">'5'</span>&amp;&amp;be!=i)&#123;</div><div class="line">				v.push_back(stoi(str.substr(be,i<span class="number">-1</span>-be)));</div><div class="line">				be=i+<span class="number">1</span>;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">		sort(v.begin(),v.end());</div><div class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;v.size();++i)&#123;</div><div class="line">			<span class="keyword">if</span>(i)<span class="built_in">cout</span>&lt;&lt;<span class="string">" "</span>;</div><div class="line">			<span class="built_in">cout</span>&lt;&lt;v[i];</div><div class="line">		&#125;</div><div class="line">		<span class="built_in">cout</span>&lt;&lt;<span class="built_in">endl</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">HDOJ</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/08/29/HDOJ/HDOJ-1106-排序-STL/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/11/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><a class="page-number" href="/page/11/">11</a><span class="page-number current">12</span><a class="page-number" href="/page/13/">13</a><a class="page-number" href="/page/14/">14</a><span class="space">&hellip;</span><a class="page-number" href="/page/56/">56</a><a class="extend next" rel="next" href="/page/13/">Next &raquo;</a>
@@ -952,11 +956,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">数学</a>
+                <a href="javascript:void(0)" class="js-tag color4">STL</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">STL</a>
+                <a href="javascript:void(0)" class="js-tag color3">数学</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1028,26 +1032,6 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">OpenJudge</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">递归</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">位</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">POJ</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Dijstra</a>
-              </li>
-            
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">PAT甲级</a>
               </li>
             
@@ -1068,6 +1052,10 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">递归</a>
+              </li>
+            
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">逻辑</a>
               </li>
             
@@ -1077,6 +1065,22 @@ MathJax.Hub.Queue(function() {
             
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">并查集</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">OpenJudge</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">位</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">POJ</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Dijstra</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1108,11 +1112,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">操作系统</a>
+                <a href="javascript:void(0)" class="js-tag color5">HTML</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">HTML</a>
+                <a href="javascript:void(0)" class="js-tag color5">操作系统</a>
               </li>
             
               <li class="article-tag-list-item">
