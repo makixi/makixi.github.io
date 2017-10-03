@@ -162,6 +162,70 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-POJ/POJ-1568-Find-the-Winning-Move" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/09/27/POJ/POJ-1568-Find-the-Winning-Move/">POJ 1568 Find the Winning Move(Alpha–beta剪枝)</a>
+    </h1>
+  
+
+        
+        <a href="/2017/09/27/POJ/POJ-1568-Find-the-Winning-Move/" class="archive-article-date">
+  	<time datetime="2017-09-27T09:43:19.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-09-27</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong>Description</strong><br>4x4 tic-tac-toe is played on a board with four rows (numbered 0 to 3 from top to bottom) and four columns (numbered 0 to 3 from left to right). There are two players, x and o, who move alternately with x always going first. The game is won by the first player to get four of his or her pieces on the same row, column, or diagonal. If the board is full and neither player has won then the game is a draw.<br>Assuming that it is x’s turn to move, x is said to have a forced win if x can make a move such that no matter what moves o makes for the rest of the game, x can win. This does not necessarily mean that x will win on the very next move, although that is a possibility. It means that x has a winning strategy that will guarantee an eventual victory regardless of what o does.<br>Your job is to write a program that, given a partially-completed game with x to move next, will determine whether x has a forced win. You can assume that each player has made at least two moves, that the game has not already been won by either player, and that the board is not full.</p>
+<p><strong>Input</strong><br>The input contains one or more test cases, followed by a line beginning with a dollar sign that signals the end of the file. Each test case begins with a line containing a question mark and is followed by four lines representing the board; formatting is exactly as shown in the example. The characters used in a board description are the period (representing an empty space), lowercase x, and lowercase o. For each test case, output a line containing the (row, column) position of the first forced win for x, or ‘#####’ if there is no forced win. Format the output exactly as shown in the example.</p>
+<p><strong>Output</strong><br>For this problem, the first forced win is determined by board position, not the number of moves required for victory. Search for a forced win by examining positions (0, 0), (0, 1), (0, 2), (0, 3), (1, 0), (1, 1), …, (3, 2), (3, 3), in that order, and output the first forced win you find. In the second test case below, note that x could win immediately by playing at (0, 3) or (2, 0), but playing at (0, 1) will still ensure victory (although it unnecessarily delays it), and position (0, 1) comes first.</p>
+<p><strong>Sample Input</strong><br>?<br>….<br>.xo.<br>.ox.<br>….<br>?<br>o…<br>.ox.<br>.xxx<br>xooo<br>\$</p>
+<p><strong>Sample Output</strong><br>#####<br>(0,1)</p>
+<p>给定一个4 * 4 的四子连珠棋棋盘的局面，现在轮到x先走，问x下在哪里可以必胜<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cstdio&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;algorithm&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> inf = <span class="number">1</span> &lt;&lt; <span class="number">30</span>;</div><div class="line"><span class="keyword">char</span> s[<span class="number">5</span>][<span class="number">5</span>];</div><div class="line"><span class="keyword">int</span> chess;</div><div class="line"><span class="keyword">int</span> x, y;</div><div class="line"><span class="function"><span class="keyword">bool</span> <span class="title">check</span><span class="params">(<span class="keyword">int</span> xx,<span class="keyword">int</span> yy)</span> </span>&#123;</div><div class="line">	<span class="keyword">int</span> row[<span class="number">5</span>] = &#123; <span class="number">0</span> &#125;, col[<span class="number">5</span>] = &#123; <span class="number">0</span> &#125;;</div><div class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">4</span>;++i)</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; <span class="number">4</span>; ++j) &#123;</div><div class="line">			<span class="keyword">if</span> (s[i][j] == <span class="string">'x'</span>) &#123;</div><div class="line">				row[i]++;</div><div class="line">				col[j]++;</div><div class="line">			&#125;</div><div class="line">			<span class="keyword">if</span> (s[i][j] == <span class="string">'o'</span>) &#123;</div><div class="line">				row[i]--;</div><div class="line">				col[j]--;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	<span class="keyword">if</span> (row[xx] == <span class="number">-4</span> || row[xx] == <span class="number">4</span> || col[yy] == <span class="number">4</span> || col[yy] == <span class="number">-4</span>)<span class="keyword">return</span> <span class="literal">true</span>;</div><div class="line">	<span class="keyword">int</span> cnt1 = <span class="number">0</span>, cnt2 = <span class="number">0</span>;</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">4</span>; ++i) &#123;</div><div class="line">		<span class="keyword">if</span> (s[i][i] == <span class="string">'x'</span>)++cnt1;</div><div class="line">		<span class="keyword">if</span> (s[i][i] == <span class="string">'o'</span>)--cnt1;</div><div class="line">		<span class="keyword">if</span> (s[i][<span class="number">3</span> - i] == <span class="string">'x'</span>)++cnt2;</div><div class="line">		<span class="keyword">if</span> (s[i][<span class="number">3</span> - i] == <span class="string">'o'</span>)--cnt2;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">if</span> ((cnt1 == <span class="number">4</span> || cnt1 == <span class="number">-4</span>) &amp;&amp; xx == yy)<span class="keyword">return</span> <span class="literal">true</span>;</div><div class="line">	<span class="keyword">if</span> ((cnt2 == <span class="number">4</span> || cnt2 == <span class="number">-4</span>) &amp;&amp; xx == <span class="number">3</span> - yy)<span class="keyword">return</span> <span class="literal">true</span>;</div><div class="line">	<span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">MaxSearch</span><span class="params">(<span class="keyword">int</span> xx, <span class="keyword">int</span> yy, <span class="keyword">int</span> beta)</span></span>;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">MinSearch</span><span class="params">(<span class="keyword">int</span> xx, <span class="keyword">int</span> yy, <span class="keyword">int</span> alpha)</span> </span>&#123;</div><div class="line">	<span class="comment">// &lt;&lt; xx &lt;&lt; " " &lt;&lt; yy &lt;&lt; endl;</span></div><div class="line">	<span class="keyword">int</span> ans = inf;</div><div class="line">	<span class="keyword">if</span> (check(xx,yy))<span class="keyword">return</span> ans;</div><div class="line">	<span class="keyword">if</span> (chess == <span class="number">16</span>)<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">4</span>;++i)</div><div class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;<span class="number">4</span>;++j)</div><div class="line">			<span class="keyword">if</span> (s[i][j] == <span class="string">'.'</span>) &#123;</div><div class="line">				s[i][j] = <span class="string">'o'</span>; ++chess;</div><div class="line">				<span class="keyword">int</span> res = MaxSearch(i, j, ans);</div><div class="line">				s[i][j] = <span class="string">'.'</span>; --chess;</div><div class="line">				ans = min(ans, res);</div><div class="line">				<span class="keyword">if</span> (ans &lt;= alpha)<span class="keyword">return</span> ans;</div><div class="line">			&#125;</div><div class="line">	<span class="keyword">return</span> ans;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">MaxSearch</span><span class="params">(<span class="keyword">int</span> xx, <span class="keyword">int</span> yy, <span class="keyword">int</span> beta)</span> </span>&#123;</div><div class="line">	<span class="comment">//cout &lt;&lt; xx &lt;&lt; " " &lt;&lt; yy &lt;&lt; endl;</span></div><div class="line">	<span class="keyword">int</span> ans = -inf;</div><div class="line">	<span class="keyword">if</span> (check(xx, yy))<span class="keyword">return</span> ans;</div><div class="line">	<span class="keyword">if</span> (chess == <span class="number">16</span>)<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">4</span>;++i)</div><div class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;<span class="number">4</span>;++j)</div><div class="line">			<span class="keyword">if</span> (s[i][j] == <span class="string">'.'</span>) &#123;</div><div class="line">				s[i][j] = <span class="string">'x'</span>; ++chess;</div><div class="line">				<span class="keyword">int</span> res = MinSearch(i, j, ans);</div><div class="line">				s[i][j] = <span class="string">'.'</span>; --chess;</div><div class="line">				ans = max(res, ans);</div><div class="line">				<span class="keyword">if</span> (ans &gt;= beta)<span class="keyword">return</span> ans;</div><div class="line">			&#125;</div><div class="line">	<span class="keyword">return</span> ans;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">bool</span> <span class="title">solve</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="keyword">int</span> alpha = -inf;</div><div class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">4</span>;++i)</div><div class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;<span class="number">4</span>;++j)</div><div class="line">			<span class="keyword">if</span> (s[i][j] == <span class="string">'.'</span>) &#123;</div><div class="line">				s[i][j] = <span class="string">'x'</span>; ++chess;</div><div class="line">				<span class="keyword">int</span> res = MinSearch(i, j, alpha);</div><div class="line">				s[i][j] = <span class="string">'.'</span>; --chess;</div><div class="line">				<span class="keyword">if</span> (res == inf) &#123;</div><div class="line">					x = i;</div><div class="line">					y = j;</div><div class="line">					<span class="keyword">return</span> <span class="literal">true</span>;</div><div class="line">				&#125;</div><div class="line">			&#125;</div><div class="line">	<span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="keyword">char</span> c[<span class="number">5</span>];</div><div class="line">	<span class="keyword">while</span> (~<span class="built_in">scanf</span>(<span class="string">"%s"</span>,c)&amp;&amp;c[<span class="number">0</span>] != <span class="string">'$'</span>) &#123;</div><div class="line">		chess = <span class="number">0</span>;</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">4</span>; ++i) &#123;</div><div class="line">			<span class="built_in">scanf</span>(<span class="string">"%s"</span>, s[i]);</div><div class="line">			<span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; <span class="number">4</span>; ++j)</div><div class="line">				<span class="keyword">if</span> (s[i][j] != <span class="string">'.'</span>)++chess;</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">if</span> (chess &lt;= <span class="number">4</span>) &#123;</div><div class="line">			<span class="built_in">cout</span> &lt;&lt; <span class="string">"#####"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">			<span class="keyword">continue</span>;</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">if</span> (solve())<span class="built_in">printf</span>(<span class="string">"(%d,%d)\n"</span>, x, y);</div><div class="line">		<span class="keyword">else</span> <span class="built_in">cout</span> &lt;&lt; <span class="string">"#####"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">POJ</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/09/27/POJ/POJ-1568-Find-the-Winning-Move/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
     <article id="post-POJ/POJ-2286-The-Rotation-Game" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -775,79 +839,6 @@
 
 
   
-    <article id="post-POJ/OpenJudge-画家问题" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/09/23/POJ/OpenJudge-画家问题/">OpenJudge 画家问题</a>
-    </h1>
-  
-
-        
-        <a href="/2017/09/23/POJ/OpenJudge-画家问题/" class="archive-article-date">
-  	<time datetime="2017-09-23T03:25:51.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-09-23</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><strong>描述</strong><br>有一个正方形的墙，由N*N个正方形的砖组成，其中一些砖是白色的，另外一些砖是黄色的。Bob是个画家，想把全部的砖都涂成黄色。但他的画笔不好使。当他用画笔涂画第(i, j)个位置的砖时， 位置(i-1, j)、 (i+1, j)、 (i, j-1)、 (i, j+1)上的砖都会改变颜色。请你帮助Bob计算出最少需要涂画多少块砖，才能使所有砖的颜色都变成黄色。</p>
-<p><strong>输入</strong><br>第一行是一个整数n (1≤n ≤15)，表示墙的大小。接下来的n行表示墙的初始状态。每一行包含n个字符。第i行的第j个字符表示位于位置(i,j)上的砖的颜色。“w”表示白砖，“y”表示黄砖。</p>
-<p><strong>输出</strong><br>一行，如果Bob能够将所有的砖都涂成黄色，则输出最少需要涂画的砖数，否则输出“inf”。</p>
-<p><strong>样例输入</strong><br>5<br>wwwww<br>wwwww<br>wwwww<br>wwwww<br>wwwww</p>
-<p><strong>样例输出</strong><br>15</p>
-<p>这个辣鸡题目害我没理解清楚意思WA一小时<br>改变颜色的意思是y变w，w变y<br>这什么辣鸡画笔画过的地方还会褪色？？气死</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cstdio&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cstring&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;algorithm&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> maxn = <span class="number">16</span>;</div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> inf = <span class="number">0x3f3f3f3f</span>;</div><div class="line"><span class="keyword">int</span> ori[maxn], curr[maxn];</div><div class="line"><span class="keyword">int</span> n, mincnt;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">getbit</span><span class="params">(<span class="keyword">int</span> c, <span class="keyword">int</span> i)</span> </span>&#123;</div><div class="line">	<span class="keyword">return</span> (c &gt;&gt; i) &amp; <span class="number">1</span>;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">setbit</span><span class="params">(<span class="keyword">int</span> &amp;c, <span class="keyword">int</span> i,<span class="keyword">int</span> v)</span> </span>&#123;</div><div class="line">	<span class="keyword">if</span>(v)c |= (<span class="number">1</span> &lt;&lt; i);</div><div class="line">	<span class="keyword">else</span> c &amp;= ~(<span class="number">1</span> &lt;&lt; i);</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">flipbit</span><span class="params">(<span class="keyword">int</span> &amp;c, <span class="keyword">int</span> i)</span> </span>&#123;</div><div class="line">	c ^= (<span class="number">1</span> &lt;&lt; i);</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="built_in">cin</span> &gt;&gt; n;</div><div class="line">	mincnt = inf;</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; ++i) &#123;</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; n; ++j) &#123;</div><div class="line">			<span class="keyword">char</span> c; <span class="built_in">cin</span> &gt;&gt; c;</div><div class="line">			<span class="keyword">if</span> (c == <span class="string">'w'</span>)setbit(ori[i], j, <span class="number">1</span>);<span class="comment">//white</span></div><div class="line">			<span class="keyword">else</span>  setbit(ori[i], j, <span class="number">0</span>);<span class="comment">//yellow</span></div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> ii = <span class="number">0</span>; ii &lt; (<span class="number">1</span> &lt;&lt; n); ++ii) &#123;</div><div class="line">		<span class="keyword">int</span> cnt = <span class="number">0</span>, switchs = ii;</div><div class="line">		<span class="built_in">memcpy</span>(curr, ori, <span class="keyword">sizeof</span>(curr));</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; ++i) &#123;<span class="comment">//行</span></div><div class="line">			<span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; n; ++j) &#123;<span class="comment">//每行中的每一位</span></div><div class="line">				<span class="keyword">if</span> (getbit(switchs, j)) &#123;<span class="comment">//方法中需要涂第j位</span></div><div class="line">					++cnt;</div><div class="line">					<span class="keyword">if</span> (j &gt; <span class="number">0</span>)flipbit(curr[i], j - <span class="number">1</span>);<span class="comment">//左</span></div><div class="line">					flipbit(curr[i], j);<span class="comment">//中</span></div><div class="line">					<span class="keyword">if</span> (j &lt; n - <span class="number">1</span>)flipbit(curr[i], j + <span class="number">1</span>);<span class="comment">//右</span></div><div class="line">				&#125;</div><div class="line">			&#125;</div><div class="line">			<span class="keyword">if</span> (i &lt; n - <span class="number">1</span>)curr[i + <span class="number">1</span>] ^= switchs;<span class="comment">//下方被影响</span></div><div class="line">			switchs = curr[i];</div><div class="line">			<span class="keyword">if</span> (cnt &gt;= mincnt)<span class="keyword">continue</span>;</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">if</span> (curr[n - <span class="number">1</span>] == <span class="number">0</span>) &#123;</div><div class="line">			mincnt = min(mincnt, cnt);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">if</span> (mincnt == inf)<span class="built_in">cout</span> &lt;&lt; <span class="string">"inf"</span>;</div><div class="line">	<span class="keyword">else</span> <span class="built_in">cout</span> &lt;&lt; mincnt;</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">枚举</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">OpenJudge</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">位</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/09/23/POJ/OpenJudge-画家问题/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/56/">56</a><a class="extend next" rel="next" href="/page/3/">Next &raquo;</a>
@@ -963,10 +954,6 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">STL</a>
-              </li>
-            
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">数学</a>
               </li>
             
@@ -975,19 +962,19 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">DP</a>
-              </li>
-            
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">DFS</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">二分法</a>
+                <a href="javascript:void(0)" class="js-tag color3">DP</a>
               </li>
             
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">BFS</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">二分法</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1027,15 +1014,43 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">组合数学</a>
-              </li>
-            
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">Floyd</a>
               </li>
             
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">组合数学</a>
+              </li>
+            
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">博弈论</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">OpenJudge</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">递归</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">位</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">POJ</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Android</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">SQL</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">STL</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1059,10 +1074,6 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">递归</a>
-              </li>
-            
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">逻辑</a>
               </li>
             
@@ -1075,31 +1086,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">C++练手题</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">OpenJudge</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">位</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">POJ</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Android</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">SQL</a>
-              </li>
-            
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">C++</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">C++练手题</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1119,11 +1110,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">HTML</a>
+                <a href="javascript:void(0)" class="js-tag color5">操作系统</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">操作系统</a>
+                <a href="javascript:void(0)" class="js-tag color5">HTML</a>
               </li>
             
               <li class="article-tag-list-item">
