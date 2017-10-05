@@ -162,6 +162,82 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-HDOJ/HDOJ-1067-Gap" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/08/21/HDOJ/HDOJ-1067-Gap/">HDOJ 1067 Gap(BFS+Hash)</a>
+    </h1>
+  
+
+        
+        <a href="/2017/08/21/HDOJ/HDOJ-1067-Gap/" class="archive-article-date">
+  	<time datetime="2017-08-21T05:33:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-08-21</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong>Problem Description</strong><br>Let’s play a card game called Gap.<br>You have 28 cards labeled with two-digit numbers. The first digit (from 1 to 4) represents the suit of the card, and the second digit (from 1 to 7) represents the value of the card.<br>First, you shu2e the cards and lay them face up on the table in four rows of seven cards, leaving a space of one card at the extreme left of each row. The following shows an example of initial layout.<br><img src="https://github.com/makixi/makixi.github.io/raw/master/img/%E5%88%B7%E9%A2%98%E4%B8%93%E7%94%A8%E5%9B%BE/HDOJ1067.gif" alt="figure1"><br>Next, you remove all cards of value 1, and put them in the open space at the left end of the rows: “11” to the top row, “21” to the next, and so on.<br>Now you have 28 cards and four spaces, called gaps, in four rows and eight columns. You start moving cards from this layout.<br><img src="https://github.com/makixi/makixi.github.io/raw/master/img/%E5%88%B7%E9%A2%98%E4%B8%93%E7%94%A8%E5%9B%BE/HDOJ1067-1.gif" alt="figure2"><br>At each move, you choose one of the four gaps and fill it with the successor of the left neighbor of the gap. The successor of a card is the next card in the same suit, when it exists. For instance the successor of “42” is “43”, and “27” has no successor.<br>In the above layout, you can move “43” to the gap at the right of “42”, or “36” to the gap at the right of “35”. If you move “43”, a new gap is generated to the right of “16”. You cannot move any card to the right of a card of value 7, nor to the right of a gap.<br>The goal of the game is, by choosing clever moves, to make four ascending sequences of the same suit, as follows.<br><img src="https://github.com/makixi/makixi.github.io/raw/master/img/%E5%88%B7%E9%A2%98%E4%B8%93%E7%94%A8%E5%9B%BE/HDOJ1067-2.gif" alt="figure3"><br>Your task is to find the minimum number of moves to reach the goal layout.</p>
+<p><strong>Input</strong><br>The input starts with a line containing the number of initial layouts that follow.<br>Each layout consists of five lines - a blank line and four lines which represent initial layouts of four rows. Each row has seven two-digit numbers which correspond to the cards.</p>
+<p><strong>Output</strong><br>For each initial layout, produce a line with the minimum number of moves to reach the goal layout. Note that this number should not include the initial four moves of the cards of value 1. If there is no move sequence from the initial layout to the goal layout, produce “-1”.</p>
+<p><strong>Sample Input</strong><br>4</p>
+<p>12 13 14 15 16 17 21<br>22 23 24 25 26 27 31<br>32 33 34 35 36 37 41<br>42 43 44 45 46 47 11</p>
+<p>26 31 13 44 21 24 42<br>17 45 23 25 41 36 11<br>46 34 14 12 37 32 47<br>16 43 27 35 22 33 15</p>
+<p>17 12 16 13 15 14 11<br>27 22 26 23 25 24 21<br>37 32 36 33 35 34 31<br>47 42 46 43 45 44 41</p>
+<p>27 14 22 35 32 46 33<br>13 17 36 24 44 21 15<br>43 16 45 47 23 11 26<br>25 37 41 34 42 12 31</p>
+<p><strong>Sample Output</strong><br>0<br>33<br>60<br>-1</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div></pre></td><td class="code"><pre><div class="line">#include&lt;iostream&gt;</div><div class="line">#include&lt;string&gt;</div><div class="line">#include&lt;map&gt;</div><div class="line">#include&lt;unordered_map&gt;</div><div class="line">#include&lt;queue&gt;</div><div class="line">using namespace std;</div><div class="line">string target(32,1),table(32,1);//fill 1</div><div class="line">struct node &#123;</div><div class="line">	string str;</div><div class="line">	int step;</div><div class="line">	node() :str(table), step(0) &#123;&#125;</div><div class="line">&#125;;</div><div class="line">void initTarget() &#123;</div><div class="line">	for (int i = 0; i &lt; 4; ++i)</div><div class="line">		for (int j = 0; j &lt; 7; ++j)</div><div class="line">			target[i * 8 + j] = (i + 1) * 10 + (j + 1);</div><div class="line">&#125;</div><div class="line">void Move(string &amp;str, char ch, int index) &#123;</div><div class="line">	int id;</div><div class="line">	for (id = 0; id &lt; 32 &amp;&amp; str[id] != ch; ++id);</div><div class="line">	if (id &lt; 32) &#123;</div><div class="line">		str[index] = ch;</div><div class="line">		str[id] = 1;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line">int bfs() &#123;</div><div class="line">	unordered_map&lt;string, bool&gt; Hash;</div><div class="line">	node u, v;</div><div class="line">	Hash[u.str] = true;</div><div class="line">	queue&lt;node&gt; q;</div><div class="line">	q.push(u);</div><div class="line">	while (!q.empty()) &#123;</div><div class="line">		u = q.front(); q.pop();</div><div class="line">		if (u.str == target)return u.step;</div><div class="line">		for(int i=0;i&lt;4;++i)</div><div class="line">			for (int j = 1; j &lt; 8; ++j) &#123;</div><div class="line">				//find blank</div><div class="line">				if (u.str[i * 8 + j] == 1 &amp;&amp; u.str[i * 8 + j - 1] != 1)&#123;</div><div class="line">					v = u;</div><div class="line">					Move(v.str, u.str[i * 8 + j - 1] + 1, i * 8 + j);</div><div class="line">					if (!Hash[v.str]) &#123;</div><div class="line">						Hash[v.str] = true;</div><div class="line">						++v.step;</div><div class="line">						q.push(v);</div><div class="line">					&#125;</div><div class="line">				&#125;</div><div class="line">			&#125;</div><div class="line">	&#125;</div><div class="line">	return -1;</div><div class="line">&#125;</div><div class="line"></div><div class="line">int main() &#123;</div><div class="line">	initTarget();</div><div class="line">	int t,tmp;</div><div class="line">	cin &gt;&gt; t;</div><div class="line">	while (t--) &#123;</div><div class="line">		for(int i=0;i&lt;4;++i)</div><div class="line">			for (int j = 1; j &lt; 8; ++j) &#123;</div><div class="line">				cin &gt;&gt; tmp;</div><div class="line">				if (tmp % 10 == 1) &#123;//11 21 31 41的移动不占步数</div><div class="line">					table[(tmp / 10 - 1) * 8] = tmp;</div><div class="line">					table[i * 8 + j] = 1;//空位是1</div><div class="line">				&#125;</div><div class="line">				else</div><div class="line">					table[i * 8 + j] = tmp;</div><div class="line">			&#125;</div><div class="line">		cout &lt;&lt; bfs() &lt;&lt; endl;</div><div class="line">	&#125;</div><div class="line">	return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">HDOJ</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">BFS</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Hash</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/08/21/HDOJ/HDOJ-1067-Gap/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
     <article id="post-HDOJ/HDOJ-1066-Last-non-zero-Digit-in-N" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -775,74 +851,6 @@
 
 
   
-    <article id="post-天梯赛/L2-007-家庭房产" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/08/20/天梯赛/L2-007-家庭房产/">L2-007.家庭房产</a>
-    </h1>
-  
-
-        
-        <a href="/2017/08/20/天梯赛/L2-007-家庭房产/" class="archive-article-date">
-  	<time datetime="2017-08-20T08:13:42.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-08-20</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>给定每个人的家庭成员和其自己名下的房产，请你统计出每个家庭的人口数、人均房产面积及房产套数。</p>
-<p><strong>输入格式：</strong><br>输入第一行给出一个正整数N（&lt;=1000），随后N行，每行按下列格式给出一个人的房产：<br>编号 父母 k 孩子1 … 孩子k 房产套数 总面积<br>其中 编号 是每个人独有的一个4位数的编号；父 和 母 分别是该编号对应的这个人的父母的编号（如果已经过世，则显示-1）；k（0&lt;=k&lt;=5）是该人的子女的个数；孩子i是其子女的编号。</p>
-<p><strong>输出格式：</strong><br>首先在第一行输出家庭个数（所有有亲属关系的人都属于同一个家庭）。随后按下列格式输出每个家庭的信息：<br>家庭成员的最小编号 家庭人口数 人均房产套数 人均房产面积<br>其中人均值要求保留小数点后3位。家庭信息首先按人均面积降序输出，若有并列，则按成员编号的升序输出。</p>
-<p><strong>输入样例：</strong><br>10<br>6666 5551 5552 1 7777 1 100<br>1234 5678 9012 1 0002 2 300<br>8888 -1 -1 0 1 1000<br>2468 0001 0004 1 2222 1 500<br>7777 6666 -1 0 2 300<br>3721 -1 -1 1 2333 2 150<br>9012 -1 -1 3 1236 1235 1234 1 100<br>1235 5678 9012 0 1 50<br>2222 1236 2468 2 6661 6662 1 300<br>2333 -1 3721 3 6661 6662 6663 1 100</p>
-<p><strong>输出样例：</strong><br>3<br>8888 1 1.000 1000.000<br>0001 15 0.600 100.000<br>5551 4 0.750 100.000</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;vector&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;algorithm&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> maxn = <span class="number">10000</span>;</div><div class="line"><span class="keyword">int</span> father[maxn];</div><div class="line"><span class="keyword">bool</span> vis[maxn];</div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">person</span> &#123;</span></div><div class="line">	<span class="keyword">int</span> id;</div><div class="line">	<span class="keyword">int</span> fid;</div><div class="line">	<span class="keyword">int</span> mid;</div><div class="line">	<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; kid;</div><div class="line">	<span class="keyword">int</span> num;</div><div class="line">	<span class="keyword">int</span> area;</div><div class="line">&#125;p[<span class="number">1010</span>];</div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">family</span> &#123;</span></div><div class="line">	<span class="keyword">int</span> id;</div><div class="line">	<span class="keyword">double</span> num=<span class="number">0</span>;</div><div class="line">	<span class="keyword">double</span> area=<span class="number">0</span>;</div><div class="line">	<span class="keyword">int</span> people=<span class="number">0</span>;</div><div class="line">	<span class="keyword">bool</span> flag = <span class="literal">false</span>;</div><div class="line">&#125;f[maxn];</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">findfather</span><span class="params">(<span class="keyword">int</span> i)</span> </span>&#123;</div><div class="line">	<span class="keyword">while</span> (i != father[i])i = father[i];</div><div class="line">	<span class="keyword">return</span> i;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">unite</span><span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span> b)</span> </span>&#123;</div><div class="line">	<span class="keyword">int</span> x = findfather(a);</div><div class="line">	<span class="keyword">int</span> y = findfather(b);</div><div class="line">	<span class="keyword">if</span> (x &lt; y)</div><div class="line">		father[y] = x;</div><div class="line">	<span class="keyword">else</span> <span class="keyword">if</span> (x &gt; y)</div><div class="line">		father[x] = y;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">bool</span> <span class="title">cmp</span><span class="params">(family a, family b)</span> </span>&#123;</div><div class="line">	<span class="keyword">if</span> (a.area != b.area)</div><div class="line">		<span class="keyword">return</span> a.area &gt; b.area;</div><div class="line">	<span class="keyword">return</span> a.id &lt; b.id;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="keyword">int</span> n, k, cnt = <span class="number">0</span>;</div><div class="line">	<span class="built_in">cin</span> &gt;&gt; n;</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; maxn; ++i)</div><div class="line">		father[i] = i;</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; ++i) &#123;</div><div class="line">		<span class="built_in">cin</span> &gt;&gt; p[i].id &gt;&gt; p[i].fid &gt;&gt; p[i].mid &gt;&gt; k;</div><div class="line">		vis[p[i].id] = <span class="literal">true</span>;</div><div class="line">		<span class="keyword">if</span> (p[i].fid != <span class="number">-1</span>) &#123;</div><div class="line">			vis[p[i].fid] = <span class="literal">true</span>;</div><div class="line">			unite(p[i].id, p[i].fid);</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">if</span> (p[i].mid != <span class="number">-1</span>) &#123;</div><div class="line">			vis[p[i].mid] = <span class="literal">true</span>;</div><div class="line">			unite(p[i].id, p[i].mid);</div><div class="line">		&#125;</div><div class="line">		p[i].kid.resize(k);</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; k; ++j) &#123;</div><div class="line">			<span class="built_in">cin</span> &gt;&gt; p[i].kid[j];</div><div class="line">			vis[p[i].kid[j]] = <span class="literal">true</span>;</div><div class="line">			unite(p[i].kid[j], p[i].id);</div><div class="line">		&#125;</div><div class="line">		<span class="built_in">cin</span> &gt;&gt; p[i].num &gt;&gt; p[i].area;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; ++i) &#123;</div><div class="line">		<span class="keyword">int</span> id = findfather(p[i].id);</div><div class="line">		f[id].id = id;</div><div class="line">		f[id].num += p[i].num;</div><div class="line">		f[id].area += p[i].area;</div><div class="line">		f[id].flag = <span class="literal">true</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; maxn; ++i)</div><div class="line">		<span class="keyword">if</span> (vis[i])</div><div class="line">			f[findfather(i)].people++;</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; maxn; ++i)</div><div class="line">		<span class="keyword">if</span> (f[i].flag) &#123;</div><div class="line">			f[i].num /= f[i].people;</div><div class="line">			f[i].area /= f[i].people;</div><div class="line">			cnt++;</div><div class="line">		&#125;</div><div class="line">	sort(f, f + maxn, cmp);</div><div class="line">	<span class="built_in">cout</span> &lt;&lt; cnt &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; cnt; ++i)</div><div class="line">		<span class="built_in">printf</span>(<span class="string">"%04d %d %.3lf %.3lf\n"</span>, f[i].id, f[i].people, f[i].num, f[i].area);</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">并查集</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">天梯赛</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/08/20/天梯赛/L2-007-家庭房产/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/19/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/18/">18</a><a class="page-number" href="/page/19/">19</a><span class="page-number current">20</span><a class="page-number" href="/page/21/">21</a><a class="page-number" href="/page/22/">22</a><span class="space">&hellip;</span><a class="page-number" href="/page/57/">57</a><a class="extend next" rel="next" href="/page/21/">Next &raquo;</a>
@@ -954,15 +962,11 @@ MathJax.Hub.Queue(function() {
           <ul class="article-tag-list" q-show="showTags">
             
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">POJ</a>
+              </li>
+            
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">HDOJ</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">STL</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">数学</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -970,11 +974,19 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">DFS</a>
+                <a href="javascript:void(0)" class="js-tag color3">数学</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">STL</a>
               </li>
             
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">DP</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">DFS</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1018,10 +1030,6 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Floyd</a>
-              </li>
-            
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">字典树</a>
               </li>
             
@@ -1030,7 +1038,23 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Floyd</a>
+              </li>
+            
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">博弈论</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">OpenJudge</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">递归</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">位</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1054,10 +1078,6 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">递归</a>
-              </li>
-            
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">逻辑</a>
               </li>
             
@@ -1070,23 +1090,7 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">OpenJudge</a>
-              </li>
-            
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">C++练手题</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">位</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">POJ</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1102,6 +1106,14 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">天梯赛</a>
+              </li>
+            
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">排序</a>
               </li>
             
@@ -1110,7 +1122,7 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">天梯赛</a>
+                <a href="javascript:void(0)" class="js-tag color5">HTML</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1123,10 +1135,6 @@ MathJax.Hub.Queue(function() {
             
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">js</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">HTML</a>
               </li>
             
               <li class="article-tag-list-item">
