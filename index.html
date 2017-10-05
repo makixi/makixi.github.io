@@ -162,6 +162,78 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-POJ/POJ-2528-Mayor-s-posters" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/10/05/POJ/POJ-2528-Mayor-s-posters/">POJ 2528 Mayor&#39;s posters(离散化+线段树)</a>
+    </h1>
+  
+
+        
+        <a href="/2017/10/05/POJ/POJ-2528-Mayor-s-posters/" class="archive-article-date">
+  	<time datetime="2017-10-05T08:13:26.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-10-05</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong>Description</strong><br>The citizens of Bytetown, AB, could not stand that the candidates in the mayoral election campaign have been placing their electoral posters at all places at their whim. The city council has finally decided to build an electoral wall for placing the posters and introduce the following rules:</p>
+<ul>
+<li>Every candidate can place exactly one poster on the wall.</li>
+<li>All posters are of the same height equal to the height of the wall; the width of a poster can be any integer number of bytes (byte is the unit of length in Bytetown).</li>
+<li>The wall is divided into segments and the width of each segment is one byte.</li>
+<li>Each poster must completely cover a contiguous number of wall segments.</li>
+</ul>
+<p>They have built a wall 10000000 bytes long (such that there is enough place for all candidates). When the electoral campaign was restarted, the candidates were placing their posters on the wall and their posters differed widely in width. Moreover, the candidates started placing their posters on wall segments already occupied by other posters. Everyone in Bytetown was curious whose posters will be visible (entirely or in part) on the last day before elections.<br>Your task is to find the number of visible posters when all the posters are placed given the information about posters’ size, their place and order of placement on the electoral wall.</p>
+<p><strong>Input</strong><br>The first line of input contains a number c giving the number of cases that follow. The first line of data for a single case contains number 1 &lt;= n &lt;= 10000. The subsequent n lines describe the posters in the order in which they were placed. The i-th line among the n lines contains two integer numbers li and ri which are the number of the wall segment occupied by the left end and the right end of the i-th poster, respectively. We know that for each 1 &lt;= i &lt;= n, 1 &lt;= li &lt;= ri &lt;= 10000000. After the i-th poster is placed, it entirely covers all wall segments numbered li, li+1 ,… , ri.</p>
+<p><strong>Output</strong><br>For each input data set print the number of visible posters after all the posters are placed.<br>The picture below illustrates the case of the sample input.<br><img src="https://github.com/makixi/makixi.github.io/raw/master/img/%E5%88%B7%E9%A2%98%E4%B8%93%E7%94%A8%E5%9B%BE/POJ2528.jpg" alt="POJ2528"></p>
+<p><strong>Sample Input</strong><br>1<br>5<br>1 4<br>2 6<br>8 10<br>3 4<br>7 10</p>
+<p><strong>Sample Output</strong><br>4</p>
+<p>直接用数组st&lt;&lt;1 和st&lt;&lt;1|1会RT 估计是满二叉树的结构太占内存，后来就换成链式AC了</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;algorithm&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> maxn=<span class="number">10000</span>+<span class="number">100</span>;</div><div class="line"></div><div class="line"><span class="keyword">int</span> n;</div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">node</span>&#123;</span></div><div class="line">	<span class="keyword">int</span> l,r;</div><div class="line">&#125;nd[maxn];</div><div class="line"><span class="keyword">int</span> x[maxn*<span class="number">2</span>];<span class="comment">//端点</span></div><div class="line"><span class="keyword">int</span> _hash[<span class="number">10000000</span>+<span class="number">10</span>];</div><div class="line"><span class="keyword">int</span> NodeCnt;</div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">state</span>&#123;</span></div><div class="line">	<span class="keyword">int</span> l,r;</div><div class="line">	<span class="keyword">bool</span> isCovered;</div><div class="line">	state *lchild,*rchild;</div><div class="line">&#125;v[<span class="number">1000000</span>];</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">Mid</span><span class="params">(state *root)</span></span>&#123;</div><div class="line">	<span class="keyword">return</span> (root-&gt;l+root-&gt;r)&gt;&gt;<span class="number">1</span>;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">build</span><span class="params">(state *root,<span class="keyword">int</span> l,<span class="keyword">int</span> r)</span></span>&#123;</div><div class="line">	root-&gt;l=l;</div><div class="line">	root-&gt;r=r;</div><div class="line">	root-&gt;isCovered=<span class="literal">false</span>;</div><div class="line">	<span class="keyword">if</span>(l==r)<span class="keyword">return</span>;</div><div class="line">	NodeCnt++;</div><div class="line">	root-&gt;lchild=v+NodeCnt;</div><div class="line">	NodeCnt++;</div><div class="line">	root-&gt;rchild=v+NodeCnt;</div><div class="line">	build(root-&gt;lchild,l,(l+r)/<span class="number">2</span>);</div><div class="line">	build(root-&gt;rchild,(l+r)/<span class="number">2</span>+<span class="number">1</span>,r);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">bool</span> <span class="title">post</span><span class="params">(state *root,<span class="keyword">int</span> l,<span class="keyword">int</span> r)</span></span>&#123;</div><div class="line">	<span class="keyword">if</span>(root-&gt;isCovered)<span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">	<span class="keyword">if</span>(root-&gt;l==l&amp;&amp;root-&gt;r==r)&#123;</div><div class="line">		root-&gt;isCovered=<span class="literal">true</span>;</div><div class="line">		<span class="keyword">return</span> <span class="literal">true</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">bool</span> res;</div><div class="line">	<span class="keyword">int</span> mid=Mid(root);</div><div class="line">	<span class="keyword">if</span>(r&lt;=mid)res=post(root-&gt;lchild,l,r);</div><div class="line">	<span class="keyword">else</span> <span class="keyword">if</span>(l&gt;mid)res=post(root-&gt;rchild,l,r);</div><div class="line">	<span class="keyword">else</span>&#123;</div><div class="line">		<span class="keyword">bool</span> b1=post(root-&gt;lchild,l,mid);</div><div class="line">		<span class="keyword">bool</span> b2=post(root-&gt;rchild,mid+<span class="number">1</span>,r);</div><div class="line">		res=b1||b2;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">if</span>(root-&gt;lchild-&gt;isCovered&amp;&amp;root-&gt;rchild-&gt;isCovered)</div><div class="line">		root-&gt;isCovered=<span class="literal">true</span>;</div><div class="line">	<span class="keyword">return</span> res;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</div><div class="line">	<span class="keyword">int</span> t;</div><div class="line">	<span class="built_in">scanf</span>(<span class="string">"%d"</span>,&amp;t);</div><div class="line">	<span class="keyword">while</span>(t--)&#123;</div><div class="line">		<span class="keyword">int</span> cnt=<span class="number">0</span>;</div><div class="line">		NodeCnt=<span class="number">0</span>;</div><div class="line">		<span class="built_in">scanf</span>(<span class="string">"%d"</span>,&amp;n);</div><div class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;n;++i)&#123;</div><div class="line">			<span class="built_in">scanf</span>(<span class="string">"%d%d"</span>,&amp;nd[i].l,&amp;nd[i].r);</div><div class="line">			x[cnt++]=nd[i].l;x[cnt++]=nd[i].r;</div><div class="line">		&#125;</div><div class="line">		sort(x,x+cnt);</div><div class="line">		cnt=unique(x,x+cnt)-x;</div><div class="line">		<span class="keyword">int</span> IntervalNo=<span class="number">0</span>;</div><div class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;cnt;++i)&#123;</div><div class="line">			_hash[x[i]]=IntervalNo;</div><div class="line">			<span class="keyword">if</span>(i&lt;cnt<span class="number">-1</span>)</div><div class="line">				<span class="keyword">if</span>(x[i+<span class="number">1</span>]-x[i]==<span class="number">1</span>)IntervalNo++;</div><div class="line">				<span class="keyword">else</span> IntervalNo+=<span class="number">2</span>;</div><div class="line">		&#125;</div><div class="line">		build(v,<span class="number">0</span>,IntervalNo);</div><div class="line">		<span class="keyword">int</span> res=<span class="number">0</span>;</div><div class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i=n<span class="number">-1</span>;i&gt;=<span class="number">0</span>;--i)</div><div class="line">			<span class="keyword">if</span>(post(v,_hash[nd[i].l],_hash[nd[i].r]))</div><div class="line">				++res;</div><div class="line">		<span class="built_in">cout</span>&lt;&lt;res&lt;&lt;<span class="built_in">endl</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">POJ</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/10/05/POJ/POJ-2528-Mayor-s-posters/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
     <article id="post-HDOJ/HDOJ-1556-Color-the-ball" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -461,11 +533,11 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">POJ</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">A*</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">A*</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">POJ</a>
         		</li>
       		
 		</ul>
@@ -740,79 +812,6 @@
 
 
   
-    <article id="post-POJ/POJ-2449-Remmarguts-Date" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/09/30/POJ/POJ-2449-Remmarguts-Date/">POJ 2449 Remmarguts&#39; Date(K短路)</a>
-    </h1>
-  
-
-        
-        <a href="/2017/09/30/POJ/POJ-2449-Remmarguts-Date/" class="archive-article-date">
-  	<time datetime="2017-09-30T07:58:45.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-09-30</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><strong>Description</strong><br>“Good man never makes girls wait or breaks an appointment!” said the mandarin duck father. Softly touching his little ducks’ head, he told them a story.<br>“Prince Remmarguts lives in his kingdom UDF – United Delta of Freedom. One day their neighboring country sent them Princess Uyuw on a diplomatic mission.”<br>“Erenow, the princess sent Remmarguts a letter, informing him that she would come to the hall and hold commercial talks with UDF if and only if the prince go and meet her via the K-th shortest path. (in fact, Uyuw does not want to come at all)”<br>Being interested in the trade development and such a lovely girl, Prince Remmarguts really became enamored. He needs you - the prime minister’s help!<br>DETAILS: UDF’s capital consists of N stations. The hall is numbered S, while the station numbered T denotes prince’ current place. M muddy directed sideways connect some of the stations. Remmarguts’ path to welcome the princess might include the same station twice or more than twice, even it is the station with number S or T. Different paths with same length will be considered disparate.</p>
-<p><strong>Input</strong><br>The first line contains two integer numbers N and M (1 &lt;= N &lt;= 1000, 0 &lt;= M &lt;= 100000). Stations are numbered from 1 to N. Each of the following M lines contains three integer numbers A, B and T (1 &lt;= A, B &lt;= N, 1 &lt;= T &lt;= 100). It shows that there is a directed sideway from A-th station to B-th station with time T.<br>The last line consists of three integer numbers S, T and K (1 &lt;= S, T &lt;= N, 1 &lt;= K &lt;= 1000).</p>
-<p><strong>Output</strong><br>A single line consisting of a single integer number: the length (time required) to welcome Princess Uyuw using the K-th shortest path. If K-th shortest path does not exist, you should output “-1” (without quotes) instead.</p>
-<p><strong>Sample Input</strong><br>2 2<br>1 2 5<br>2 1 4<br>1 2 2</p>
-<p><strong>Sample Output</strong><br>14</p>
-<p>因为两个点之间可能不止一条边，所以如果直接用二维数组来存就会WA<br>哭叽叽 修BUG修两小时的我</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;queue&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cstring&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;algorithm&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> maxn=<span class="number">1001</span>;</div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> inf=<span class="number">0x3f3f3f3f</span>;</div><div class="line"><span class="keyword">int</span> dis[maxn];<span class="comment">//终点到i的最短路</span></div><div class="line"><span class="keyword">bool</span> vis[maxn];</div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">node</span>&#123;</span></div><div class="line">	<span class="keyword">int</span> curr;</div><div class="line">	<span class="keyword">int</span> g;</div><div class="line">	node()&#123;&#125;</div><div class="line">	node(<span class="keyword">int</span> cc,<span class="keyword">int</span> gg):curr(cc),g(gg)&#123;&#125;</div><div class="line">	<span class="keyword">bool</span> <span class="keyword">operator</span> &lt; (<span class="keyword">const</span> node &amp;a)<span class="keyword">const</span>&#123;</div><div class="line">		<span class="keyword">return</span> g+dis[curr]&gt;a.g+dis[a.curr];</div><div class="line">	&#125;</div><div class="line">&#125;;</div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">edge</span>&#123;</span></div><div class="line">	<span class="keyword">int</span> u,v,w,nex,rnex;</div><div class="line">	edge()&#123;&#125;</div><div class="line">	edge(<span class="keyword">int</span> uu,<span class="keyword">int</span> vv,<span class="keyword">int</span> ww):u(uu),v(vv),w(ww)&#123;&#125;</div><div class="line">&#125;e[<span class="number">100000</span>+<span class="number">5</span>];</div><div class="line"><span class="keyword">int</span> head[maxn],rhead[maxn];</div><div class="line"><span class="keyword">int</span> num=<span class="number">0</span>;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">addEdge</span><span class="params">(<span class="keyword">int</span> a,<span class="keyword">int</span> b,<span class="keyword">int</span> w)</span></span>&#123;</div><div class="line">	e[num]=edge(a,b,w);</div><div class="line">	e[num].nex=head[a];</div><div class="line">	e[num].rnex=rhead[b];</div><div class="line">	rhead[b]=num;</div><div class="line">	head[a]=num;</div><div class="line">	++num;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</div><div class="line">	<span class="keyword">int</span> n,m,s,t,k,a,b,c;</div><div class="line">	<span class="built_in">cin</span>&gt;&gt;n&gt;&gt;m;</div><div class="line">	<span class="built_in">memset</span>(head,<span class="number">-1</span>,<span class="keyword">sizeof</span>(head));</div><div class="line">	<span class="built_in">memset</span>(rhead,<span class="number">-1</span>,<span class="keyword">sizeof</span>(rhead));</div><div class="line">	<span class="built_in">memset</span>(dis,inf,<span class="keyword">sizeof</span>(dis));</div><div class="line">	<span class="built_in">memset</span>(vis,<span class="literal">false</span>,<span class="keyword">sizeof</span>(vis));</div><div class="line">	<span class="keyword">while</span>(m--)&#123;</div><div class="line">		<span class="built_in">cin</span>&gt;&gt;a&gt;&gt;b&gt;&gt;c;</div><div class="line">		addEdge(a,b,c);</div><div class="line">	&#125;</div><div class="line">	<span class="built_in">cin</span>&gt;&gt;s&gt;&gt;t&gt;&gt;k;</div><div class="line">	dis[t]=<span class="number">0</span>;</div><div class="line">	priority_queue&lt;node&gt; q;</div><div class="line">	q.push(node(t,<span class="number">0</span>));</div><div class="line">	<span class="keyword">while</span>(!q.empty())&#123;</div><div class="line">		node nd=q.top();q.pop();</div><div class="line">		<span class="keyword">if</span>(vis[nd.curr])<span class="keyword">continue</span>;</div><div class="line">		vis[nd.curr]=<span class="literal">true</span>;</div><div class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i=rhead[nd.curr];i+<span class="number">1</span>;i=e[i].rnex)</div><div class="line">			<span class="keyword">if</span>(dis[e[i].u]&gt;dis[nd.curr]+e[i].w)&#123;</div><div class="line">				dis[e[i].u]=dis[nd.curr]+e[i].w;</div><div class="line">				q.push(node(e[i].u,<span class="number">0</span>));</div><div class="line">			&#125;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">if</span>(dis[s]==inf)&#123;</div><div class="line">		<span class="built_in">cout</span>&lt;&lt;<span class="number">-1</span>&lt;&lt;<span class="built_in">endl</span>;</div><div class="line">		<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">while</span>(!q.empty())q.pop();</div><div class="line">	q.push(node(s,<span class="number">0</span>));</div><div class="line">	<span class="keyword">if</span>(s==t)++k;</div><div class="line">	<span class="keyword">while</span>(!q.empty())&#123;</div><div class="line">		node nd=q.top();q.pop();</div><div class="line">		<span class="keyword">if</span>(nd.curr==t)&#123;</div><div class="line">			<span class="keyword">if</span>(k&gt;<span class="number">1</span>)--k;</div><div class="line">			<span class="keyword">else</span>&#123;</div><div class="line">				<span class="built_in">cout</span>&lt;&lt;nd.g&lt;&lt;<span class="built_in">endl</span>;</div><div class="line">				<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i=head[nd.curr]; i+<span class="number">1</span>; i=e[i].nex)</div><div class="line">			q.push(node(e[i].v, nd.g + e[i].w));</div><div class="line">	&#125;</div><div class="line">	<span class="built_in">cout</span>&lt;&lt;<span class="number">-1</span>&lt;&lt;<span class="built_in">endl</span>;</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">POJ</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">A*</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Dijkstra</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/09/30/POJ/POJ-2449-Remmarguts-Date/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/57/">57</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
@@ -924,11 +923,11 @@ MathJax.Hub.Queue(function() {
           <ul class="article-tag-list" q-show="showTags">
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">POJ</a>
+                <a href="javascript:void(0)" class="js-tag color5">HDOJ</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">HDOJ</a>
+                <a href="javascript:void(0)" class="js-tag color3">数学</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -940,10 +939,6 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">数学</a>
-              </li>
-            
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">DFS</a>
               </li>
             
@@ -952,11 +947,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">二分法</a>
+                <a href="javascript:void(0)" class="js-tag color4">BFS</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">BFS</a>
+                <a href="javascript:void(0)" class="js-tag color4">二分法</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -996,27 +991,15 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">组合数学</a>
-              </li>
-            
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">Floyd</a>
               </li>
             
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">组合数学</a>
+              </li>
+            
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">博弈论</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">OpenJudge</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">递归</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">位</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1044,6 +1027,10 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">递归</a>
+              </li>
+            
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">堆</a>
               </li>
             
@@ -1052,7 +1039,19 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">OpenJudge</a>
+              </li>
+            
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">C++练手题</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">POJ</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">位</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1084,7 +1083,7 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">错题集</a>
+                <a href="javascript:void(0)" class="js-tag color5">HTML</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1092,11 +1091,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">js</a>
+                <a href="javascript:void(0)" class="js-tag color4">错题集</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">HTML</a>
+                <a href="javascript:void(0)" class="js-tag color3">js</a>
               </li>
             
               <li class="article-tag-list-item">
