@@ -162,6 +162,70 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-POJ/POJ-1039-Pipe" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/09/20/POJ/POJ-1039-Pipe/">POJ 1039 Pipe(几何)</a>
+    </h1>
+  
+
+        
+        <a href="/2017/09/20/POJ/POJ-1039-Pipe/" class="archive-article-date">
+  	<time datetime="2017-09-20T06:07:20.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-09-20</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong>Description</strong><br>The GX Light Pipeline Company started to prepare bent pipes for the new transgalactic light pipeline. During the design phase of the new pipe shape the company ran into the problem of determining how far the light can reach inside each component of the pipe. Note that the material which the pipe is made from is not transparent and not light reflecting.<br>Each pipe component consists of many straight pipes connected tightly together. For the programming purposes, the company developed the description of each component as a sequence of points [x1; y1], [x2; y2], . . ., [xn; yn], where x1 &lt; x2 &lt; . . . xn . These are the upper points of the pipe contour. The bottom points of the pipe contour consist of points with y-coordinate decreased by 1. To each upper point [xi; yi] there is a corresponding bottom point [xi; (yi)-1] (see picture above). The company wants to find, for each pipe component, the point with maximal x-coordinate that the light will reach. The light is emitted by a segment source with endpoints [x1; (y1)-1] and [x1; y1] (endpoints are emitting light too). Assume that the light is not bent at the pipe bent points and the bent points do not stop the light beam.</p>
+<p><strong>Input</strong><br>The input file contains several blocks each describing one pipe component. Each block starts with the number of bent points 2 &lt;= n &lt;= 20 on separate line. Each of the next n lines contains a pair of real values xi, yi separated by space. The last block is denoted with n = 0.</p>
+<p><strong>Output</strong><br>The output file contains lines corresponding to blocks in input file. To each block in the input file there is one line in the output file. Each such line contains either a real value, written with precision of two decimal places, or the message Through all the pipe.. The real value is the desired maximal x-coordinate of the point where the light can reach from the source for corresponding pipe component. If this value equals to xn, then the message Through all the pipe. will appear in the output file.</p>
+<p><strong>Sample Input</strong><br>4<br>0 1<br>2 2<br>4 1<br>6 4<br>6<br>0 1<br>2 -0.6<br>5 -4.45<br>7 -5.57<br>12 -10.8<br>17 -16.55<br>0</p>
+<p><strong>Sample Output</strong><br>4.67<br>Through all the pipe.</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;cstdio&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;cmath&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;algorithm&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="keyword">const</span> <span class="keyword">double</span> eps = <span class="number">1e-3</span>;</div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">node</span> &#123;</span></div><div class="line">   <span class="keyword">double</span> x, y;</div><div class="line">   node()&#123;&#125;</div><div class="line">   node(<span class="keyword">int</span> a,<span class="keyword">int</span> b):x(a),y(b)&#123;&#125;</div><div class="line">&#125;up[<span class="number">22</span>], down[<span class="number">22</span>];</div><div class="line"><span class="comment">//&gt;0，则射线p0p1在射线p0p2顺时针方向; &lt;0，则射线p0p1在射线p0p2逆时针方向;</span></div><div class="line"><span class="function"><span class="keyword">double</span> <span class="title">Multi</span><span class="params">(<span class="keyword">const</span> node &amp;p1, <span class="keyword">const</span> node &amp;p2, <span class="keyword">const</span> node &amp;p0)</span> </span>&#123;</div><div class="line">   <span class="keyword">return</span> (p1.x - p0.x) * (p2.y - p0.y) - (p2.x - p0.x) * (p1.y - p0.y);</div><div class="line">&#125;</div><div class="line"><span class="comment">//直线ab与线段cd是否相交</span></div><div class="line"><span class="function"><span class="keyword">bool</span> <span class="title">Across</span><span class="params">(<span class="keyword">const</span> node &amp;a, <span class="keyword">const</span> node &amp;b, <span class="keyword">const</span> node &amp;c, <span class="keyword">const</span> node &amp;d)</span> </span>&#123;</div><div class="line">    <span class="keyword">return</span> Multi(c, b, a) * Multi(d, b, a) &lt; eps;</div><div class="line">&#125;</div><div class="line"><span class="comment">//求交点</span></div><div class="line"><span class="function"><span class="keyword">double</span> <span class="title">getIntersect</span><span class="params">(<span class="keyword">const</span> node &amp;a, <span class="keyword">const</span> node &amp;b, <span class="keyword">const</span> node &amp;c, <span class="keyword">const</span> node &amp;d)</span> </span>&#123;</div><div class="line">    <span class="keyword">double</span> A1 = b.y - a.y;</div><div class="line">    <span class="keyword">double</span> B1 = a.x - b.x;</div><div class="line">    <span class="keyword">double</span> C1 = (b.x - a.x) * a.y - (b.y - a.y) * a.x;</div><div class="line">    <span class="keyword">double</span> A2 = d.y - c.y;</div><div class="line">    <span class="keyword">double</span> B2 = c.x - d.x;</div><div class="line">    <span class="keyword">double</span> C2 = (d.x - c.x) * c.y - (d.y - c.y) * c.x;</div><div class="line">    <span class="keyword">double</span> x = (B1 * C2 - B2 * C1) / (A1 * B2 - A2 * B1);</div><div class="line">    <span class="comment">//y = (A2 * C1 - A1 * C2) / (A1 * B2 - A2 * B1); //交点纵坐标</span></div><div class="line">    <span class="keyword">return</span> x;</div><div class="line"> &#125;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">int</span> n,k;</div><div class="line">    <span class="keyword">while</span> (<span class="built_in">cin</span>&gt;&gt;n &amp;&amp; n) &#123;</div><div class="line">         <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++) &#123;</div><div class="line">         	<span class="built_in">cin</span>&gt;&gt;up[i].x&gt;&gt;up[i].y;</div><div class="line">            down[i].x = up[i].x;</div><div class="line">            down[i].y = up[i].y - <span class="number">1</span>;</div><div class="line">         &#125;</div><div class="line">         <span class="keyword">double</span> best = up[<span class="number">0</span>].x;</div><div class="line">         <span class="keyword">bool</span> flag = <span class="literal">false</span>;</div><div class="line">         <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n &amp;&amp; !flag; i++)</div><div class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; n &amp;&amp; !flag; j++)</div><div class="line">                <span class="keyword">if</span> (i != j) &#123;</div><div class="line">                   <span class="keyword">for</span> (k = <span class="number">0</span>; k &lt; n; k++)</div><div class="line">                      <span class="keyword">if</span> (!Across(up[i], down[j], up[k], down[k])) <span class="keyword">break</span>;</div><div class="line">                   <span class="keyword">if</span> (k == n) flag = <span class="literal">true</span>;</div><div class="line">                   <span class="keyword">else</span> <span class="keyword">if</span> (k &gt; max(i, j)) &#123;</div><div class="line">                      <span class="keyword">double</span> tmp;</div><div class="line">                      tmp = getIntersect(up[i], down[j], up[k<span class="number">-1</span>], up[k]);</div><div class="line">                      best=max(tmp,best);</div><div class="line">                      tmp = getIntersect(up[i], down[j], down[k<span class="number">-1</span>], down[k]);</div><div class="line">                      best=max(tmp,best);</div><div class="line">                   &#125;</div><div class="line">                &#125;</div><div class="line">         <span class="keyword">if</span> (flag) <span class="built_in">printf</span> (<span class="string">"Through all the pipe.\n"</span>);</div><div class="line">         <span class="keyword">else</span> <span class="built_in">printf</span> (<span class="string">"%.2lf\n"</span>, best);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">POJ</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/09/20/POJ/POJ-1039-Pipe/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
     <article id="post-咸鱼/还没结束的九月小结" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -774,70 +838,6 @@
 
 
   
-    <article id="post-POJ/POJ-2624-4th-Point" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/09/19/POJ/POJ-2624-4th-Point/">POJ 2624 4th Point(几何水)</a>
-    </h1>
-  
-
-        
-        <a href="/2017/09/19/POJ/POJ-2624-4th-Point/" class="archive-article-date">
-  	<time datetime="2017-09-19T10:55:14.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-09-19</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><strong>Description</strong><br>Given are the (x,y) coordinates of the endpoints of two adjacent sides of a parallelogram. Find the (x,y) coordinates of the fourth point.</p>
-<p><strong>Input</strong><br>Each line of input contains eight floating point numbers: the (x,y) coordinates of one of the endpoints of the first side followed by the (x,y) coordinates of the other endpoint of the first side, followed by the (x,y) coordinates of one of the endpoints of the second side followed by the (x,y) coordinates of the other endpoint of the second side. All coordinates are in meters, to the nearest mm. All coordinates are between -10000 and +10000.</p>
-<p><strong>Output</strong><br>For each line of input, print the (x,y) coordinates of the fourth point of the parallelogram in meters, to the nearest mm, separated by a single space.</p>
-<p><strong>Sample Input</strong><br>0.000 0.000 0.000 1.000 0.000 1.000 1.000 1.000<br>1.000 0.000 3.500 3.500 3.500 3.500 0.000 1.000<br>1.866 0.000 3.127 3.543 3.127 3.543 1.412 3.145</p>
-<p><strong>Sample Output</strong><br>1.000 0.000<br>-2.500 -2.500<br>0.151 -0.398</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cmath&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cstdio&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;algorithm&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> eps = <span class="number">1e-6</span>;</div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">node</span> &#123;</span></div><div class="line">	<span class="keyword">double</span> x, y;</div><div class="line">	node()&#123;&#125;</div><div class="line">	node(<span class="keyword">double</span> a,<span class="keyword">double</span> b):x(a),y(b)&#123;&#125;</div><div class="line">&#125;v[<span class="number">5</span>];</div><div class="line"><span class="function"><span class="keyword">bool</span> <span class="title">iszero</span><span class="params">(<span class="keyword">double</span> n)</span> </span>&#123;</div><div class="line">	<span class="keyword">return</span> ((n &lt;= eps) &amp;&amp; (n &gt;= -eps));</div><div class="line">&#125;</div><div class="line"><span class="keyword">bool</span> <span class="keyword">operator</span> == (node a, node b) &#123;</div><div class="line">	<span class="keyword">if</span> (iszero(a.x - b.x)&amp;&amp;iszero(a.y - b.y))<span class="keyword">return</span> <span class="literal">true</span>;</div><div class="line">	<span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="keyword">int</span> i, j;</div><div class="line">	<span class="keyword">while</span> (<span class="built_in">cin</span> &gt;&gt; v[<span class="number">1</span>].x &gt;&gt; v[<span class="number">1</span>].y &gt;&gt; v[<span class="number">2</span>].x &gt;&gt; v[<span class="number">2</span>].y &gt;&gt; v[<span class="number">3</span>].x &gt;&gt; v[<span class="number">3</span>].y &gt;&gt; v[<span class="number">4</span>].x &gt;&gt; v[<span class="number">4</span>].y) &#123;</div><div class="line">		<span class="keyword">bool</span> success = <span class="literal">false</span>;</div><div class="line">		<span class="keyword">for</span> (i = <span class="number">1</span>; i &lt;= <span class="number">4</span>; ++i) &#123;</div><div class="line">			<span class="keyword">for</span> (j = i+<span class="number">1</span>; j &lt;= <span class="number">4</span>; ++j)</div><div class="line">				<span class="keyword">if</span> (v[i] == v[j]) &#123; success = <span class="literal">true</span>; <span class="keyword">break</span>; &#125;</div><div class="line">			<span class="keyword">if</span> (success)<span class="keyword">break</span>;</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">if</span> (i != <span class="number">1</span>)swap(v[<span class="number">1</span>], v[i]);</div><div class="line">		<span class="keyword">if</span> (j != <span class="number">4</span>)swap(v[<span class="number">4</span>], v[j]);</div><div class="line">		v[<span class="number">4</span>].x = v[<span class="number">2</span>].x + v[<span class="number">3</span>].x - v[<span class="number">1</span>].x;</div><div class="line">		v[<span class="number">4</span>].y = v[<span class="number">2</span>].y + v[<span class="number">3</span>].y - v[<span class="number">1</span>].y;</div><div class="line">		<span class="built_in">printf</span>(<span class="string">"%.3f %.3f\n"</span>, v[<span class="number">4</span>].x, v[<span class="number">4</span>].y);</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">POJ</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/09/19/POJ/POJ-2624-4th-Point/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/4/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/57/">57</a><a class="extend next" rel="next" href="/page/6/">Next &raquo;</a>
@@ -961,11 +961,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">算法</a>
+                <a href="javascript:void(0)" class="js-tag color4">DFS</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">DFS</a>
+                <a href="javascript:void(0)" class="js-tag color3">算法</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -997,11 +997,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">01背包</a>
+                <a href="javascript:void(0)" class="js-tag color5">Java</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Java</a>
+                <a href="javascript:void(0)" class="js-tag color5">01背包</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1049,11 +1049,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">逻辑</a>
+                <a href="javascript:void(0)" class="js-tag color3">递归</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">递归</a>
+                <a href="javascript:void(0)" class="js-tag color3">逻辑</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1069,7 +1069,7 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">C++练手题</a>
+                <a href="javascript:void(0)" class="js-tag color2">位</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1077,7 +1077,7 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">位</a>
+                <a href="javascript:void(0)" class="js-tag color2">C++练手题</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1109,11 +1109,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">HTML</a>
+                <a href="javascript:void(0)" class="js-tag color5">操作系统</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">操作系统</a>
+                <a href="javascript:void(0)" class="js-tag color5">HTML</a>
               </li>
             
               <li class="article-tag-list-item">
