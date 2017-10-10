@@ -61,7 +61,7 @@
 	        
 				<li><a href="/tags/随笔/">随笔</a></li>
 	        
-				<li><a href="/tags/HDOJ/">HDOJ</a></li>
+				<li><a href="/tags/OJ/">OJ</a></li>
 	        
 				<li><a href="/tags/天梯赛/">天梯赛</a></li>
 	        
@@ -141,7 +141,7 @@
 		        
 					<li style="width: 20%"><a href="/tags/随笔/">随笔</a></li>
 		        
-					<li style="width: 20%"><a href="/tags/HDOJ/">HDOJ</a></li>
+					<li style="width: 20%"><a href="/tags/OJ/">OJ</a></li>
 		        
 					<li style="width: 20%"><a href="/tags/天梯赛/">天梯赛</a></li>
 		        
@@ -311,10 +311,18 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p><strong>Problem Description</strong></p>
-<p>Angel was caught by the MOLIGPY! He was put in prison by Moligpy. The prison is described as a N * M (N, M &lt;= 200) matrix. There are WALLs, ROADs, and GUARDs in the prison.<br>
-        
-          <a class="article-more-a" href="/2017/04/29/HDOJ/HDOJ-Rescue/#more">more >></a>
-        
+<p>Angel was caught by the MOLIGPY! He was put in prison by Moligpy. The prison is described as a N * M (N, M &lt;= 200) matrix. There are WALLs, ROADs, and GUARDs in the prison.<br>Angel’s friends want to save Angel. Their task is: approach Angel. We assume that “approach Angel” is to get to the position where Angel stays. When there’s a guard in the grid, we must kill him (or her?) to move into the grid. We assume that we moving up, down, right, left takes us 1 unit time, and killing a guard takes 1 unit time, too. And we are strong enough to kill all the guards.</p>
+<p>You have to calculate the minimal time to approach Angel. (We can move only UP, DOWN, LEFT and RIGHT, to the neighbor grid within bound, of course.)</p>
+<p><strong>Input</strong></p>
+<p>First line contains two integers stand for N and M.<br>Then N lines follows, every line has M characters. “.” stands for road, “a” stands for Angel, and “r” stands for each of Angel’s friend.<br>Process to the end of the file.</p>
+<p><strong>Output</strong></p>
+<p>For each test case, your program should output a single integer, standing for the minimal time needed. If such a number does no exist, you should output a line containing “Poor ANGEL has to stay in the prison all his life.”</p>
+<p><strong>Sample Input</strong></p>
+<p>7 8<br>#.#####.<br>#.a#..r.<br>#..#x…<br>..#..#.#<br>#…##..<br>.#……<br>……..</p>
+<p><strong>Sample Output</strong><br>13</p>
+<p>因为最近可能要程序设计比赛什么的，就没事也刷刷HDOJ，很神奇的是最终代码用GCC++一直报错，用microsoftC++就AC，蜜汁。（还因为我一直用GCC++提交被罚了很多时间……）平时习惯刷PAT,但是HDOJ这个是要求我们自己支持多组数据输入，所以刚开始用全局变量的也出错，因为queue没有销毁。修修改改的就这样了。主要是小陷阱比较多？（或者我比较不关注这方面的..）算法也就这样，BSF。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#include&lt;iostream&gt;</span></div><div class="line"><span class="comment">#include&lt;queue&gt;</span></div><div class="line">using namespace std;</div><div class="line"><span class="comment">#define MAX 220</span></div><div class="line">struct Node &#123;</div><div class="line">	int row;</div><div class="line">	int col;</div><div class="line">	char state;</div><div class="line">	int time;</div><div class="line">&#125;node[MAX][MAX];</div><div class="line">bool vis[MAX][MAX];</div><div class="line">int n, m;</div><div class="line"></div><div class="line">bool FindPath(Node &amp;r,Node &amp;a,queue&lt;Node&gt; &amp;q) &#123;</div><div class="line">	bool vis[MAX][MAX] = &#123;<span class="literal">false</span>&#125;;</div><div class="line">	int dir[][2] = &#123; &#123; 0,1 &#125;,&#123; 1,0 &#125;,&#123; 0,-1 &#125;,&#123; -1,0 &#125; &#125;;</div><div class="line">	Node front, temp;</div><div class="line">	r.time = 0;</div><div class="line">	q.push(r);</div><div class="line">	vis[r.row][r.col] = <span class="literal">true</span>;</div><div class="line">	<span class="keyword">while</span> (!q.empty()) &#123;</div><div class="line">		front = q.front();</div><div class="line">		q.pop();</div><div class="line">		<span class="keyword">if</span> (front.state == <span class="string">'x'</span>) &#123;</div><div class="line">			front.state = <span class="string">'.'</span>;</div><div class="line">			front.time += 1;</div><div class="line">			q.push(front);</div><div class="line">			<span class="built_in">continue</span>;</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">for</span> (int i = 0; i &lt; 4; ++i)</div><div class="line">		&#123;</div><div class="line">			<span class="keyword">if</span> (front.row + dir[i][0] &gt;= 0 &amp;&amp; front.row + dir[i][0] &lt; n&amp;&amp;front.col + dir[i][1] &gt;= 0 &amp;&amp; front.col + dir[i][1] &lt; m) &#123;</div><div class="line">				temp = node[front.row + dir[i][0]][front.col + dir[i][1]];</div><div class="line">				temp.time = front.time + 1;</div><div class="line">				<span class="keyword">if</span> (temp.state == <span class="string">'a'</span>) &#123;</div><div class="line">					cout &lt;&lt; front.time + 1 &lt;&lt; endl;</div><div class="line">					<span class="built_in">return</span> <span class="literal">true</span>;</div><div class="line">				&#125;</div><div class="line">				<span class="keyword">if</span> (!vis[temp.row][temp.col] &amp;&amp;temp.state!=<span class="string">'#'</span>) &#123;</div><div class="line">					q.push(temp);</div><div class="line">					vis[temp.row][temp.col] = <span class="literal">true</span>;</div><div class="line">				&#125;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	<span class="built_in">return</span> <span class="literal">false</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line">int <span class="function"><span class="title">main</span></span>()</div><div class="line">&#123;</div><div class="line">	<span class="keyword">while</span> (cin &gt;&gt; n &gt;&gt; m) &#123;</div><div class="line">		queue&lt;Node&gt; q;</div><div class="line">		Node a, r;</div><div class="line">		<span class="keyword">for</span> (int i = 0; i &lt; n; ++i) &#123;</div><div class="line">			<span class="keyword">for</span> (int j = 0; j &lt; m; ++j) &#123;</div><div class="line">				cin &gt;&gt; node[i][j].state;</div><div class="line">				node[i][j].row = i;</div><div class="line">				node[i][j].col = j;</div><div class="line">				<span class="keyword">if</span> (node[i][j].state == <span class="string">'r'</span>)  r = node[i][j];</div><div class="line">				<span class="keyword">if</span> (node[i][j].state == <span class="string">'a'</span>)  a = node[i][j];</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">if</span>(!FindPath(r,a,q))</div><div class="line">			cout &lt;&lt; <span class="string">"Poor ANGEL has to stay in the prison all his life."</span> &lt;&lt; endl;</div><div class="line">	&#125;</div><div class="line">	<span class="built_in">return</span> 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
       
 
       
@@ -327,7 +335,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">HDOJ</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">OJ</a>
         		</li>
       		
 		</ul>
@@ -927,7 +935,7 @@ MathJax.Hub.Queue(function() {
           <ul class="article-tag-list" q-show="showTags">
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">HDOJ</a>
+                <a href="javascript:void(0)" class="js-tag color3">OJ</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -991,11 +999,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">组合数学</a>
+                <a href="javascript:void(0)" class="js-tag color4">字典树</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">字典树</a>
+                <a href="javascript:void(0)" class="js-tag color5">组合数学</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1043,19 +1051,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">C++练手题</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">OpenJudge</a>
-              </li>
-            
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">位</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">POJ</a>
+                <a href="javascript:void(0)" class="js-tag color2">C++练手题</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1072,6 +1072,10 @@ MathJax.Hub.Queue(function() {
             
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">天梯赛</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1096,10 +1100,6 @@ MathJax.Hub.Queue(function() {
             
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">js</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">天梯赛</a>
               </li>
             
               <li class="article-tag-list-item">
