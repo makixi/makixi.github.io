@@ -162,6 +162,73 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-PAT/PAT-advanced-1068-Find-More-Coins-30" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/05/06/PAT/PAT-advanced-1068-Find-More-Coins-30/"> PAT advanced 1068.Find More Coins(30)</a>
+    </h1>
+  
+
+        
+        <a href="/2017/05/06/PAT/PAT-advanced-1068-Find-More-Coins-30/" class="archive-article-date">
+  	<time datetime="2017-05-06T00:42:06.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-05-06</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Eva loves to collect coins from all over the universe, including some other planets like Mars. One day she visited a universal shopping mall which could accept all kinds of coins as payments. However, there was a special requirement of the payment: for each bill, she must pay the exact amount. Since she has as many as 10^4 coins with her, she definitely needs your help. You are supposed to tell her, for any given amount of money, whether or not she can find some coins to pay for it.</p>
+<p><strong>Input Specification:</strong><br>Each input file contains one test case. For each case, the first line contains 2 positive numbers: N (&lt;=10^4, the total number of coins) and M(&lt;=10^2, the amount of money Eva has to pay). The second line contains N face values of the coins, which are all positive numbers. All the numbers in a line are separated by a space.</p>
+<p><strong>Output Specification:</strong><br>For each test case, print in one line the face values V1 &lt;= V2 &lt;= … &lt;= Vk such that V1 + V2 + … + Vk = M. All the numbers must be separated by a space, and there must be no extra space at the end of the line. If such a solution is not unique, output the smallest sequence. If there is no solution, output “No Solution” instead.<br>Note: sequence {A[1], A[2], …} is said to be “smaller” than sequence {B[1], B[2], …} if there exists k &gt;= 1 such that A[i]=B[i] for all i &lt; k, and A[k] &lt; B[k].</p>
+<p><strong>Sample Input 1:</strong><br>8 9<br>5 9 8 7 2 3 4 1<br><strong>Sample Output 1:</strong><br>1 3 5<br><strong>Sample Input 2:</strong><br>4 8<br>7 2 4 3<br><strong>Sample Output 2:</strong><br>No Solution</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;vector&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;algorithm&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="keyword">int</span> v[<span class="number">10001</span>];</div><div class="line"><span class="keyword">int</span> flag[<span class="number">10001</span>][<span class="number">101</span>];<span class="comment">//在第i位凑足j元</span></div><div class="line"><span class="keyword">int</span> dp[<span class="number">10001</span>];</div><div class="line"><span class="function"><span class="keyword">bool</span> <span class="title">cmp</span><span class="params">(<span class="keyword">int</span> a,<span class="keyword">int</span> b)</span></span>&#123;</div><div class="line">	<span class="keyword">return</span> a&gt;b;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</div><div class="line">	<span class="keyword">int</span> n,m;</div><div class="line">	<span class="built_in">cin</span>&gt;&gt;n&gt;&gt;m;</div><div class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;n;++i)<span class="built_in">cin</span>&gt;&gt;v[i];</div><div class="line">	sort(v,v+n,cmp);</div><div class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;n;++i)&#123;</div><div class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> j=m;j&gt;=v[i];--j)&#123;</div><div class="line">			<span class="keyword">if</span> (dp[j] &lt;= dp[j - v[i]] + v[i]) &#123;</div><div class="line">				flag[i][j] = <span class="literal">true</span>;</div><div class="line">				dp[j] = dp[j - v[i]] + v[i];</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">if</span>(dp[m]!=m)<span class="built_in">cout</span> &lt;&lt; <span class="string">"No Solution"</span>;</div><div class="line">	<span class="keyword">else</span>&#123;</div><div class="line">		<span class="keyword">int</span> curr=n<span class="number">-1</span>;</div><div class="line">		<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; res;</div><div class="line">		<span class="keyword">while</span>(m)&#123;</div><div class="line">			<span class="keyword">if</span>(flag[curr][m])&#123;</div><div class="line">				res.push_back(v[curr]);</div><div class="line">				m-=v[curr];</div><div class="line">			&#125;</div><div class="line">			--curr;</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;res.size();++i)&#123;</div><div class="line">			<span class="keyword">if</span>(i)<span class="built_in">cout</span>&lt;&lt;<span class="string">" "</span>;</div><div class="line">			<span class="built_in">cout</span>&lt;&lt;res[i];</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">DP</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">PAT甲级</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/05/06/PAT/PAT-advanced-1068-Find-More-Coins-30/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
     <article id="post-PAT/PAT-advanced-1040-Longest-Symmetric-String-25" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -747,67 +814,6 @@
 
 
   
-    <article id="post-咸鱼/咸鱼日常牢骚" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/29/咸鱼/咸鱼日常牢骚/">咸鱼日常牢骚</a>
-    </h1>
-  
-
-        
-        <a href="/2017/04/29/咸鱼/咸鱼日常牢骚/" class="archive-article-date">
-  	<time datetime="2017-04-29T09:37:11.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-04-29</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>  泡了一天图书馆，上午刷了HDOJ和PAT，下午啃了六级卷子。然后发现好像已经对代码之外的东西没什么兴趣。。因为六级真的是不想做……完全没有像敲代码一样的热情。<br>
-        
-          <a class="article-more-a" href="/2017/04/29/咸鱼/咸鱼日常牢骚/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">随笔</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/04/29/咸鱼/咸鱼日常牢骚/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/55/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/54/">54</a><a class="page-number" href="/page/55/">55</a><span class="page-number current">56</span><a class="page-number" href="/page/57/">57</a><a class="page-number" href="/page/58/">58</a><a class="extend next" rel="next" href="/page/57/">Next &raquo;</a>
@@ -923,11 +929,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">STL</a>
+                <a href="javascript:void(0)" class="js-tag color3">数学</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">数学</a>
+                <a href="javascript:void(0)" class="js-tag color4">STL</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1035,11 +1041,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">位</a>
+                <a href="javascript:void(0)" class="js-tag color2">C++练手题</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">C++练手题</a>
+                <a href="javascript:void(0)" class="js-tag color2">位</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1079,11 +1085,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">错题集</a>
+                <a href="javascript:void(0)" class="js-tag color3">js</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">js</a>
+                <a href="javascript:void(0)" class="js-tag color4">错题集</a>
               </li>
             
               <li class="article-tag-list-item">
