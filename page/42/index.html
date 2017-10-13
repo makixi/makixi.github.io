@@ -162,6 +162,78 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-HDOJ/HDOJ-1385-Minimum-Transport-Cost" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/07/17/HDOJ/HDOJ-1385-Minimum-Transport-Cost/">HDOJ 1385 Minimum Transport Cost</a>
+    </h1>
+  
+
+        
+        <a href="/2017/07/17/HDOJ/HDOJ-1385-Minimum-Transport-Cost/" class="archive-article-date">
+  	<time datetime="2017-07-17T07:36:50.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-17</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong>Problem Description</strong><br>These are N cities in Spring country. Between each pair of cities there may be one transportation track or none. Now there is some cargo that should be delivered from one city to another. The transportation fee consists of two parts:<br>The cost of the transportation on the path between these cities, and<br>a certain tax which will be charged whenever any cargo passing through one city, except for the source and the destination cities.<br>You must write a program to find the route which has the minimum cost.</p>
+<p><strong>Input</strong><br>First is N, number of cities. N = 0 indicates the end of input.<br>The data of path cost, city tax, source and destination cities are given in the input, which is of the form:<br>a11 a12 … a1N<br>a21 a22 … a2N<br>……………<br>aN1 aN2 … aNN<br>b1 b2 … bN<br>c d<br>e f<br>…<br>g h<br>where aij is the transport cost from city i to city j, aij = -1 indicates there is no direct path between city i and city j. bi represents the tax of passing through city i. And the cargo is to be delivered from city c to city d, city e to city f, …, and g = h = -1. You must output the sequence of cities passed by and the total cost which is of the form:</p>
+<p><strong>Output</strong><br>From c to d :<br>Path: c–&gt;c1–&gt;……–&gt;ck–&gt;d<br>Total cost : ……<br>……</p>
+<p>From e to f :<br>Path: e–&gt;e1–&gt;……….–&gt;ek–&gt;f<br>Total cost : ……</p>
+<p><strong>Note:</strong><br>if there are more minimal paths, output the lexically smallest one. Print a blank line after each test case.</p>
+<p><strong>Sample Input</strong><br>5<br>0 3 22 -1 4<br>3 0 5 -1 -1<br>22 5 0 9 20<br>-1 -1 9 0 4<br>4 -1 20 4 0<br>5 17 8 3 1<br>1 3<br>3 5<br>2 4<br>-1 -1<br>0</p>
+<p><strong>Sample Output</strong><br>From 1 to 3 :<br>Path: 1–&gt;5–&gt;4–&gt;3<br>Total cost : 21</p>
+<p>From 3 to 5 :<br>Path: 3–&gt;4–&gt;5<br>Total cost : 16</p>
+<p>From 2 to 4 :<br>Path: 2–&gt;1–&gt;5–&gt;4<br>Total cost : 17</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;algorithm&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> MAXNUM = <span class="number">1010</span>;</div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> INF = <span class="number">0x3f3f3f3f</span>;</div><div class="line"><span class="keyword">int</span> cost[MAXNUM][MAXNUM];</div><div class="line"><span class="keyword">int</span> costcity[MAXNUM];</div><div class="line"><span class="keyword">int</span> n;</div><div class="line"><span class="keyword">int</span> path[MAXNUM][MAXNUM];</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">floyd</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; ++i)</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">1</span>; j &lt;= n; ++j)</div><div class="line">			path[i][j] = j;</div><div class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> k=<span class="number">1</span>;k&lt;=n;++k)</div><div class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=n;++i)</div><div class="line">			<span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">1</span>; j &lt;= n; ++j) &#123;</div><div class="line">				<span class="keyword">int</span> sum = cost[i][k] + cost[k][j] + costcity[k];</div><div class="line">				<span class="keyword">if</span> (cost[i][j] &gt; sum) &#123;</div><div class="line">					cost[i][j] = sum;</div><div class="line">					path[i][j] = path[i][k];</div><div class="line">				&#125;</div><div class="line">				<span class="keyword">else</span> <span class="keyword">if</span> (cost[i][j] == sum)</div><div class="line">					path[i][j] = min(path[i][j], path[i][k]);</div><div class="line">			&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="keyword">int</span> b, c;</div><div class="line">	<span class="keyword">while</span> (<span class="built_in">cin</span> &gt;&gt; n&amp;&amp;n) &#123;</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; ++i)</div><div class="line">			<span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">1</span>; j &lt;= n; ++j)</div><div class="line">			&#123;</div><div class="line">				<span class="built_in">cin</span> &gt;&gt; cost[i][j];</div><div class="line">				<span class="keyword">if</span> (cost[i][j] == <span class="number">-1</span>)</div><div class="line">					cost[i][j] = INF;</div><div class="line">			&#125;</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; ++i)</div><div class="line">			<span class="built_in">cin</span> &gt;&gt; costcity[i];</div><div class="line">		floyd();</div><div class="line">		<span class="keyword">while</span> (<span class="built_in">scanf</span>(<span class="string">"%d%d"</span>, &amp;b, &amp;c), b != <span class="number">-1</span>)</div><div class="line">		&#123;</div><div class="line">			<span class="keyword">int</span> w = b;</div><div class="line">			<span class="built_in">printf</span>(<span class="string">"From %d to %d :\nPath: "</span>, b, c);</div><div class="line">			<span class="keyword">while</span> (w != c)</div><div class="line">			&#123;</div><div class="line">				<span class="built_in">printf</span>(<span class="string">"%d--&gt;"</span>, w);</div><div class="line">				w = path[w][c];</div><div class="line">			&#125;</div><div class="line">			<span class="built_in">printf</span>(<span class="string">"%d\n"</span>, w);</div><div class="line">			<span class="built_in">printf</span>(<span class="string">"Total cost : %d\n\n"</span>, cost[b][c]);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">OJ</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Floyd</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/07/17/HDOJ/HDOJ-1385-Minimum-Transport-Cost/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
     <article id="post-咸鱼/懒癌の挣扎" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -766,82 +838,6 @@
 
 
   
-    <article id="post-算法/递推关系" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/07/16/算法/递推关系/">递推关系</a>
-    </h1>
-  
-
-        
-        <a href="/2017/07/16/算法/递推关系/" class="archive-article-date">
-  	<time datetime="2017-07-16T00:54:28.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-16</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="汉诺塔"><a href="#汉诺塔" class="headerlink" title="汉诺塔"></a>汉诺塔</h2><p>假设有A、B、C3个轴，有n个直径各不相同、从小到大依次编号为1，2，3，…，n的圆盘按照上小下大的顺序叠放在A轴上。现要求将这n个圆盘移至B轴上并仍按同样顺序叠放，但圆盘移动时必须遵循下列规则：</p>
-<ul>
-<li>每次智能移动一个圆盘，它必须位于某个轴的顶部。</li>
-<li>圆盘可以插在A、B、C中的任一轴上。</li>
-<li>任何时刻都不能将一个较大的圆盘压在较小的圆盘之上。<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/*</span></div><div class="line">			n个圆盘所需步数f(n)=2*f(n-1)+1</div><div class="line">			并且f(1)=1</div><div class="line">			递推得到f(n)=2^n-1</div><div class="line">*/</div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cmath&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> MAXNUM=<span class="number">1000</span>;</div><div class="line"><span class="keyword">int</span> book[MAXNUM+<span class="number">1</span>];</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</div><div class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=MAXNUM;++i)</div><div class="line">		book[i]=<span class="built_in">pow</span>(<span class="number">2</span>,i)<span class="number">-1</span>;</div><div class="line">	<span class="keyword">int</span> n;</div><div class="line">	<span class="keyword">while</span>(<span class="built_in">cin</span>&gt;&gt;n)</div><div class="line">		<span class="built_in">cout</span>&lt;&lt;book[n]&lt;&lt;<span class="built_in">endl</span>;</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
-</ul>
-<h2 id="Fibonacci数列"><a href="#Fibonacci数列" class="headerlink" title="Fibonacci数列"></a>Fibonacci数列</h2><h3 id="楼梯问题"><a href="#楼梯问题" class="headerlink" title="楼梯问题"></a>楼梯问题</h3><p>楼梯有n个台阶，上楼可以一步上1阶，也可以一步上2阶。一共有多少上楼的方法？<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/*</span></div><div class="line">			f(i)=f(i-1)+f(i-2)</div><div class="line">			f(1)=1;f(2)=2;</div><div class="line">*/</div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> MAXNUM=<span class="number">1000</span>;</div><div class="line"><span class="keyword">int</span> f[MAXNUM+<span class="number">1</span>];</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</div><div class="line">	f[<span class="number">1</span>]=<span class="number">1</span>;f[<span class="number">2</span>]=<span class="number">2</span>;</div><div class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">3</span>;i&lt;=MAXNUM;++i)</div><div class="line">		f[i]=f[i<span class="number">-1</span>]+f[i<span class="number">-2</span>];</div><div class="line">	<span class="keyword">int</span> n;</div><div class="line">	<span class="keyword">while</span>(<span class="built_in">cin</span>&gt;&gt;n)</div><div class="line">		<span class="built_in">cout</span>&lt;&lt;f[n]&lt;&lt;<span class="built_in">endl</span>;</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h3 id="兔子问题"><a href="#兔子问题" class="headerlink" title="兔子问题"></a>兔子问题</h3><p>把雌雄各一的一对新兔子放入养殖场中。每只雌兔从第2个月开始每月产雌雄各一的一对新兔子。试问第n个月后养殖场中共有多少对兔子？<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/*</span></div><div class="line">      其实就是和楼梯问题一毛一样</div><div class="line">			f(i)=f(i-1)+f(i-2)</div><div class="line">			f(1)=1;f(2)=2;</div><div class="line">*/</div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> MAXNUM=<span class="number">1000</span>;</div><div class="line"><span class="keyword">int</span> f[MAXNUM+<span class="number">1</span>];</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</div><div class="line">	f[<span class="number">1</span>]=<span class="number">1</span>;f[<span class="number">2</span>]=<span class="number">2</span>;</div><div class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">3</span>;i&lt;=MAXNUM;++i)</div><div class="line">		f[i]=f[i<span class="number">-1</span>]+f[i<span class="number">-2</span>];</div><div class="line">	<span class="keyword">int</span> n;</div><div class="line">	<span class="keyword">while</span>(<span class="built_in">cin</span>&gt;&gt;n)</div><div class="line">		<span class="built_in">cout</span>&lt;&lt;f[n]&lt;&lt;<span class="built_in">endl</span>;</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h2 id="Catalan数"><a href="#Catalan数" class="headerlink" title="Catalan数"></a>Catalan数</h2><p>给一个凸n边形，用n-3条不相交的对角线把它分成n-2个三角形，求不同的方法数目。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/*</span></div><div class="line">			每个三角形左边是k边形，右边就是n-k+1边形</div><div class="line">			包含这个三角形的方案数为f(k)f(n-k+1)</div><div class="line">			f(n)=f(2)f(n-1)+f(2)f(n-2)+...+f(n-1)f(2)</div><div class="line">			f(2)=f(3)=1</div><div class="line"></div><div class="line">			对角线来考虑 包含对角线V1Vk的凸多边形有f(k)f(n-k+2)个</div><div class="line">			一共n[f(3)f(n-1)+f(4)f(n-2)+...+f(n-1)f(3)]个剖分</div><div class="line">			去除重复后： n[f(3)f(n-1)+f(4)f(n-2)+...+f(n-1)f(3)]/(2n-6)</div><div class="line"></div><div class="line">			与第一个递推式连列</div><div class="line">			f(n+1)=(4n-6)*f(n)/n</div><div class="line">*/</div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> MAXNUM=<span class="number">1000</span>;</div><div class="line"><span class="keyword">int</span> f[MAXNUM+<span class="number">1</span>];</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</div><div class="line">	f[<span class="number">2</span>]=<span class="number">1</span>;f[<span class="number">3</span>]=<span class="number">1</span>;</div><div class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">3</span>;i&lt;MAXNUM;++i)</div><div class="line">		f[i+<span class="number">1</span>]=f[i]*(<span class="number">4</span>*i<span class="number">-6</span>)/i;</div><div class="line">	<span class="keyword">int</span> n;</div><div class="line">	<span class="keyword">while</span>(<span class="built_in">cin</span>&gt;&gt;n)</div><div class="line">		<span class="built_in">cout</span>&lt;&lt;f[n]&lt;&lt;<span class="built_in">endl</span>;</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h2 id="危险的组合"><a href="#危险的组合" class="headerlink" title="危险的组合"></a>危险的组合</h2><p>将一些装有铀(U)和铅(L)的盒子，数量均足够多。要求把n个盒子放成一行，但至少有3个U放在一起，有多少种放法？n&lt;=30<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/*</span></div><div class="line">			n个盒子。第一个盒子放U或L，剩下方案f(n-1)</div><div class="line"></div><div class="line">			如果把第一个盒子拿掉，剩下n-1个盒子不满足条件</div><div class="line">			那么就是前三盒是U，第四个是L</div><div class="line">			pow(2, n-4)是n-4盒子的所有情况，减去cnt(n-4)后n-4盒子满足条件的</div><div class="line">*/</div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cmath&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> MAXNUM=<span class="number">30</span>;</div><div class="line"><span class="keyword">int</span> f[MAXNUM+<span class="number">1</span>];</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</div><div class="line">	f[<span class="number">0</span>]=f[<span class="number">1</span>]=f[<span class="number">2</span>]=<span class="number">0</span>;f[<span class="number">3</span>]=<span class="number">1</span>;f[<span class="number">4</span>]=<span class="number">3</span>;</div><div class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">5</span>;i&lt;=MAXNUM;++i)</div><div class="line">		f[i]=<span class="number">2</span>*f[i<span class="number">-1</span>]+<span class="built_in">pow</span>(<span class="number">2</span>,i<span class="number">-4</span>)-f[i<span class="number">-4</span>];</div><div class="line">	<span class="keyword">int</span> n;</div><div class="line">	<span class="keyword">while</span>(<span class="built_in">cin</span>&gt;&gt;n)</div><div class="line">		<span class="built_in">cout</span>&lt;&lt;f[n]&lt;&lt;<span class="built_in">endl</span>;</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h2 id="统计n-k特殊集的数目"><a href="#统计n-k特殊集的数目" class="headerlink" title="统计n-k特殊集的数目"></a>统计n-k特殊集的数目</h2><p>如果由正整数构成的集合X满足以下条件，我们称它为n-k特殊集：</p>
-<ul>
-<li>集合X中的每个元素x均不超过n，即1&lt;=x&lt;=n</li>
-<li>集合X中的元素之和大于k</li>
-<li>集合X中不包含任意一对相邻的自然数<br>给出n，k，求n-k特殊集合有多少个<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/*</span></div><div class="line">			1.n不出现 f(n-1,k)</div><div class="line">			2.n出现 f(n-2,k-n)</div><div class="line">*/</div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> F(i,j) (f[(i)+1][(j)+1])	<span class="comment">//因为下标不能为负</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="keyword">long</span> <span class="keyword">long</span> f[<span class="number">200</span>][<span class="number">500</span>];</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</div><div class="line">	<span class="keyword">int</span> n,k;</div><div class="line">	<span class="built_in">cin</span>&gt;&gt;n&gt;&gt;k;</div><div class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">-1</span>;j&lt;=k;++j)</div><div class="line">		F(<span class="number">-1</span>,j)=F(<span class="number">0</span>,j)=<span class="number">0</span>;</div><div class="line">	F(<span class="number">-1</span>,<span class="number">-1</span>)=F(<span class="number">0</span>,<span class="number">-1</span>)=<span class="number">1</span>;</div><div class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=n;++i)</div><div class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">-1</span>;j&lt;=k;++j)&#123;</div><div class="line">			F(i,j)=F(i<span class="number">-1</span>,j);</div><div class="line">			<span class="keyword">if</span>(j-i&lt;<span class="number">0</span>)F(i,j)+=F(i<span class="number">-2</span>,<span class="number">-1</span>);</div><div class="line">			<span class="keyword">else</span> F(i,j)+=F(i<span class="number">-2</span>,j-i);</div><div class="line">		&#125;</div><div class="line">	<span class="built_in">cout</span>&lt;&lt;F(n,k)&lt;&lt;<span class="built_in">endl</span>;</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
-</ul>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">算法</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/07/16/算法/递推关系/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/41/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/40/">40</a><a class="page-number" href="/page/41/">41</a><span class="page-number current">42</span><a class="page-number" href="/page/43/">43</a><a class="page-number" href="/page/44/">44</a><span class="space">&hellip;</span><a class="page-number" href="/page/58/">58</a><a class="extend next" rel="next" href="/page/43/">Next &raquo;</a>
@@ -957,15 +953,15 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">算法</a>
+              </li>
+            
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">数学</a>
               </li>
             
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">STL</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">算法</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1033,26 +1029,6 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">递归</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">位</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">并查集</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Android</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">SQL</a>
-              </li>
-            
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">PAT甲级</a>
               </li>
             
@@ -1073,7 +1049,15 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">递归</a>
+              </li>
+            
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">逻辑</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">并查集</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1081,19 +1065,31 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">C++</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">天梯赛</a>
-              </li>
-            
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">C++练手题</a>
               </li>
             
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">位</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Android</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">SQL</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">C++</a>
+              </li>
+            
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">天梯赛</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1105,19 +1101,19 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">操作系统</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">HTML</a>
-              </li>
-            
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">错题集</a>
               </li>
             
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">js</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">操作系统</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">HTML</a>
               </li>
             
               <li class="article-tag-list-item">

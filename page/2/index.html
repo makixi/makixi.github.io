@@ -162,6 +162,71 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-POJ/POJ-1177-Picture" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/10/07/POJ/POJ-1177-Picture/">POJ 1177 Picture(线段树+离散化+扫描线段)</a>
+    </h1>
+  
+
+        
+        <a href="/2017/10/07/POJ/POJ-1177-Picture/" class="archive-article-date">
+  	<time datetime="2017-10-07T04:25:33.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-10-07</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong>Description</strong><br>A number of rectangular posters, photographs and other pictures of the same shape are pasted on a wall. Their sides are all vertical or horizontal. Each rectangle can be partially or totally covered by the others. The length of the boundary of the union of all rectangles is called the perimeter.<br>Write a program to calculate the perimeter. An example with 7 rectangles is shown in Figure 1.<br><img src="https://github.com/makixi/makixi.github.io/raw/master/img/%E5%88%B7%E9%A2%98%E4%B8%93%E7%94%A8%E5%9B%BE/POJ11771.jpg" alt="1177-1"><br>The corresponding boundary is the whole set of line segments drawn in Figure 2.<br><img src="https://github.com/makixi/makixi.github.io/raw/master/img/%E5%88%B7%E9%A2%98%E4%B8%93%E7%94%A8%E5%9B%BE/POJ11772.jpg" alt="1177-2"><br>The vertices of all rectangles have integer coordinates.</p>
+<p><strong>Input</strong><br>Your program is to read from standard input. The first line contains the number of rectangles pasted on the wall. In each of the subsequent lines, one can find the integer coordinates of the lower left vertex and the upper right vertex of each rectangle. The values of those coordinates are given as ordered pairs consisting of an x-coordinate followed by a y-coordinate.<br>0 &lt;= number of rectangles &lt; 5000<br>All coordinates are in the range [-10000,10000] and any existing rectangle has a positive area.</p>
+<p><strong>Output</strong><br>Your program is to write to standard output. The output must contain a single line with a non-negative integer which corresponds to the perimeter for the input rectangles.</p>
+<p><strong>Sample Input</strong><br>7<br>-15 0 5 10<br>-5 8 20 25<br>15 -4 24 14<br>0 -6 16 4<br>2 15 10 22<br>30 10 36 20<br>34 0 40 16</p>
+<p><strong>Sample Output</strong><br>228</p>
+<p>求周长并</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cmath&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;algorithm&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> maxn = <span class="number">5000</span> + <span class="number">10</span>;</div><div class="line"></div><div class="line"><span class="keyword">int</span> v[maxn&lt;&lt;<span class="number">1</span>];</div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">tree</span> &#123;</span></div><div class="line">	<span class="keyword">int</span> l, r;</div><div class="line">	<span class="keyword">int</span> len, num;		<span class="comment">// len是横边长  num是竖线段条数</span></div><div class="line">	<span class="keyword">int</span> cover, lc, rc;		<span class="comment">//是否被完全覆盖 两个端点是否被覆盖</span></div><div class="line">&#125;tree[maxn &lt;&lt; <span class="number">3</span>];</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Line</span> &#123;</span></div><div class="line">	<span class="keyword">int</span> x1, x2, y;</div><div class="line">	<span class="keyword">int</span> flag;</div><div class="line">	Line() &#123;&#125;</div><div class="line">	Line(<span class="keyword">int</span> xx1, <span class="keyword">int</span> xx2, <span class="keyword">int</span> yy, <span class="keyword">int</span> ff) :x1(xx1), x2(xx2), y(yy), flag(ff) &#123;&#125;</div><div class="line">	<span class="keyword">bool</span> <span class="keyword">operator</span> &lt; (<span class="keyword">const</span> Line &amp;a) <span class="keyword">const</span> &#123;</div><div class="line">		<span class="keyword">return</span> y&lt;a.y;</div><div class="line">	&#125;</div><div class="line">&#125;line[maxn &lt;&lt; <span class="number">1</span>];</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">build</span><span class="params">(<span class="keyword">int</span> st, <span class="keyword">int</span> l, <span class="keyword">int</span> r)</span> </span>&#123;</div><div class="line">	tree[st].l = l; tree[st].r = r;</div><div class="line">	tree[st].cover = <span class="number">0</span>; tree[st].len = <span class="number">0</span>;</div><div class="line">	tree[st].lc = tree[st].rc = tree[st].num = <span class="number">0</span>;</div><div class="line">	<span class="keyword">if</span> (l == r)<span class="keyword">return</span>;</div><div class="line">	<span class="keyword">int</span> mid = (l + r) &gt;&gt; <span class="number">1</span>;</div><div class="line">	build(st &lt;&lt; <span class="number">1</span>, l, mid);</div><div class="line">	build(st &lt;&lt; <span class="number">1</span> | <span class="number">1</span>, mid + <span class="number">1</span>, r);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">pushdown</span><span class="params">(<span class="keyword">int</span> st)</span> </span>&#123;</div><div class="line">	<span class="keyword">if</span> (tree[st].cover &gt; <span class="number">0</span>) &#123;</div><div class="line">		tree[st].len = v[tree[st].r+<span class="number">1</span>] - v[tree[st].l];</div><div class="line">		tree[st].lc = <span class="number">1</span>; tree[st].rc = <span class="number">1</span>; tree[st].num = <span class="number">1</span>;</div><div class="line">		<span class="keyword">return</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">if</span> (tree[st].l == tree[st].r) &#123;</div><div class="line">		tree[st].lc = tree[st].rc = tree[st].num = tree[st].len = <span class="number">0</span>;</div><div class="line">		<span class="keyword">return</span>;</div><div class="line">	&#125;</div><div class="line">	tree[st].len = tree[st &lt;&lt; <span class="number">1</span>].len + tree[st &lt;&lt; <span class="number">1</span> | <span class="number">1</span>].len;</div><div class="line">	tree[st].lc = tree[st &lt;&lt; <span class="number">1</span>].lc;</div><div class="line">	tree[st].rc = tree[st &lt;&lt; <span class="number">1</span> | <span class="number">1</span>].rc;</div><div class="line">	tree[st].num = tree[st &lt;&lt; <span class="number">1</span>].num + tree[st &lt;&lt; <span class="number">1</span> | <span class="number">1</span>].num - (tree[st &lt;&lt; <span class="number">1</span>].rc&amp;&amp;tree[st &lt;&lt; <span class="number">1</span> | <span class="number">1</span>].lc);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">update</span><span class="params">(<span class="keyword">int</span> st, <span class="keyword">int</span> l, <span class="keyword">int</span> r, <span class="keyword">int</span> flag)</span> </span>&#123;</div><div class="line">	<span class="keyword">if</span> (tree[st].l == l&amp;&amp;tree[st].r == r) &#123;</div><div class="line">		tree[st].cover += flag;</div><div class="line">		pushdown(st);</div><div class="line">		<span class="keyword">return</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">int</span> mid = (tree[st].l + tree[st].r) &gt;&gt; <span class="number">1</span>;</div><div class="line">	<span class="keyword">if</span> (r &lt;= mid)update(st &lt;&lt; <span class="number">1</span>, l, r, flag);</div><div class="line">	<span class="keyword">else</span> <span class="keyword">if</span> (l &gt; mid)update(st &lt;&lt; <span class="number">1</span> | <span class="number">1</span>, l, r, flag);</div><div class="line">	<span class="keyword">else</span> &#123;</div><div class="line">		update(st &lt;&lt; <span class="number">1</span>, l, mid, flag);</div><div class="line">		update(st &lt;&lt; <span class="number">1</span> | <span class="number">1</span>, mid + <span class="number">1</span>, r, flag);</div><div class="line">	&#125;</div><div class="line">	pushdown(st);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">binSearch</span><span class="params">(<span class="keyword">int</span> l, <span class="keyword">int</span> r, <span class="keyword">int</span> key)</span> </span>&#123;</div><div class="line">	<span class="keyword">while</span> (l &lt;= r) &#123;</div><div class="line">		<span class="keyword">int</span> mid = (l + r) &gt;&gt; <span class="number">1</span>;</div><div class="line">		<span class="keyword">if</span> (v[mid] == key)<span class="keyword">return</span> mid;</div><div class="line">		<span class="keyword">if</span> (v[mid] &gt; key)r = mid - <span class="number">1</span>;</div><div class="line">		<span class="keyword">else</span> l = mid + <span class="number">1</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> <span class="number">-1</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="keyword">int</span> n;</div><div class="line">	<span class="keyword">while</span> (~<span class="built_in">scanf</span>(<span class="string">"%d"</span>, &amp;n)) &#123;</div><div class="line">		<span class="keyword">int</span> vcnt = <span class="number">0</span>, lcnt = <span class="number">0</span>;</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i&lt;n; ++i) &#123;</div><div class="line">			<span class="keyword">int</span> x1, y1, x2, y2;</div><div class="line">			<span class="built_in">scanf</span>(<span class="string">"%d %d %d %d"</span>, &amp;x1, &amp;y1, &amp;x2, &amp;y2);</div><div class="line">			line[lcnt++] = Line(x1, x2, y1, <span class="number">1</span>);</div><div class="line">			v[vcnt++] = x1;</div><div class="line">			line[lcnt++] = Line(x1, x2, y2, <span class="number">-1</span>);</div><div class="line">			v[vcnt++] = x2;</div><div class="line">		&#125;</div><div class="line">		sort(v, v + vcnt);</div><div class="line">		vcnt = unique(v, v + vcnt) - v;</div><div class="line">		sort(line, line + lcnt);</div><div class="line">		build(<span class="number">1</span>, <span class="number">0</span>, vcnt - <span class="number">2</span>);</div><div class="line">		<span class="keyword">int</span> res = <span class="number">0</span>, pre = <span class="number">0</span>;</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i&lt;lcnt; ++i) &#123;</div><div class="line">			<span class="keyword">int</span> l = binSearch(<span class="number">0</span>, vcnt - <span class="number">1</span>, line[i].x1);</div><div class="line">			<span class="keyword">int</span> r = binSearch(<span class="number">0</span>, vcnt - <span class="number">1</span>, line[i].x2) - <span class="number">1</span>;</div><div class="line">			update(<span class="number">1</span>, l, r, line[i].flag);</div><div class="line">			res += <span class="built_in">abs</span>(tree[<span class="number">1</span>].len - pre);</div><div class="line">			pre = tree[<span class="number">1</span>].len;</div><div class="line">			<span class="keyword">if</span> (i &lt; lcnt - <span class="number">1</span>)res += (line[i + <span class="number">1</span>].y - line[i].y) * <span class="number">2</span> * tree[<span class="number">1</span>].num;</div><div class="line">		&#125;</div><div class="line">		<span class="built_in">printf</span>(<span class="string">"%d\n"</span>, res);</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">OJ</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/10/07/POJ/POJ-1177-Picture/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
     <article id="post-POJ/POJ-2352-Stars" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -755,72 +820,6 @@
 
 
   
-    <article id="post-POJ/魔兽世界之一：备战" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/10/02/POJ/魔兽世界之一：备战/">OpenJudge 魔兽世界之一：备战</a>
-    </h1>
-  
-
-        
-        <a href="/2017/10/02/POJ/魔兽世界之一：备战/" class="archive-article-date">
-  	<time datetime="2017-10-02T00:07:25.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-10-02</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><strong>描述</strong><br>魔兽世界的西面是红魔军的司令部，东面是蓝魔军的司令部。两个司令部之间是依次排列的若干城市。<br>红司令部，City 1，City 2，……，City n，蓝司令部<br>两军的司令部都会制造武士。武士一共有 dragon 、ninja、iceman、lion、wolf 五种。每种武士都有编号、生命值、攻击力这三种属性。<br>双方的武士编号都是从1开始计算。红方制造出来的第n个武士，编号就是n。同样，蓝方制造出来的第n个武士，编号也是n。<br>武士在刚降生的时候有一个生命值。<br>在每个整点，双方的司令部中各有一个武士降生。<br>红方司令部按照iceman、lion、wolf、ninja、dragon的顺序循环制造武士。<br>蓝方司令部按照lion、dragon、ninja、iceman、wolf的顺序循环制造武士。<br>制造武士需要生命元。<br>制造一个初始生命值为m的武士，司令部中的生命元就要减少m个。<br>如果司令部中的生命元不足以制造某个按顺序应该制造的武士，那么司令部就试图制造下一个。如果所有武士都不能制造了，则司令部停止制造武士。<br>给定一个时间，和双方司令部的初始生命元数目，要求你将从0点0分开始到双方司令部停止制造武士为止的所有事件按顺序输出。<br>一共有两种事件，其对应的输出样例如下：</p>
-<p>1) 武士降生<br>输出样例： 004 blue lion 5 born with strength 5,2 lion in red headquarter<br>表示在4点整，编号为5的蓝魔lion武士降生，它降生时生命值为5，降生后蓝魔司令部里共有2个lion武士。（为简单起见，不考虑单词的复数形式）注意，每制造出一个新的武士，都要输出此时司令部里共有多少个该种武士。<br>2) 司令部停止制造武士<br>输出样例： 010 red headquarter stops making warriors<br>表示在10点整，红方司令部停止制造武士</p>
-<p>输出事件时：<br>首先按时间顺序输出；<br>同一时间发生的事件，先输出红司令部的，再输出蓝司令部的。</p>
-<p><strong>输入</strong><br>第一行是一个整数，代表测试数据组数。<br>每组测试数据共两行。<br>第一行：一个整数M。其含义为， 每个司令部一开始都有M个生命元( 1 &lt;= M &lt;= 10000)。<br>第二行：五个整数，依次是 dragon 、ninja、iceman、lion、wolf 的初始生命值。它们都大于0小于等于10000。</p>
-<p><strong>输出</strong><br>对每组测试数据，要求输出从0时0分开始，到双方司令部都停止制造武士为止的所有事件。<br>对每组测试数据，首先输出”Case:n” n是测试数据的编号，从1开始 。<br>接下来按恰当的顺序和格式输出所有事件。每个事件都以事件发生的时间开头，时间以小时为单位，有三位。</p>
-<p><strong>样例输入</strong><br>1<br>20<br>3 4 5 6 7</p>
-<p><strong>样例输出</strong><br>Case:1<br>000 red iceman 1 born with strength 5,1 iceman in red headquarter<br>000 blue lion 1 born with strength 6,1 lion in blue headquarter<br>001 red lion 2 born with strength 6,1 lion in red headquarter<br>001 blue dragon 2 born with strength 3,1 dragon in blue headquarter<br>002 red wolf 3 born with strength 7,1 wolf in red headquarter<br>002 blue ninja 3 born with strength 4,1 ninja in blue headquarter<br>003 red headquarter stops making warriors<br>003 blue iceman 4 born with strength 5,1 iceman in blue headquarter<br>004 blue headquarter stops making warriors</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div></pre></td><td class="code"><pre><div class="line">#include&lt;iostream&gt;</div><div class="line">using namespace std;</div><div class="line">class Warrior &#123;//武士</div><div class="line">public:</div><div class="line">	Warrior(int nn, int kn) &#123;</div><div class="line">		this-&gt;no = nn;</div><div class="line">		this-&gt;kindNo = kn;</div><div class="line">	&#125;</div><div class="line">	static int bloods[5];</div><div class="line">private:</div><div class="line">	int no;</div><div class="line">	int kindNo;</div><div class="line">&#125;;</div><div class="line">int Warrior::bloods[5] = &#123; 0 &#125;;</div><div class="line">class Leader &#123;</div><div class="line">public:</div><div class="line">	Leader(int cc, int bb) &#123;</div><div class="line">		this-&gt;blood = bb;</div><div class="line">		this-&gt;color = cc;</div><div class="line">		totalWarrior = 0;</div><div class="line">		for (int i = 0; i &lt; 5; ++i)warriorNum[i] = 0;</div><div class="line">		stop = false;</div><div class="line">		num = 0;</div><div class="line">	&#125;</div><div class="line">	~Leader() &#123;</div><div class="line">		for (int i = 0; i &lt; totalWarrior; ++i)</div><div class="line">			delete pWarrior[i];</div><div class="line">	&#125;</div><div class="line">	bool stop;</div><div class="line">	string getColor(int color) &#123;</div><div class="line">		if (color)return "blue";</div><div class="line">		else return "red";</div><div class="line">	&#125;</div><div class="line">	void solve(int times);</div><div class="line">private:</div><div class="line">	int color;		//red is 0, blue is 1</div><div class="line">	int blood;</div><div class="line">	int totalWarrior;</div><div class="line">	int warriorNum[5];</div><div class="line">	int num;</div><div class="line">	Warrior *pWarrior[101];</div><div class="line">	static string warriorName[5];</div><div class="line">	static int bornSequence[2][5];</div><div class="line">&#125;;</div><div class="line">string Leader::warriorName[5] = &#123; "dragon","ninja","iceman","lion","wolf" &#125;;</div><div class="line">int Leader::bornSequence[2][5] = &#123; &#123; 2,3,4,1,0 &#125;,&#123; 3,0,1,2,4 &#125; &#125;;</div><div class="line">void Leader::solve(int times) &#123;</div><div class="line">	if (stop)return;</div><div class="line">	int t = 0;</div><div class="line">	while (Warrior::bloods[bornSequence[color][num]] &gt; blood&amp;&amp;t &lt; 5) &#123;</div><div class="line">		num = (num + 1) % 5;</div><div class="line">		++t;</div><div class="line">	&#125;</div><div class="line">	int kn = bornSequence[color][num];</div><div class="line">	if (Warrior::bloods[kn] &gt; blood) &#123;</div><div class="line">		stop = true;</div><div class="line">		if (color)printf("%03d blue headquarter stops making warriors\n", times);</div><div class="line">		else printf("%03d red headquarter stops making warriors\n", times);</div><div class="line">		return;</div><div class="line">	&#125;</div><div class="line">	blood -= Warrior::bloods[kn];</div><div class="line">	num = (num + 1) % 5;</div><div class="line">	pWarrior[totalWarrior] = new Warrior(totalWarrior + 1, kn);</div><div class="line">	warriorNum[kn]++;</div><div class="line">	printf("%03d %s %s %d born with strength %d,%d %s in %s headquarter\n",</div><div class="line">		times, getColor(color).c_str(), warriorName[kn].c_str(),</div><div class="line">		++totalWarrior, Warrior::bloods[kn], warriorNum[kn],</div><div class="line">		warriorName[kn].c_str(), getColor(color).c_str());</div><div class="line">	return;</div><div class="line">&#125;</div><div class="line">int main() &#123;</div><div class="line">	int cas = 1, t, m;</div><div class="line">	cin &gt;&gt; t;</div><div class="line">	while (t--) &#123;</div><div class="line">		int times = 0;</div><div class="line">		cin &gt;&gt; m;</div><div class="line">		for (int i = 0; i &lt; 5; ++i)cin &gt;&gt; Warrior::bloods[i];</div><div class="line">		Leader red(0, m), blue(1, m);</div><div class="line">		printf("Case:%d\n", cas++);</div><div class="line">		while (1) &#123;</div><div class="line">			red.solve(times);</div><div class="line">			blue.solve(times);</div><div class="line">			if (red.stop&amp;&amp;blue.stop)break;</div><div class="line">			++times;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">OJ</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/10/02/POJ/魔兽世界之一：备战/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/58/">58</a><a class="extend next" rel="next" href="/page/3/">Next &raquo;</a>
@@ -936,15 +935,15 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">算法</a>
+              </li>
+            
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">数学</a>
               </li>
             
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">STL</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">算法</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1012,26 +1011,6 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">递归</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">位</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">并查集</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Android</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">SQL</a>
-              </li>
-            
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">PAT甲级</a>
               </li>
             
@@ -1052,7 +1031,15 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">递归</a>
+              </li>
+            
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">逻辑</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">并查集</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1060,19 +1047,31 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">C++</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">天梯赛</a>
-              </li>
-            
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">C++练手题</a>
               </li>
             
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">位</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Android</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">SQL</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">C++</a>
+              </li>
+            
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">天梯赛</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1084,19 +1083,19 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">操作系统</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">HTML</a>
-              </li>
-            
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">错题集</a>
               </li>
             
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">js</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">操作系统</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">HTML</a>
               </li>
             
               <li class="article-tag-list-item">
