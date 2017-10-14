@@ -162,6 +162,70 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-HDOJ/HDOJ-1147-Pick-up-sticks" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/09/04/HDOJ/HDOJ-1147-Pick-up-sticks/">HDOJ 1147 Pick-up sticks(几何 线段相交问题)</a>
+    </h1>
+  
+
+        
+        <a href="/2017/09/04/HDOJ/HDOJ-1147-Pick-up-sticks/" class="archive-article-date">
+  	<time datetime="2017-09-04T07:22:55.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-09-04</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong>Problem Description</strong><br>Stan has n sticks of various length. He throws them one at a time on the floor in a random way. After finishing throwing, Stan tries to find the top sticks, that is these sticks such that there is no stick on top of them. Stan has noticed that the last thrown stick is always on top but he wants to know all the sticks that are on top. Stan sticks are very, very thin such that their thickness can be neglected.</p>
+<p><strong>Input</strong><br>Input consists of a number of cases. The data for each case start with 1 ≤ n ≤ 100000, the number of sticks for this case. The following n lines contain four numbers each, these numbers are the planar coordinates of the endpoints of one stick. The sticks are listed in the order in which Stan has thrown them. You may assume that there are no more than 1000 top sticks. The input is ended by the case with n=0. This case should not be processed.</p>
+<p><strong>Output</strong><br>For each input case, print one line of output listing the top sticks in the format given in the sample. The top sticks should be listed in order in which they were thrown.<br>The picture to the right below illustrates the first case from input.</p>
+<p><strong>Sample Input</strong><br>5<br>1 1 4 2<br>2 3 3 1<br>1 -2.0 8 4<br>1 4 8 2<br>3 3 6 -2.0<br>3<br>0 0 1 1<br>1 0 2 1<br>2 0 3 1<br>0</p>
+<p><strong>Sample Output</strong><br>Top sticks: 2, 4, 5.<br>Top sticks: 1, 2, 3.</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;queue&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;functional&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;algorithm&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stack&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;string&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cstring&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;vector&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;map&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;set&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> PI acos(-1.0)</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> R (20000.0/PI)</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> eps 11e-9</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> lowbit(i) ((i)&amp;(-i))</span></div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> inf = <span class="number">0x3f3f3f3f</span>;</div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> maxn = <span class="number">100010</span>;</div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">node</span> &#123;</span></div><div class="line">	<span class="keyword">double</span> x, y;</div><div class="line">&#125;;</div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">stick</span> &#123;</span></div><div class="line">	node b, e;</div><div class="line">&#125;st[maxn];</div><div class="line"><span class="function"><span class="keyword">double</span> <span class="title">left</span><span class="params">(node a, node b, node c)</span> </span>&#123;</div><div class="line">	<span class="keyword">return</span> (b.x - a.x)*(c.y - a.y) - (b.y - a.y)*(c.x - a.x);</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">bool</span> <span class="title">judge</span><span class="params">(stick i, stick j)</span> </span>&#123;</div><div class="line">	<span class="keyword">if</span> (left(j.b, j.e, i.b)*left(j.b, j.e, i.e)&gt;<span class="number">0</span>)<span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">	<span class="keyword">if</span> (left(i.b, i.e, j.b)*left(i.b, i.e, j.e)&gt;<span class="number">0</span>)<span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">	<span class="keyword">return</span> <span class="literal">true</span>;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="keyword">int</span> n;</div><div class="line">	<span class="keyword">while</span> (~<span class="built_in">scanf</span>(<span class="string">"%d"</span>,&amp;n)&amp;&amp;n) &#123;</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; ++i)</div><div class="line">			<span class="built_in">scanf</span>(<span class="string">"%lf%lf%lf%lf"</span>, &amp;st[i].b.x, &amp;st[i].b.y, &amp;st[i].e.x, &amp;st[i].e.y);</div><div class="line">		<span class="built_in">printf</span>(<span class="string">"Top sticks: "</span>);</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; n; ++i) &#123;</div><div class="line">			<span class="keyword">bool</span> flag = <span class="literal">true</span>;</div><div class="line">			<span class="keyword">for</span> (<span class="keyword">int</span> j = i + <span class="number">1</span>; j &lt;= n; ++j)</div><div class="line">				<span class="keyword">if</span> (judge(st[i], st[j])) &#123;</div><div class="line">					flag = <span class="literal">false</span>;</div><div class="line">					<span class="keyword">break</span>;</div><div class="line">			&#125;</div><div class="line">			<span class="keyword">if</span> (flag)<span class="built_in">printf</span>(<span class="string">"%d, "</span>, i);</div><div class="line">		&#125;</div><div class="line">		<span class="built_in">printf</span>(<span class="string">"%d.\n"</span>, n);</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">OJ</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/09/04/HDOJ/HDOJ-1147-Pick-up-sticks/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
     <article id="post-HDOJ/HDOJ-1046-Ferry-Loading-III" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -735,71 +799,6 @@
 
 
   
-    <article id="post-HDOJ/HDOJ-1133-Buy-the-Ticket" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/09/02/HDOJ/HDOJ-1133-Buy-the-Ticket/">HDOJ 1133 Buy the Ticket(JAVA大数乘除)</a>
-    </h1>
-  
-
-        
-        <a href="/2017/09/02/HDOJ/HDOJ-1133-Buy-the-Ticket/" class="archive-article-date">
-  	<time datetime="2017-09-02T01:41:29.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-09-02</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><strong>Problem Description</strong><br>The “Harry Potter and the Goblet of Fire” will be on show in the next few days. As a crazy fan of Harry Potter, you will go to the cinema and have the first sight, won’t you?<br>Suppose the cinema only has one ticket-office and the price for per-ticket is 50 dollars. The queue for buying the tickets is consisted of m + n persons (m persons each only has the 50-dollar bill and n persons each only has the 100-dollar bill).<br>Now the problem for you is to calculate the number of different ways of the queue that the buying process won’t be stopped from the first person till the last person.<br>Note: initially the ticket-office has no money.<br>The buying process will be stopped on the occasion that the ticket-office has no 50-dollar bill but the first person of the queue only has the 100-dollar bill.</p>
-<p><strong>Input</strong><br>The input file contains several test cases. Each test case is made up of two integer numbers: m and n. It is terminated by m = n = 0. Otherwise, m, n &lt;=100.</p>
-<p><strong>Output</strong><br>For each test case, first print the test number (counting from 1) in one line, then output the number of different ways in another line.</p>
-<p><strong>Sample Input</strong><br>3 0<br>3 1<br>3 3<br>0 0</p>
-<p><strong>Sample Output</strong><br>Test #1:<br>6<br>Test #2:<br>18<br>Test #3:<br>180</p>
-<p>ans=(m+n)!*(m-n+1)/(m+1)</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> java.math.BigInteger;</div><div class="line"><span class="keyword">import</span> java.util.Scanner;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> &#123;</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String args[])</span> </span>&#123;</div><div class="line">		Scanner <span class="built_in">cin</span>=<span class="keyword">new</span> Scanner(System.in);</div><div class="line">		<span class="keyword">int</span> casen=<span class="number">0</span>;</div><div class="line">		<span class="keyword">while</span>(<span class="built_in">cin</span>.hasNext()) &#123;</div><div class="line">			casen++;</div><div class="line">			BigInteger a=<span class="keyword">new</span> BigInteger(<span class="string">"1"</span>);</div><div class="line">			<span class="keyword">int</span> c=<span class="built_in">cin</span>.nextInt();</div><div class="line">			<span class="keyword">int</span> d=<span class="built_in">cin</span>.nextInt();</div><div class="line">			<span class="keyword">if</span>(c==<span class="number">0</span>&amp;&amp;d==<span class="number">0</span>)<span class="keyword">break</span>;</div><div class="line">			System.out.<span class="built_in">printf</span>(<span class="string">"Test #%d:%n"</span>,casen);</div><div class="line">			<span class="keyword">if</span>(c&lt;d) &#123;</div><div class="line">				System.out.println(<span class="string">"0"</span>);</div><div class="line">				<span class="keyword">continue</span>;</div><div class="line">			&#125;</div><div class="line">			<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=c+d;++i) &#123;</div><div class="line">				BigInteger tmp=<span class="keyword">new</span> BigInteger(((Integer)i).toString());</div><div class="line">				a=a.multiply(tmp);</div><div class="line">			&#125;</div><div class="line">			BigInteger tmp=<span class="keyword">new</span> BigInteger(((Integer)(c-d+<span class="number">1</span>)).toString());</div><div class="line">			a=a.multiply(tmp);</div><div class="line">			tmp=<span class="keyword">new</span> BigInteger(((Integer)(c+<span class="number">1</span>)).toString());</div><div class="line">			a=a.divide(tmp);</div><div class="line">			System.out.println(a);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">OJ</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/09/02/HDOJ/HDOJ-1133-Buy-the-Ticket/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/11/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><a class="page-number" href="/page/11/">11</a><span class="page-number current">12</span><a class="page-number" href="/page/13/">13</a><a class="page-number" href="/page/14/">14</a><span class="space">&hellip;</span><a class="page-number" href="/page/58/">58</a><a class="extend next" rel="next" href="/page/13/">Next &raquo;</a>
@@ -927,11 +926,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">DP</a>
+                <a href="javascript:void(0)" class="js-tag color4">DFS</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">DFS</a>
+                <a href="javascript:void(0)" class="js-tag color3">DP</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1031,10 +1030,6 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">位</a>
-              </li>
-            
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Android</a>
               </li>
             
@@ -1071,11 +1066,15 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">错题集</a>
+              </li>
+            
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">js</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">错题集</a>
+                <a href="javascript:void(0)" class="js-tag color2">位</a>
               </li>
             
               <li class="article-tag-list-item">
