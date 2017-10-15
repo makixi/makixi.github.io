@@ -162,6 +162,66 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-算法/Tarjan相关" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/10/15/算法/Tarjan相关/">Tarjan相关</a>
+    </h1>
+  
+
+        
+        <a href="/2017/10/15/算法/Tarjan相关/" class="archive-article-date">
+  	<time datetime="2017-10-15T05:34:51.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-10-15</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//无重边连通无向图求割点和桥的程序</span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;vector&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;algorithm&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> maxn 200</span></div><div class="line"><span class="keyword">typedef</span> <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; Edge;</div><div class="line"><span class="built_in">vector</span>&lt;Edge&gt; G(maxn);</div><div class="line"><span class="keyword">bool</span> Visited[maxn];</div><div class="line"><span class="keyword">int</span> dfn[maxn];</div><div class="line"><span class="keyword">int</span> low[maxn];</div><div class="line"><span class="keyword">int</span> Father[maxn]; <span class="comment">//DFS树中每个点的父节点</span></div><div class="line"><span class="keyword">bool</span> bIsCutVetext[maxn]; <span class="comment">//每个点是不是割点</span></div><div class="line"><span class="keyword">int</span> nTime; <span class="comment">//Dfs时间戳</span></div><div class="line"><span class="keyword">int</span> n, m; <span class="comment">//n是点数， m是边数</span></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">Tarjan</span><span class="params">(<span class="keyword">int</span> u, <span class="keyword">int</span> father)</span></span>&#123;</div><div class="line">	Father[u] = father;</div><div class="line">	<span class="keyword">int</span> i, j, k;</div><div class="line">	low[u] = dfn[u] = nTime++;</div><div class="line">	<span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; G[u].size(); i++) &#123;</div><div class="line">		<span class="keyword">int</span> v = G[u][i];</div><div class="line">		<span class="keyword">if</span> (!dfn[v]) &#123;</div><div class="line">			Tarjan(v, u);</div><div class="line">			low[u] = min(low[u], low[v]);</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">else</span> <span class="keyword">if</span> (father != v) <span class="comment">//连到父节点的回边不考虑，否则求不出桥</span></div><div class="line">			low[u] = min(low[u], dfn[v]);</div><div class="line">	&#125;</div><div class="line">&#125;<span class="function"><span class="keyword">void</span> <span class="title">Count</span><span class="params">()</span></span>&#123; <span class="comment">//计算割点和桥</span></div><div class="line">	<span class="keyword">int</span> nRootSons = <span class="number">0</span>; <span class="keyword">int</span> i;</div><div class="line">	Tarjan(<span class="number">1</span>, <span class="number">0</span>);</div><div class="line">	<span class="keyword">for</span> (i = <span class="number">2</span>; i &lt;= n; i++) &#123;</div><div class="line">		<span class="keyword">int</span> v = Father[i];</div><div class="line">		<span class="keyword">if</span> (v == <span class="number">1</span>)nRootSons++; <span class="comment">//DFS树中根节点有几个子树</span></div><div class="line">		<span class="keyword">else</span> <span class="keyword">if</span> (dfn[v] &lt;= low[i])bIsCutVetext[v] = <span class="literal">true</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">if</span> (nRootSons &gt; <span class="number">1</span>)bIsCutVetext[<span class="number">1</span>] = <span class="literal">true</span>;</div><div class="line">	<span class="keyword">for</span> (i = <span class="number">1</span>; i &lt;= n; i++)<span class="keyword">if</span> (bIsCutVetext[i])<span class="built_in">cout</span> &lt;&lt; i &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	<span class="keyword">for</span> (i = <span class="number">1</span>; i &lt;= n; i++) &#123;</div><div class="line">		<span class="keyword">int</span> v = Father[i];</div><div class="line">		<span class="keyword">if</span> (v &gt;<span class="number">0</span> &amp;&amp; dfn[v] &lt; low[i])<span class="built_in">cout</span> &lt;&lt; v &lt;&lt; <span class="string">","</span> &lt;&lt; i &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</div><div class="line">	<span class="keyword">int</span> u, v;</div><div class="line">	<span class="keyword">int</span> i;</div><div class="line">	nTime = <span class="number">1</span>;</div><div class="line">	<span class="built_in">cin</span> &gt;&gt; n &gt;&gt; m; <span class="comment">//n是点数， m是边数</span></div><div class="line">	<span class="keyword">for</span> (i = <span class="number">1</span>; i &lt;= m; i++) &#123;</div><div class="line">		<span class="built_in">cin</span> &gt;&gt; u &gt;&gt; v; <span class="comment">//点编号从1开始</span></div><div class="line">		G[v].push_back(u);</div><div class="line">		G[u].push_back(v);</div><div class="line">	&#125;</div><div class="line">	Count();</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//求无向连通图点双连通分量（没有割点的连通分量） ,假定没有重边</span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;vector&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;queue&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> maxn 200</span></div><div class="line"><span class="keyword">typedef</span> <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; Edge;</div><div class="line"><span class="built_in">vector</span>&lt;Edge&gt; G(maxn);</div><div class="line"><span class="keyword">int</span> dfn[maxn],low[maxn];</div><div class="line"><span class="keyword">int</span> nTime;</div><div class="line"><span class="keyword">int</span> n, m; <span class="comment">//n是点数， m是边数</span></div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Edge2</span>&#123;</span></div><div class="line">	<span class="keyword">int</span> u;</div><div class="line">	<span class="keyword">int</span> v;</div><div class="line">	Edge2(<span class="keyword">int</span> u_, <span class="keyword">int</span> v_) :u(u_), v(v_) &#123; &#125;</div><div class="line">&#125;;</div><div class="line"><span class="built_in">deque</span>&lt;Edge2&gt; Edges; <span class="comment">//栈</span></div><div class="line"><span class="keyword">int</span> nBlockNo = <span class="number">0</span>;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">Tarjan</span><span class="params">(<span class="keyword">int</span> u, <span class="keyword">int</span> father)</span></span>&#123;</div><div class="line">	<span class="keyword">int</span> i, j, k;</div><div class="line">	low[u] = dfn[u] = nTime++;</div><div class="line">	<span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; G[u].size(); i++) &#123;</div><div class="line">		<span class="keyword">int</span> v = G[u][i];</div><div class="line">		<span class="keyword">if</span> (!dfn[v]) &#123; <span class="comment">//v没有访问过</span></div><div class="line">					   <span class="comment">//树边要入栈</span></div><div class="line">			Edges.push_back(Edge2(u, v));</div><div class="line">			Tarjan(v, u);</div><div class="line">			low[u] = min(low[u], low[v]);</div><div class="line">			<span class="function">Edge2 <span class="title">tmp</span><span class="params">(<span class="number">0</span>, <span class="number">0</span>)</span></span>;</div><div class="line">			<span class="keyword">if</span> (dfn[u] &lt;= low[v]) &#123;</div><div class="line">				<span class="comment">//从一条边往下走，走完后发现自己是割点，则栈中的边一定全是和自己在一个双连通分量里面</span></div><div class="line">					<span class="comment">//根节点总是和其下的某些点在同一个双连通分量里面</span></div><div class="line">					<span class="built_in">cout</span> &lt;&lt; <span class="string">"Block No: "</span> &lt;&lt; ++nBlockNo</div><div class="line">					&lt;&lt; <span class="built_in">endl</span>; <span class="keyword">do</span> &#123;</div><div class="line">					tmp = Edges.back();</div><div class="line">					Edges.pop_back();</div><div class="line">					<span class="built_in">cout</span> &lt;&lt; tmp.u &lt;&lt; <span class="string">","</span> &lt;&lt;</div><div class="line">						tmp.v &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">				&#125; <span class="keyword">while</span> (!(tmp.u == u &amp;&amp;tmp.v == v));</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">else</span> &#123;</div><div class="line">			<span class="keyword">if</span> (v != father) &#123;<span class="comment">//u连到父节点的回边不考虑</span></div><div class="line">				low[u] = min(low[u], dfn[v]);</div><div class="line">				<span class="keyword">if</span> (dfn[u] &gt; dfn[v])</div><div class="line">					<span class="comment">//连接到祖先的回边要入栈，但是连接到儿子的边，此处肯定已经入过栈了，不能再入栈</span></div><div class="line">					Edges.push_back(Edge2(u, v));</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</div><div class="line">	<span class="keyword">int</span> u, v;</div><div class="line">	<span class="keyword">int</span> i;</div><div class="line">	nTime = <span class="number">1</span>;</div><div class="line">	<span class="built_in">cin</span> &gt;&gt; n &gt;&gt; m; <span class="comment">//n是点数， m是边数</span></div><div class="line">	nBlockNo = <span class="number">0</span>;</div><div class="line">	<span class="keyword">for</span> (i = <span class="number">1</span>; i &lt;= m; i++) &#123;</div><div class="line">		<span class="built_in">cin</span> &gt;&gt; u &gt;&gt; v; <span class="comment">//点编号从1开始</span></div><div class="line">		G[v].push_back(u);</div><div class="line">		G[u].push_back(v);</div><div class="line">	&#125;</div><div class="line">	Tarjan(<span class="number">1</span>, <span class="number">0</span>);</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">算法</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/10/15/算法/Tarjan相关/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
     <article id="post-POJ/POJ-3352-Road-Construction" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -826,72 +886,9 @@
 
 
   
-    <article id="post-PAT/PATY乙级重刷记录" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/10/11/PAT/PATY乙级重刷记录/">PAT乙级重刷记录~</a>
-    </h1>
-  
-
-        
-        <a href="/2017/10/11/PAT/PATY乙级重刷记录/" class="archive-article-date">
-  	<time datetime="2017-10-11T01:08:36.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-10-11</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="1001-害死人不偿命的-3n-1-猜想-15"><a href="#1001-害死人不偿命的-3n-1-猜想-15" class="headerlink" title="1001. 害死人不偿命的(3n+1)猜想 (15)"></a>1001. 害死人不偿命的(3n+1)猜想 (15)</h2><p>卡拉兹(Callatz)猜想：<br>对任何一个自然数n，如果它是偶数，那么把它砍掉一半；如果它是奇数，那么把(3n+1)砍掉一半。这样一直反复砍下去，最后一定在某一步得到n=1。卡拉兹在1950年的世界数学家大会上公布了这个猜想，传说当时耶鲁大学师生齐动员，拼命想证明这个貌似很傻很天真的命题，结果闹得学生们无心学业，一心只证(3n+1)，以至于有人说这是一个阴谋，卡拉兹是在蓄意延缓美国数学界教学与科研的进展……<br>我们今天的题目不是证明卡拉兹猜想，而是对给定的任一不超过1000的正整数n，简单地数一下，需要多少步（砍几下）才能得到n=1？<br><strong>输入格式：</strong>每个测试输入包含1个测试用例，即给出自然数n的值。<br><strong>输出格式：</strong>输出从n计算到1需要的步数。</p>
-<p><strong>输入样例：</strong><br>3<br><strong>输出样例：</strong><br>5<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</div><div class="line">	<span class="keyword">int</span> n,res=<span class="number">0</span>;</div><div class="line">	<span class="built_in">cin</span>&gt;&gt;n;</div><div class="line">	<span class="keyword">while</span>(n!=<span class="number">1</span>)&#123;</div><div class="line">		<span class="keyword">if</span>(n%<span class="number">2</span>)n=n*<span class="number">3</span>+<span class="number">1</span>;</div><div class="line">		n/=<span class="number">2</span>;</div><div class="line">		++res;</div><div class="line">	&#125;</div><div class="line">	<span class="built_in">cout</span>&lt;&lt;res;</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> java.util.Scanner;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String args[])</span> </span>&#123;</div><div class="line">		<span class="keyword">int</span> n,res=<span class="number">0</span>;</div><div class="line">		Scanner in=<span class="keyword">new</span> Scanner(System.in);</div><div class="line">		n=in.nextInt();</div><div class="line">		in.close();</div><div class="line">		<span class="keyword">while</span>(n!=<span class="number">1</span>) &#123;</div><div class="line">			<span class="keyword">if</span>(n%<span class="number">2</span>!=<span class="number">0</span>)n=<span class="number">3</span>*n+<span class="number">1</span>;</div><div class="line">			n/=<span class="number">2</span>;</div><div class="line">			res++;</div><div class="line">		&#125;</div><div class="line">		System.out.println(res);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-        
-          <a class="article-more-a" href="/2017/10/11/PAT/PATY乙级重刷记录/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/10/11/PAT/PATY乙级重刷记录/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
   
     <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/58/">58</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
+      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/59/">59</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
     </nav>
   
 
@@ -1016,11 +1013,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">DP</a>
+                <a href="javascript:void(0)" class="js-tag color4">STL</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">STL</a>
+                <a href="javascript:void(0)" class="js-tag color3">DP</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1064,7 +1061,7 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">组合数学</a>
+                <a href="javascript:void(0)" class="js-tag color4">字典树</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1072,11 +1069,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">博弈论</a>
+                <a href="javascript:void(0)" class="js-tag color5">组合数学</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">字典树</a>
+                <a href="javascript:void(0)" class="js-tag color4">博弈论</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1152,6 +1149,10 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">HTML</a>
+              </li>
+            
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">操作系统</a>
               </li>
             
@@ -1161,10 +1162,6 @@ MathJax.Hub.Queue(function() {
             
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">js</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">HTML</a>
               </li>
             
               <li class="article-tag-list-item">
