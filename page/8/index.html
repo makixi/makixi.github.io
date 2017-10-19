@@ -162,6 +162,70 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-POJ/POJ-1569-Myacm-Triangles" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/09/19/POJ/POJ-1569-Myacm-Triangles/">POJ 1569 Myacm Triangles(几何)</a>
+    </h1>
+  
+
+        
+        <a href="/2017/09/19/POJ/POJ-1569-Myacm-Triangles/" class="archive-article-date">
+  	<time datetime="2017-09-19T11:49:27.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-09-19</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong>Description</strong><br>There has been considerable archeological work on the ancient Myacm culture. Many artifacts have been found in what have been called power fields: a fairly small area, less than 100 meters square where there are from four to fifteen tall monuments with crystals on top. Such an area is mapped out above. Most of the artifacts discovered have come from inside a triangular area between just three of the monuments, now called the power triangle. After considerable analysis archeologists agree how this triangle is selected from all the triangles with three monuments as vertices: it is the triangle with the largest possible area that does not contain any other monuments inside the triangle or on an edge of the triangle. Each field contains only one such triangle.<br>Archeological teams are continuing to find more power fields. They would like to automate the task of locating the power triangles in power fields. Write a program that takes the positions of the monuments in any number of power fields as input and determines the power triangle for each power field.<br>A useful formula: the area of a triangle with vertices (x1, y1), (x2, y2), and (x3, y3) is the absolute value of <code>0.5 * [(y3 - y1)(x2 - x1) - (y2 - y1)(x3 - x1)].</code></p>
+<p><strong>Input</strong><br>For each power field there are several lines of data. The first line is the number of monuments: at least 4, and at most 15. For each monument there is a data line that starts with a one character label for the monument and is followed by the coordinates of the monument, which are nonnegative integers less than 100. The first label is A, and the next is B, and so on.<br>There is at least one such power field described. The end of input is indicated by a 0 for the number of monuments. The first sample data below corresponds to the diagram in the problem.</p>
+<p><strong>Output</strong><br>For each power field there is one line of output. It contains the three labels of the vertices of the power triangle, listed in increasing alphabetical order, with no spaces.</p>
+<p><strong>Sample Input</strong><br>6<br>A 1 0<br>B 4 0<br>C 0 3<br>D 1 3<br>E 4 4<br>F 0 6<br>4<br>A 0 0<br>B 1 0<br>C 99 0<br>D 99 99<br>0</p>
+<p><strong>Sample Output</strong><br>BEF<br>BCD</p>
+<p>给出一些点，从其中取出三个点组成一个面积最大的三角形，且三角形内及边上不能有其他点<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cmath&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cstdio&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;algorithm&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> eps = <span class="number">1e-6</span>;</div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">node</span> &#123;</span></div><div class="line">	<span class="keyword">double</span> x, y;</div><div class="line">	<span class="keyword">char</span> c;</div><div class="line">	node()&#123;&#125;</div><div class="line">	node(<span class="keyword">double</span> a,<span class="keyword">double</span> b):x(a),y(b)&#123;&#125;</div><div class="line">&#125;v[<span class="number">101</span>];</div><div class="line"><span class="keyword">double</span> <span class="keyword">operator</span> ^(<span class="keyword">const</span> node &amp;a, <span class="keyword">const</span> node &amp;b) &#123;</div><div class="line">	<span class="keyword">return</span> a.x*b.y - a.y*b.x;</div><div class="line">&#125;</div><div class="line">node <span class="keyword">operator</span> -(<span class="keyword">const</span> node &amp;a, <span class="keyword">const</span> node &amp;b) &#123;</div><div class="line">	<span class="keyword">return</span> node(a.x - b.x, a.y - b.y);</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">double</span> <span class="title">s</span><span class="params">(<span class="keyword">const</span> node &amp;a, <span class="keyword">const</span> node &amp;b, <span class="keyword">const</span> node &amp;c)</span> </span>&#123;</div><div class="line">	<span class="keyword">return</span> <span class="built_in">fabs</span>((b - a) ^ (c - a));</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">double</span> <span class="title">isleft</span><span class="params">(<span class="keyword">const</span> node &amp;a, <span class="keyword">const</span> node &amp;b, <span class="keyword">const</span> node &amp;c)</span> </span>&#123;</div><div class="line">	<span class="keyword">return</span> (b - a) ^ (c - a);</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">bool</span> <span class="title">cmp</span> <span class="params">(<span class="keyword">const</span> node &amp;a, <span class="keyword">const</span> node &amp;b)</span> </span>&#123;<span class="comment">//逆时针排序</span></div><div class="line">	<span class="keyword">return</span> (a^b) &gt; <span class="number">0</span>;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="keyword">int</span> n;</div><div class="line">	<span class="keyword">double</span> maxs;</div><div class="line">	<span class="keyword">while</span> (<span class="built_in">cin</span> &gt;&gt; n&amp;&amp;n) &#123;</div><div class="line">		maxs = <span class="number">0</span>;</div><div class="line">		<span class="keyword">char</span> res[<span class="number">3</span>];</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; ++i)<span class="built_in">cin</span> &gt;&gt; v[i].c &gt;&gt; v[i].x &gt;&gt; v[i].y;</div><div class="line">		sort(v, v + n, cmp);</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; ++i)</div><div class="line">			<span class="keyword">for</span> (<span class="keyword">int</span> j = i + <span class="number">1</span>; j &lt; n; ++j)</div><div class="line">				<span class="keyword">for</span> (<span class="keyword">int</span> k = j + <span class="number">1</span>; k &lt; n; ++k) &#123;</div><div class="line">					<span class="keyword">bool</span> flag = <span class="literal">true</span>;</div><div class="line">					<span class="keyword">for</span> (<span class="keyword">int</span> l = <span class="number">0</span>; l &lt; n; ++l) &#123;</div><div class="line">						<span class="keyword">if</span> ((l!=i&amp;&amp;l!=j&amp;&amp;l!=k)&amp;&amp;</div><div class="line">							((isleft(v[i], v[j], v[l])&gt;=<span class="number">0</span> &amp;&amp; isleft(v[j], v[k], v[l])&gt;=<span class="number">0</span> &amp;&amp; isleft(v[k], v[i], v[l])&gt;=<span class="number">0</span>)</div><div class="line">							||(isleft(v[i], v[j], v[l])&lt;<span class="number">0</span> &amp;&amp; isleft(v[j], v[k], v[l])&lt;<span class="number">0</span> &amp;&amp; isleft(v[k], v[i], v[l])&lt;<span class="number">0</span>))) &#123;</div><div class="line">							flag = <span class="literal">false</span>;</div><div class="line">							<span class="keyword">break</span>;<span class="comment">//点v[j]在三角形内或i,j,k并没有构成一个三角形</span></div><div class="line">						&#125;</div><div class="line">					&#125;</div><div class="line">					<span class="keyword">if</span> (flag) &#123;</div><div class="line">						<span class="keyword">double</span> ss = s(v[i], v[j], v[k]);</div><div class="line">						<span class="keyword">if</span> (ss &gt; maxs) &#123;</div><div class="line">							maxs = ss;</div><div class="line">							res[<span class="number">0</span>] = v[i].c; res[<span class="number">1</span>] = v[j].c; res[<span class="number">2</span>] = v[k].c;</div><div class="line">						&#125;</div><div class="line">					&#125;</div><div class="line">				&#125;</div><div class="line">		sort(res, res + <span class="number">3</span>);</div><div class="line">		<span class="built_in">printf</span>(<span class="string">"%c%c%c\n"</span>, res[<span class="number">0</span>], res[<span class="number">1</span>], res[<span class="number">2</span>]);</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">OJ</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/09/19/POJ/POJ-1569-Myacm-Triangles/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
     <article id="post-POJ/POJ-2624-4th-Point" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -325,11 +389,11 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">数学</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">数据结构</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">数据结构</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">数学</a>
         		</li>
       		
 		</ul>
@@ -772,74 +836,6 @@
 
 
   
-    <article id="post-POJ/POJ-2373-灌溉草场" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/09/17/POJ/POJ-2373-灌溉草场/">POJ 2373 灌溉草场</a>
-    </h1>
-  
-
-        
-        <a href="/2017/09/17/POJ/POJ-2373-灌溉草场/" class="archive-article-date">
-  	<time datetime="2017-09-17T01:16:59.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-09-17</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>在一片草场上:有一条长度为L (1 &lt;= L &lt;= 1,000,000，L为偶数)的线段。 John的N (1 &lt;= N &lt;= 1000) 头奶牛都沿着草场上这条线段吃草，每头牛的活动范围是一个开区间(S,E)，S，E都是整数。不同奶牛的活动范围可以有重叠。<br>John要在这条线段上安装喷水头灌溉草场。每个喷水头的喷洒半径可以随意调节，调节范围是 <a href="1 &lt;= A &lt;= B &lt;= 1000">A B </a>，A,B都是整数。要求线段上的每个整点恰好位于一个喷水头的喷洒范围内每头奶牛的活动范围要位于一个喷水头的喷洒范围内任何喷水头的喷洒范围不可越过线段的两端(左端是0,右端是L )<br>请问， John 最少需要安装多少个喷水头。</p>
-<p><strong>输入</strong><br>第1行：整数N、L。<br>第2行：整数A、B。<br>第3到N+2行：每行两个整数S、E (0 &lt;= S &lt; E &lt;= L) ，表示某头牛活动范围的起点和终点在线段上的坐标(即到线段起点的距离)。</p>
-<p><strong>输出：</strong><br>最少需要安装的多少个喷水头；若没有符合要求的喷水头安装方案，则输出-1。</p>
-<p><strong>输入样例</strong><br>2 8<br>1 2<br>6 7<br>3 6</p>
-<p><strong>输出样例</strong><br>3</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cstring&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cmath&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;queue&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> maxn=<span class="number">1010</span>;</div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> maxl=<span class="number">1000000</span>+<span class="number">10</span>;</div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> inf=<span class="number">1</span>&lt;&lt;<span class="number">30</span>;</div><div class="line"><span class="keyword">int</span> cowThere[maxl];<span class="comment">//1表示有奶牛</span></div><div class="line"><span class="keyword">int</span> n,l,a,b;</div><div class="line"><span class="keyword">int</span> f[maxl];<span class="comment">//从0到i坐标上喷水头的总数目</span></div><div class="line"><span class="comment">//f(X)=1+min&#123;f(Y): Y∈[X-2B X-2A]、Y位于任何奶牛的活动范围</span></div><div class="line">之外&#125;： X&gt;<span class="number">2B</span></div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">fx</span>&#123;</span></div><div class="line">	<span class="keyword">int</span> x,f;</div><div class="line">	<span class="keyword">bool</span> <span class="keyword">operator</span> &lt; (<span class="keyword">const</span> fx &amp;a)<span class="keyword">const</span>&#123;</div><div class="line">		<span class="keyword">return</span> f&gt;a.f;</div><div class="line">	&#125;</div><div class="line">&#125;;</div><div class="line">priority_queue&lt;fx&gt; q;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</div><div class="line">	<span class="built_in">cin</span>&gt;&gt;n&gt;&gt;l&gt;&gt;a&gt;&gt;b;</div><div class="line">	a&lt;&lt;=<span class="number">1</span>;b&lt;&lt;=<span class="number">1</span>;</div><div class="line">	<span class="built_in">memset</span>(cowThere,<span class="number">0</span>,<span class="keyword">sizeof</span>(cowThere));</div><div class="line">	<span class="built_in">memset</span>(f,inf,<span class="keyword">sizeof</span>(f));</div><div class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;n;++i)&#123;</div><div class="line">		<span class="keyword">int</span> s,e;</div><div class="line">		<span class="built_in">cin</span>&gt;&gt;s&gt;&gt;e;</div><div class="line">		++cowThere[s+<span class="number">1</span>];</div><div class="line">		--cowThere[e];</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">int</span> cownum=<span class="number">0</span>;</div><div class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;=l;++i)&#123;</div><div class="line">		cownum+=cowThere[i];</div><div class="line">		cowThere[i]=cownum&gt;<span class="number">0</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="comment">//[x-2B,x-2A]</span></div><div class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=a;i&lt;=b;i+=<span class="number">2</span>)</div><div class="line">		<span class="keyword">if</span>(!cowThere[i])&#123;</div><div class="line">			f[i]=<span class="number">1</span>;</div><div class="line">			<span class="keyword">if</span>(i&lt;b-a)q.push(fx&#123;i,<span class="number">1</span>&#125;);<span class="comment">//在最小喷射范围外</span></div><div class="line">		&#125;</div><div class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=b+<span class="number">2</span>;i&lt;=l;i+=<span class="number">2</span>)&#123;</div><div class="line">		<span class="keyword">if</span>(!cowThere[i])&#123;</div><div class="line">			fx tmp;</div><div class="line">			<span class="keyword">while</span>(!q.empty())&#123;</div><div class="line">				tmp=q.top();</div><div class="line">				<span class="keyword">if</span>(tmp.x&lt;i-b)q.pop();</div><div class="line">				<span class="keyword">else</span> <span class="keyword">break</span>;</div><div class="line">			&#125;</div><div class="line">			<span class="keyword">if</span>(!q.empty())f[i]=tmp.f+<span class="number">1</span>;</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">if</span>(f[i-a+<span class="number">2</span>]!=inf)</div><div class="line">				q.push(fx&#123;i-a+<span class="number">2</span>,f[i-a+<span class="number">2</span>]&#125;);</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">if</span>(f[l]==inf)<span class="built_in">cout</span>&lt;&lt;<span class="number">-1</span>&lt;&lt;<span class="built_in">endl</span>;</div><div class="line">	<span class="keyword">else</span> <span class="built_in">cout</span>&lt;&lt;f[l]&lt;&lt;<span class="built_in">endl</span>;</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">OJ</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">DP</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/09/17/POJ/POJ-2373-灌溉草场/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/7/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/">9</a><a class="page-number" href="/page/10/">10</a><span class="space">&hellip;</span><a class="page-number" href="/page/59/">59</a><a class="extend next" rel="next" href="/page/9/">Next &raquo;</a>
@@ -951,6 +947,10 @@ MathJax.Hub.Queue(function() {
           <ul class="article-tag-list" q-show="showTags">
             
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+              </li>
+            
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">OJ</a>
               </li>
             
@@ -967,79 +967,15 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">STL</a>
+                <a href="javascript:void(0)" class="js-tag color3">Android</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">数学</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">算法</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">DP</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">二分法</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">BFS</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">贪心算法</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Hash</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">DBFS</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">A*</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">01背包</a>
+                <a href="javascript:void(0)" class="js-tag color4">SQL</a>
               </li>
             
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Java</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">枚举</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Dijkstra</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">组合数学</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Floyd</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">字典树</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">博弈论</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">PAT甲级</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1051,27 +987,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">BST</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">AVL</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">递归</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">逻辑</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">并查集</a>
-              </li>
-            
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">堆</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">数学</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1079,27 +999,15 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">位</a>
+                <a href="javascript:void(0)" class="js-tag color3">算法</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Android</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">SQL</a>
+                <a href="javascript:void(0)" class="js-tag color4">并查集</a>
               </li>
             
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">C++</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">天梯赛</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1111,7 +1019,99 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">STL</a>
+              </li>
+            
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">操作系统</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">HTML</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">DP</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">递归</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">贪心算法</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">枚举</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">位</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Floyd</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">A*</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Dijkstra</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">01背包</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">BFS</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">PAT甲级</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">二分法</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">BST</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Hash</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">AVL</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">逻辑</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">天梯赛</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">DBFS</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">字典树</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">组合数学</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">博弈论</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1120,10 +1120,6 @@ MathJax.Hub.Queue(function() {
             
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">js</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">HTML</a>
               </li>
             
               <li class="article-tag-list-item">
