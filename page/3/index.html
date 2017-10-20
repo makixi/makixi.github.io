@@ -162,6 +162,78 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-POJ/POJ-3667-Hotal" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/10/07/POJ/POJ-3667-Hotal/">POJ 3667 Hotel(线段树/树状数组,区间合并)</a>
+    </h1>
+  
+
+        
+        <a href="/2017/10/07/POJ/POJ-3667-Hotal/" class="archive-article-date">
+  	<time datetime="2017-10-07T09:48:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-10-07</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong>Description</strong><br>The cows are journeying north to Thunder Bay in Canada to gain cultural enrichment and enjoy a vacation on the sunny shores of Lake Superior. Bessie, ever the competent travel agent, has named the Bullmoose Hotel on famed Cumberland Street as their vacation residence. This immense hotel has N (1 ≤ N ≤ 50,000) rooms all located on the same side of an extremely long hallway (all the better to see the lake, of course).<br>The cows and other visitors arrive in groups of size Di (1 ≤ Di ≤ N) and approach the front desk to check in. Each group i requests a set of Di contiguous rooms from Canmuu, the moose staffing the counter. He assigns them some set of consecutive room numbers r..r+Di-1 if they are available or, if no contiguous set of rooms is available, politely suggests alternate lodging. Canmuu always chooses the value of r to be the smallest possible.<br>Visitors also depart the hotel from groups of contiguous rooms. Checkout i has the parameters Xi and Di which specify the vacating of rooms Xi ..Xi +Di-1 (1 ≤ Xi ≤ N-Di+1). Some (or all) of those rooms might be empty before the checkout.<br>Your job is to assist Canmuu by processing M (1 ≤ M &lt; 50,000) checkin/checkout requests. The hotel is initially unoccupied.</p>
+<p><strong>Input</strong></p>
+<ul>
+<li>Line 1: Two space-separated integers: N and M</li>
+<li>Lines 2..M+1: Line i+1 contains request expressed as one of two possible formats: (a) Two space separated integers representing a check-in request: 1 and Di (b) Three space-separated integers representing a check-out: 2, Xi, and Di</li>
+</ul>
+<p><strong>Output</strong></p>
+<ul>
+<li>Lines 1…..: For each check-in request, output a single line with a single integer r, the first room in the contiguous sequence of rooms to be occupied. If the request cannot be satisfied, output 0.</li>
+</ul>
+<p><strong>Sample Input</strong><br>10 6<br>1 3<br>1 3<br>1 3<br>1 3<br>2 5 5<br>1 6</p>
+<p><strong>Sample Output</strong><br>1<br>4<br>7<br>0<br>5</p>
+<p>树状数组一版：会TLE 但是代码本身应该没什么问题<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> lowbit(i) ((i)&amp;(-i))</span></div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> maxn=<span class="number">50000</span>+<span class="number">10</span>;</div><div class="line"><span class="keyword">int</span> n,m;</div><div class="line"><span class="keyword">int</span> c[maxn],c1[maxn];</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">update</span><span class="params">(<span class="keyword">int</span> *cc,<span class="keyword">int</span> x,<span class="keyword">int</span> v)</span></span>&#123;</div><div class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=x;i&lt;=n;i+=lowbit(i))cc[i]+=v;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">getsum</span><span class="params">(<span class="keyword">int</span> *cc,<span class="keyword">int</span> x)</span></span>&#123;</div><div class="line">	<span class="keyword">int</span> res=<span class="number">0</span>;</div><div class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=x;i&gt;=<span class="number">1</span>;i-=lowbit(i))res+=cc[i];</div><div class="line">	<span class="keyword">return</span> res;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</div><div class="line">	<span class="keyword">int</span> q,d,a,b;</div><div class="line">	<span class="built_in">cin</span>&gt;&gt;n&gt;&gt;m;</div><div class="line">	<span class="keyword">int</span> curr=<span class="number">1</span>;</div><div class="line">	<span class="keyword">while</span>(m--)&#123;</div><div class="line">		<span class="built_in">cin</span>&gt;&gt;q;</div><div class="line">		<span class="keyword">if</span>(q==<span class="number">1</span>)&#123;</div><div class="line">			<span class="built_in">cin</span>&gt;&gt;d;</div><div class="line">			<span class="keyword">bool</span> flag=<span class="literal">false</span>;</div><div class="line">			<span class="keyword">for</span>(a=curr;a+d<span class="number">-1</span>&lt;=n;++a)&#123;</div><div class="line">				b=a+d<span class="number">-1</span>;</div><div class="line">				<span class="keyword">int</span> tmp=getsum(c,b)-getsum(c,a<span class="number">-1</span>)+getsum(c1,b)*b-getsum(c1,a<span class="number">-1</span>)*(a<span class="number">-1</span>);</div><div class="line">				<span class="keyword">if</span>(tmp==<span class="number">0</span>)&#123;			<span class="comment">//check in val取1</span></div><div class="line">					<span class="built_in">cout</span>&lt;&lt;a&lt;&lt;<span class="built_in">endl</span>;</div><div class="line">					update(c,a,<span class="number">1</span>-a);</div><div class="line">					update(c,b+<span class="number">1</span>,b);</div><div class="line">					update(c1,a,<span class="number">1</span>);</div><div class="line">					update(c1,b+<span class="number">1</span>,<span class="number">-1</span>);</div><div class="line">					curr=b+<span class="number">1</span>;</div><div class="line">					flag=<span class="literal">true</span>;</div><div class="line">					<span class="keyword">break</span>;</div><div class="line">				&#125;</div><div class="line">			&#125;</div><div class="line">			<span class="keyword">if</span>(!flag)<span class="built_in">cout</span>&lt;&lt;<span class="number">0</span>&lt;&lt;<span class="built_in">endl</span>;</div><div class="line">		&#125;<span class="keyword">else</span>&#123;</div><div class="line">			<span class="built_in">cin</span>&gt;&gt;a&gt;&gt;b;<span class="comment">//check out   val取-1</span></div><div class="line">			b=a+b<span class="number">-1</span>;</div><div class="line">			update(c,a,a<span class="number">-1</span>);</div><div class="line">			update(c,b+<span class="number">1</span>,-b);</div><div class="line">			update(c1,a,<span class="number">-1</span>);</div><div class="line">			update(c1,b+<span class="number">1</span>,<span class="number">1</span>);</div><div class="line">			curr=a;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>线段树一版：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;algorithm&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> maxn=<span class="number">50000</span>+<span class="number">10</span>;</div><div class="line"></div><div class="line"><span class="keyword">int</span> n;</div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">tree</span>&#123;</span></div><div class="line">	<span class="keyword">int</span> cover;</div><div class="line">	<span class="keyword">int</span> llen,rlen;</div><div class="line">	<span class="keyword">int</span> l,r;</div><div class="line">	<span class="keyword">int</span> len;		<span class="comment">//empty length</span></div><div class="line">&#125;v[maxn&lt;&lt;<span class="number">3</span>];</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">build</span><span class="params">(<span class="keyword">int</span> st,<span class="keyword">int</span> l,<span class="keyword">int</span> r)</span></span>&#123;</div><div class="line">	v[st].l=l;v[st].r=r;</div><div class="line">	v[st].cover=<span class="number">-1</span>;v[st].len=<span class="number">1</span>;</div><div class="line">	v[st].llen=r-l+<span class="number">1</span>;</div><div class="line">	v[st].rlen=r-l+<span class="number">1</span>;</div><div class="line">	v[st].len=r-l+<span class="number">1</span>;</div><div class="line">	<span class="keyword">if</span>(l==r)<span class="keyword">return</span>;</div><div class="line">	<span class="keyword">int</span> mid=(l+r)&gt;&gt;<span class="number">1</span>;</div><div class="line">	build(st&lt;&lt;<span class="number">1</span>,l,mid);</div><div class="line">	build(st&lt;&lt;<span class="number">1</span>|<span class="number">1</span>,mid+<span class="number">1</span>,r);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">pushup</span><span class="params">(<span class="keyword">int</span> st,<span class="keyword">int</span> l,<span class="keyword">int</span> r)</span></span>&#123;</div><div class="line">	v[st].llen=v[st&lt;&lt;<span class="number">1</span>].llen;</div><div class="line">    v[st].rlen=v[st&lt;&lt;<span class="number">1</span>|<span class="number">1</span>].rlen;</div><div class="line">    <span class="keyword">int</span> mid=(l+r)&gt;&gt;<span class="number">1</span>;</div><div class="line">    <span class="keyword">if</span>(v[st].llen==mid-l+<span class="number">1</span>) v[st].llen+=v[st&lt;&lt;<span class="number">1</span>|<span class="number">1</span>].llen;</div><div class="line">    <span class="keyword">if</span>(v[st].rlen==r-mid) v[st].rlen+=v[st&lt;&lt;<span class="number">1</span>].rlen;</div><div class="line">    v[st].len=max(max(v[st&lt;&lt;<span class="number">1</span>].len,v[st&lt;&lt;<span class="number">1</span>|<span class="number">1</span>].len),v[st&lt;&lt;<span class="number">1</span>].rlen+v[st&lt;&lt;<span class="number">1</span>|<span class="number">1</span>].llen);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">pushdown</span><span class="params">(<span class="keyword">int</span> st)</span></span>&#123;</div><div class="line">	<span class="keyword">if</span>(v[st].cover!=<span class="number">-1</span>)&#123;</div><div class="line">		v[st&lt;&lt;<span class="number">1</span>].cover=v[st&lt;&lt;<span class="number">1</span>|<span class="number">1</span>].cover=v[st].cover;</div><div class="line">		<span class="keyword">if</span>(v[st].cover)&#123;</div><div class="line">			v[st&lt;&lt;<span class="number">1</span>].llen=v[st&lt;&lt;<span class="number">1</span>].rlen=v[st&lt;&lt;<span class="number">1</span>].len=<span class="number">0</span>;</div><div class="line">			v[st&lt;&lt;<span class="number">1</span>|<span class="number">1</span>].llen=v[st&lt;&lt;<span class="number">1</span>|<span class="number">1</span>].rlen=v[st&lt;&lt;<span class="number">1</span>|<span class="number">1</span>].len=<span class="number">0</span>;</div><div class="line">		&#125;<span class="keyword">else</span>&#123;</div><div class="line">			v[st&lt;&lt;<span class="number">1</span>].llen=v[st&lt;&lt;<span class="number">1</span>].rlen=v[st&lt;&lt;<span class="number">1</span>].len=v[st&lt;&lt;<span class="number">1</span>].r-v[st&lt;&lt;<span class="number">1</span>].l+<span class="number">1</span>;</div><div class="line">			v[st&lt;&lt;<span class="number">1</span>|<span class="number">1</span>].llen=v[st&lt;&lt;<span class="number">1</span>|<span class="number">1</span>].rlen=v[st&lt;&lt;<span class="number">1</span>|<span class="number">1</span>].len=v[st&lt;&lt;<span class="number">1</span>|<span class="number">1</span>].r-v[st&lt;&lt;<span class="number">1</span>|<span class="number">1</span>].l+<span class="number">1</span>;</div><div class="line">		&#125;</div><div class="line">		v[st].cover=<span class="number">-1</span>;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">update</span><span class="params">(<span class="keyword">int</span> st,<span class="keyword">int</span> l,<span class="keyword">int</span> r,<span class="keyword">int</span> val)</span></span>&#123;</div><div class="line">	<span class="keyword">if</span>(v[st].l==l&amp;&amp;v[st].r==r)&#123;</div><div class="line">		v[st].cover=val;</div><div class="line">		<span class="keyword">if</span>(val)v[st].llen=v[st].rlen=v[st].len=<span class="number">0</span>;</div><div class="line">		<span class="keyword">else</span> v[st].llen=v[st].rlen=v[st].len=r-l+<span class="number">1</span>;</div><div class="line">		<span class="keyword">return</span>;</div><div class="line">	&#125;</div><div class="line">	pushdown(st);</div><div class="line">	<span class="keyword">int</span> mid=(v[st].l+v[st].r)&gt;&gt;<span class="number">1</span>;</div><div class="line">	<span class="keyword">if</span>(mid&gt;=r)update(st&lt;&lt;<span class="number">1</span>,l,r,val);</div><div class="line">	<span class="keyword">else</span> <span class="keyword">if</span>(mid&lt;l)update(st&lt;&lt;<span class="number">1</span>|<span class="number">1</span>,l,r,val);</div><div class="line">	<span class="keyword">else</span>&#123;</div><div class="line">		update(st&lt;&lt;<span class="number">1</span>,l,mid,val);</div><div class="line">		update(st&lt;&lt;<span class="number">1</span>|<span class="number">1</span>,mid+<span class="number">1</span>,r,val);</div><div class="line">	&#125;</div><div class="line">	pushup(st,v[st].l,v[st].r);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">query</span><span class="params">(<span class="keyword">int</span> st,<span class="keyword">int</span> l,<span class="keyword">int</span> r,<span class="keyword">int</span> val)</span></span>&#123;</div><div class="line">	<span class="keyword">if</span>(l==r)<span class="keyword">return</span> l;</div><div class="line">	pushdown(st);</div><div class="line">	<span class="keyword">int</span> mid=(l+r)&gt;&gt;<span class="number">1</span>;</div><div class="line">	<span class="keyword">if</span>(v[st&lt;&lt;<span class="number">1</span>].len&gt;=val) <span class="keyword">return</span> query(st&lt;&lt;<span class="number">1</span>,l,mid,val);</div><div class="line">    <span class="keyword">if</span>(v[st&lt;&lt;<span class="number">1</span>].rlen+v[st&lt;&lt;<span class="number">1</span>|<span class="number">1</span>].llen&gt;=val) <span class="keyword">return</span> mid-v[st&lt;&lt;<span class="number">1</span>].rlen+<span class="number">1</span>;</div><div class="line">    <span class="keyword">return</span> query(st&lt;&lt;<span class="number">1</span>|<span class="number">1</span>,mid+<span class="number">1</span>,r,val);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</div><div class="line">	<span class="keyword">int</span> m,q,a,b,d;</div><div class="line">	<span class="built_in">cin</span>&gt;&gt;n&gt;&gt;m;</div><div class="line">	build(<span class="number">1</span>,<span class="number">1</span>,n);</div><div class="line">	<span class="keyword">while</span>(m--)&#123;</div><div class="line">		<span class="built_in">cin</span>&gt;&gt;q;</div><div class="line">		<span class="keyword">if</span>(q==<span class="number">1</span>)&#123;<span class="comment">//check in</span></div><div class="line">			<span class="built_in">cin</span>&gt;&gt;d;</div><div class="line">			<span class="keyword">if</span>(v[<span class="number">1</span>].len&lt;d)<span class="built_in">cout</span>&lt;&lt;<span class="number">0</span>&lt;&lt;<span class="built_in">endl</span>;</div><div class="line">			<span class="keyword">else</span>&#123;</div><div class="line">				a=query(<span class="number">1</span>,<span class="number">1</span>,n,d);</div><div class="line">                <span class="built_in">cout</span>&lt;&lt;a&lt;&lt;<span class="built_in">endl</span>;</div><div class="line">                update(<span class="number">1</span>,a,a+d<span class="number">-1</span>,<span class="number">1</span>);</div><div class="line">			&#125;</div><div class="line">		&#125;<span class="keyword">else</span>&#123;<span class="comment">//check out</span></div><div class="line">			<span class="built_in">cin</span>&gt;&gt;a&gt;&gt;b;</div><div class="line">			update(<span class="number">1</span>,a,a+b<span class="number">-1</span>,<span class="number">0</span>);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">OJ</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/10/07/POJ/POJ-3667-Hotal/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
     <article id="post-POJ/POJ-1177-Picture" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -760,66 +832,6 @@
 
 
   
-    <article id="post-数据结构/有关线段树的一切" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/10/02/数据结构/有关线段树的一切/">有关线段树的一切</a>
-    </h1>
-  
-
-        
-        <a href="/2017/10/02/数据结构/有关线段树的一切/" class="archive-article-date">
-  	<time datetime="2017-10-02T08:11:12.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-10-02</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="基本操作"><a href="#基本操作" class="headerlink" title="基本操作"></a>基本操作</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> maxn=<span class="number">1000</span>;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">SegTreeNode</span>&#123;</span></div><div class="line">	<span class="keyword">int</span> val;	<span class="comment">//区间内的最小值</span></div><div class="line">&#125;segTree[maxn];</div><div class="line"></div><div class="line"><span class="comment">//创建</span></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">build</span><span class="params">(<span class="keyword">int</span> root,<span class="keyword">int</span> arr[],<span class="keyword">int</span> s,<span class="keyword">int</span> e)</span></span>&#123;</div><div class="line">	<span class="keyword">if</span>(s==e)&#123;</div><div class="line">		segTree[root].val=arr[s];</div><div class="line">		<span class="keyword">return</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">int</span> mid=(s+e)&gt;&gt;<span class="number">1</span>;</div><div class="line">	build(root*<span class="number">2</span>+<span class="number">1</span>,arr,s,mid);</div><div class="line">	build(root*<span class="number">2</span>+<span class="number">2</span>,arr,mid+<span class="number">1</span>,e);</div><div class="line">	segTree[root].val=min(segTree[root*<span class="number">2</span>+<span class="number">1</span>].val,segTree[root*<span class="number">2</span>+<span class="number">2</span>].val);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">//查询最小值</span></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">query</span><span class="params">(<span class="keyword">int</span> root,<span class="keyword">int</span> ns,<span class="keyword">int</span> ne,<span class="keyword">int</span> qs,<span class="keyword">int</span> qe)</span></span>&#123;<span class="comment">//qs~qs是query的范围 ns~ne是实际范围</span></div><div class="line">	<span class="keyword">if</span>(qs&gt;ne||qe&lt;ns)<span class="keyword">return</span> inf;<span class="comment">//没交集</span></div><div class="line">	<span class="keyword">if</span>(qs&lt;=ns&amp;&amp;qe&gt;=ne)<span class="keyword">return</span> segTree[root].val;</div><div class="line">	<span class="keyword">int</span> mid=(ns+ne)/<span class="number">2</span>;</div><div class="line">	<span class="keyword">return</span> min(query(root*<span class="number">2</span>+<span class="number">1</span>,ns,mid,qs,qe),query(root*<span class="number">2</span>+<span class="number">2</span>,mid+<span class="number">1</span>,ne,qs,qe));</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">//单结点更新</span></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">updateOne</span><span class="params">(<span class="keyword">int</span> root,<span class="keyword">int</span> s,<span class="keyword">int</span> e,<span class="keyword">int</span> index,<span class="keyword">int</span> addVal)</span></span>&#123;</div><div class="line">	<span class="keyword">if</span>(s==e)&#123;</div><div class="line">		<span class="keyword">if</span>(index==s)segTree[root].val+=addVal;</div><div class="line">		<span class="keyword">return</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">int</span> mid=(s+e)/<span class="number">2</span>;</div><div class="line">	<span class="keyword">if</span>(index&lt;=mid)updateOne(root*<span class="number">2</span>+<span class="number">1</span>,s,mid,index,addVal);</div><div class="line">	<span class="keyword">else</span> updateOne(root*<span class="number">2</span>+<span class="number">2</span>,mid+<span class="number">1</span>,e,index,addVal);</div><div class="line">	segTree[root].val=min(segTree[root*<span class="number">2</span>+<span class="number">1</span>].val,segTree[root*<span class="number">2</span>+<span class="number">2</span>].val);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h3 id="区间更新"><a href="#区间更新" class="headerlink" title="区间更新"></a>区间更新</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> maxn=<span class="number">1000</span>;</div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">SegTreeNode</span>&#123;</span></div><div class="line">	<span class="keyword">int</span> val;</div><div class="line">	<span class="keyword">int</span> addMark;		<span class="comment">//延迟标记</span></div><div class="line">&#125;segTree[maxn];</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">build</span><span class="params">(<span class="keyword">int</span> root,<span class="keyword">int</span> arr[],<span class="keyword">int</span> s,<span class="keyword">int</span> e)</span></span>&#123;</div><div class="line">	segTree[root].addMark=<span class="number">0</span>;</div><div class="line">	<span class="keyword">if</span>(s==e)&#123;</div><div class="line">		segTree[root].val=arr[s];</div><div class="line">		<span class="keyword">return</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">int</span> mid=(s+e)&gt;&gt;<span class="number">1</span>;</div><div class="line">	build(root*<span class="number">2</span>+<span class="number">1</span>,arr,s,mid);</div><div class="line">	build(root*<span class="number">2</span>+<span class="number">2</span>,arr,mid+<span class="number">1</span>,e);</div><div class="line">	segTree[root].val=min(segTree[root*<span class="number">2</span>+<span class="number">1</span>].val,segTree[root*<span class="number">2</span>+<span class="number">2</span>].val);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">pushDown</span><span class="params">(<span class="keyword">int</span> root)</span></span>&#123;</div><div class="line">	<span class="keyword">if</span>(segTree[root].addMark!=<span class="number">0</span>)&#123;</div><div class="line">		segTree[root*<span class="number">2</span>+<span class="number">1</span>].addMark+=segTree[root].addMark;</div><div class="line">		segTree[root*<span class="number">2</span>+<span class="number">2</span>].addMark+=segTree[root].addMark;</div><div class="line">		segTree[root*<span class="number">2</span>+<span class="number">1</span>].val+=segTree[root].addMark;</div><div class="line">		segTree[root*<span class="number">2</span>+<span class="number">2</span>].val+=segTree[root].addMark;</div><div class="line">		segTree[root].addMark=<span class="number">0</span>;<span class="comment">//清空</span></div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">query</span><span class="params">(<span class="keyword">int</span> root,<span class="keyword">int</span> ns,<span class="keyword">int</span> ne,<span class="keyword">int</span> qs,<span class="keyword">int</span> qe)</span></span>&#123;</div><div class="line">	<span class="keyword">if</span>(qs&gt;ne||qe&lt;ns)<span class="keyword">return</span> inf;</div><div class="line">	<span class="keyword">if</span>(qs&lt;=ns&amp;&amp;qe&gt;=ne)<span class="keyword">return</span> segTree[root].val;</div><div class="line">	pushDown(root);<span class="comment">//延迟标志域向下传递</span></div><div class="line">	<span class="keyword">int</span> mid=(ns+ne)&gt;&gt;<span class="number">1</span>;</div><div class="line">	<span class="keyword">return</span> mid(query(root*<span class="number">2</span>+<span class="number">1</span>,ns,mid,qs,qe),query(root*<span class="number">2</span>+<span class="number">2</span>,mid+<span class="number">1</span>,ne,qs,qe));</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">update</span><span class="params">(<span class="keyword">int</span> root,<span class="keyword">int</span> ns,<span class="keyword">int</span> ne,<span class="keyword">int</span> us,<span class="keyword">int</span> ue,<span class="keyword">int</span> addVal)</span></span>&#123;</div><div class="line">	<span class="keyword">if</span>(us&gt;ne||ue&lt;ns)<span class="keyword">return</span>;</div><div class="line">	<span class="keyword">if</span>(us&lt;=ns&amp;&amp;ue&gt;=ne)&#123;</div><div class="line">		segTree[root].addMark+=addVal;</div><div class="line">		segTree[root].val+=addVal;</div><div class="line">		<span class="keyword">return</span>;</div><div class="line">	&#125;</div><div class="line">	pushDown(root);</div><div class="line">	<span class="keyword">int</span> mid=(ns+ne)&gt;&gt;<span class="number">1</span>;</div><div class="line">	update(root*<span class="number">2</span>+<span class="number">1</span>, ns, mid, us, ue, addVal);</div><div class="line">	update(root*<span class="number">2</span>+<span class="number">2</span>, mid+<span class="number">1</span>, ne, us, ue, addVal);</div><div class="line">	segTree[root].val=min(segTree[root*<span class="number">2</span>+<span class="number">1</span>].val,segTree[root*<span class="number">2</span>+<span class="number">2</span>].val);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">数据结构</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/10/02/数据结构/有关线段树的一切/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/2/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/59/">59</a><a class="extend next" rel="next" href="/page/4/">Next &raquo;</a>
@@ -931,6 +943,10 @@ MathJax.Hub.Queue(function() {
           <ul class="article-tag-list" q-show="showTags">
             
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+              </li>
+            
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">OJ</a>
               </li>
             
@@ -955,55 +971,7 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">STL</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">数学</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">算法</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">DP</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">二分法</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">BFS</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Hash</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">DBFS</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">A*</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">贪心算法</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">01背包</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Java</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">枚举</a>
+                <a href="javascript:void(0)" class="js-tag color1">PAT甲级</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1011,23 +979,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">字典树</a>
+                <a href="javascript:void(0)" class="js-tag color4">BFS</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">组合数学</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Floyd</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">博弈论</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">PAT甲级</a>
+                <a href="javascript:void(0)" class="js-tag color4">二分法</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1043,11 +999,27 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">AVL</a>
+                <a href="javascript:void(0)" class="js-tag color3">DP</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Hash</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">数学</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">贪心算法</a>
               </li>
             
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">递归</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">AVL</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1059,15 +1031,7 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Android</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">SQL</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">位</a>
+                <a href="javascript:void(0)" class="js-tag color4">STL</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1075,11 +1039,43 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">枚举</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">位</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Floyd</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">A*</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">01背包</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Android</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Java</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">SQL</a>
+              </li>
+            
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">C++</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+                <a href="javascript:void(0)" class="js-tag color3">算法</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1100,6 +1096,22 @@ MathJax.Hub.Queue(function() {
             
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">操作系统</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">DBFS</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">组合数学</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">字典树</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">博弈论</a>
               </li>
             
               <li class="article-tag-list-item">
