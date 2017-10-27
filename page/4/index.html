@@ -162,6 +162,69 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-POJ/POJ-3321-Apple-Tree" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/10/06/POJ/POJ-3321-Apple-Tree/">POJ 3321 Apple Tree(图+树状数组)</a>
+    </h1>
+  
+
+        
+        <a href="/2017/10/06/POJ/POJ-3321-Apple-Tree/" class="archive-article-date">
+  	<time datetime="2017-10-06T03:52:10.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-10-06</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong>Description</strong><br>There is an apple tree outside of kaka’s house. Every autumn, a lot of apples will grow in the tree. Kaka likes apple very much, so he has been carefully nurturing the big apple tree.<br>The tree has N forks which are connected by branches. Kaka numbers the forks by 1 to N and the root is always numbered by 1. Apples will grow on the forks and two apple won’t grow on the same fork. kaka wants to know how many apples are there in a sub-tree, for his study of the produce ability of the apple tree.<br>The trouble is that a new apple may grow on an empty fork some time and kaka may pick an apple from the tree for his dessert. Can you help kaka?</p>
+<p><strong>Input</strong><br>The first line contains an integer N (N ≤ 100,000) , which is the number of the forks in the tree.<br>The following N - 1 lines each contain two integers u and v, which means fork u and fork v are connected by a branch.<br>The next line contains an integer M (M ≤ 100,000).<br>The following M lines each contain a message which is either<br>“C x” which means the existence of the apple on fork x has been changed. i.e. if there is an apple on the fork, then Kaka pick it; otherwise a new apple has grown on the empty fork.<br>or “Q x” which means an inquiry for the number of apples in the sub-tree above the fork x, including the apple (if exists) on the fork x<br>Note the tree is full of apples at the beginning<br><img src="https://github.com/makixi/makixi.github.io/raw/master/img/%E5%88%B7%E9%A2%98%E4%B8%93%E7%94%A8%E5%9B%BE/POJ3321.gif" alt="3321"><br><strong>Output</strong><br>For every inquiry, output the correspond answer per line.</p>
+<p><strong>Sample Input</strong><br>3<br>1 2<br>1 3<br>3<br>Q 1<br>C 2<br>Q 1</p>
+<p><strong>Sample Output</strong><br>3<br>2</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;vector&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> lowbit(i) ((i)&amp;(-i))</span></div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> maxn=<span class="number">220000</span>;</div><div class="line"><span class="keyword">int</span> cnt;</div><div class="line"><span class="built_in">vector</span>&lt;<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; &gt; e(maxn/<span class="number">2</span>);</div><div class="line"><span class="keyword">int</span> s[maxn],d[maxn],c[maxn];</div><div class="line"><span class="keyword">bool</span> apple[maxn];</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">dfs</span><span class="params">(<span class="keyword">int</span> v)</span></span>&#123;</div><div class="line">	s[v]=++cnt;</div><div class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;e[v].size();++i)dfs(e[v][i]);</div><div class="line">	d[v]=++cnt;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">getsum</span><span class="params">(<span class="keyword">int</span> x)</span></span>&#123;</div><div class="line">	<span class="keyword">int</span> res = <span class="number">0</span>;</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = x; i &gt;= <span class="number">1</span>; i -= lowbit(i))res += c[i];</div><div class="line">	<span class="keyword">return</span> res;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">update</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> v)</span></span>&#123;</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = x; i &lt;= cnt; i += lowbit(i))c[i] += v;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</div><div class="line">	cnt=<span class="number">0</span>;</div><div class="line">	<span class="keyword">int</span> n;</div><div class="line">	<span class="built_in">cin</span>&gt;&gt;n;</div><div class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;n<span class="number">-1</span>;++i)&#123;</div><div class="line">		<span class="keyword">int</span> a,b;</div><div class="line">		<span class="built_in">scanf</span>(<span class="string">"%d%d"</span>,&amp;a,&amp;b);</div><div class="line">		e[a].push_back(b);</div><div class="line">	&#125;</div><div class="line">	dfs(<span class="number">1</span>);</div><div class="line">	fill(apple,apple+n+<span class="number">1</span>,<span class="literal">true</span>);</div><div class="line">	<span class="keyword">int</span> m;</div><div class="line">	<span class="built_in">cin</span>&gt;&gt;m;</div><div class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=cnt;++i)c[i]=lowbit(i);</div><div class="line">	<span class="keyword">while</span>(m--)&#123;</div><div class="line">		<span class="keyword">char</span> ch;</div><div class="line">		<span class="keyword">int</span> q;</div><div class="line">		<span class="built_in">cin</span>&gt;&gt;ch&gt;&gt;q;</div><div class="line">		<span class="keyword">if</span>(ch==<span class="string">'Q'</span>) <span class="built_in">printf</span>(<span class="string">"%d\n"</span>, (getsum(d[q]) - getsum(s[q] - <span class="number">1</span>)) / <span class="number">2</span>);</div><div class="line">		<span class="keyword">else</span>&#123;</div><div class="line">			<span class="keyword">if</span> (apple[q]) &#123;</div><div class="line">				update(s[q], <span class="number">-1</span>); update(d[q], <span class="number">-1</span>);</div><div class="line">				apple[q] = <span class="number">0</span>;</div><div class="line">			&#125;</div><div class="line">			<span class="keyword">else</span> &#123;</div><div class="line">				update(s[q], <span class="number">1</span>); update(d[q], <span class="number">1</span>);</div><div class="line">				apple[q] = <span class="number">1</span>;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">OJ</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/10/06/POJ/POJ-3321-Apple-Tree/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
     <article id="post-POJ/POJ-2528-Mayor-s-posters" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -735,79 +798,6 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2017/09/30/咸鱼/又双叒改不出BUG以后的随笔/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
-    <article id="post-POJ/POJ-2449-Remmarguts-Date" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/09/30/POJ/POJ-2449-Remmarguts-Date/">POJ 2449 Remmarguts&#39; Date(K短路)</a>
-    </h1>
-  
-
-        
-        <a href="/2017/09/30/POJ/POJ-2449-Remmarguts-Date/" class="archive-article-date">
-  	<time datetime="2017-09-30T07:58:45.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-09-30</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><strong>Description</strong><br>“Good man never makes girls wait or breaks an appointment!” said the mandarin duck father. Softly touching his little ducks’ head, he told them a story.<br>“Prince Remmarguts lives in his kingdom UDF – United Delta of Freedom. One day their neighboring country sent them Princess Uyuw on a diplomatic mission.”<br>“Erenow, the princess sent Remmarguts a letter, informing him that she would come to the hall and hold commercial talks with UDF if and only if the prince go and meet her via the K-th shortest path. (in fact, Uyuw does not want to come at all)”<br>Being interested in the trade development and such a lovely girl, Prince Remmarguts really became enamored. He needs you - the prime minister’s help!<br>DETAILS: UDF’s capital consists of N stations. The hall is numbered S, while the station numbered T denotes prince’ current place. M muddy directed sideways connect some of the stations. Remmarguts’ path to welcome the princess might include the same station twice or more than twice, even it is the station with number S or T. Different paths with same length will be considered disparate.</p>
-<p><strong>Input</strong><br>The first line contains two integer numbers N and M (1 &lt;= N &lt;= 1000, 0 &lt;= M &lt;= 100000). Stations are numbered from 1 to N. Each of the following M lines contains three integer numbers A, B and T (1 &lt;= A, B &lt;= N, 1 &lt;= T &lt;= 100). It shows that there is a directed sideway from A-th station to B-th station with time T.<br>The last line consists of three integer numbers S, T and K (1 &lt;= S, T &lt;= N, 1 &lt;= K &lt;= 1000).</p>
-<p><strong>Output</strong><br>A single line consisting of a single integer number: the length (time required) to welcome Princess Uyuw using the K-th shortest path. If K-th shortest path does not exist, you should output “-1” (without quotes) instead.</p>
-<p><strong>Sample Input</strong><br>2 2<br>1 2 5<br>2 1 4<br>1 2 2</p>
-<p><strong>Sample Output</strong><br>14</p>
-<p>因为两个点之间可能不止一条边，所以如果直接用二维数组来存就会WA<br>哭叽叽 修BUG修两小时的我</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;queue&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cstring&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;algorithm&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> maxn=<span class="number">1001</span>;</div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> inf=<span class="number">0x3f3f3f3f</span>;</div><div class="line"><span class="keyword">int</span> dis[maxn];<span class="comment">//终点到i的最短路</span></div><div class="line"><span class="keyword">bool</span> vis[maxn];</div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">node</span>&#123;</span></div><div class="line">	<span class="keyword">int</span> curr;</div><div class="line">	<span class="keyword">int</span> g;</div><div class="line">	node()&#123;&#125;</div><div class="line">	node(<span class="keyword">int</span> cc,<span class="keyword">int</span> gg):curr(cc),g(gg)&#123;&#125;</div><div class="line">	<span class="keyword">bool</span> <span class="keyword">operator</span> &lt; (<span class="keyword">const</span> node &amp;a)<span class="keyword">const</span>&#123;</div><div class="line">		<span class="keyword">return</span> g+dis[curr]&gt;a.g+dis[a.curr];</div><div class="line">	&#125;</div><div class="line">&#125;;</div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">edge</span>&#123;</span></div><div class="line">	<span class="keyword">int</span> u,v,w,nex,rnex;</div><div class="line">	edge()&#123;&#125;</div><div class="line">	edge(<span class="keyword">int</span> uu,<span class="keyword">int</span> vv,<span class="keyword">int</span> ww):u(uu),v(vv),w(ww)&#123;&#125;</div><div class="line">&#125;e[<span class="number">100000</span>+<span class="number">5</span>];</div><div class="line"><span class="keyword">int</span> head[maxn],rhead[maxn];</div><div class="line"><span class="keyword">int</span> num=<span class="number">0</span>;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">addEdge</span><span class="params">(<span class="keyword">int</span> a,<span class="keyword">int</span> b,<span class="keyword">int</span> w)</span></span>&#123;</div><div class="line">	e[num]=edge(a,b,w);</div><div class="line">	e[num].nex=head[a];</div><div class="line">	e[num].rnex=rhead[b];</div><div class="line">	rhead[b]=num;</div><div class="line">	head[a]=num;</div><div class="line">	++num;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</div><div class="line">	<span class="keyword">int</span> n,m,s,t,k,a,b,c;</div><div class="line">	<span class="built_in">cin</span>&gt;&gt;n&gt;&gt;m;</div><div class="line">	<span class="built_in">memset</span>(head,<span class="number">-1</span>,<span class="keyword">sizeof</span>(head));</div><div class="line">	<span class="built_in">memset</span>(rhead,<span class="number">-1</span>,<span class="keyword">sizeof</span>(rhead));</div><div class="line">	<span class="built_in">memset</span>(dis,inf,<span class="keyword">sizeof</span>(dis));</div><div class="line">	<span class="built_in">memset</span>(vis,<span class="literal">false</span>,<span class="keyword">sizeof</span>(vis));</div><div class="line">	<span class="keyword">while</span>(m--)&#123;</div><div class="line">		<span class="built_in">cin</span>&gt;&gt;a&gt;&gt;b&gt;&gt;c;</div><div class="line">		addEdge(a,b,c);</div><div class="line">	&#125;</div><div class="line">	<span class="built_in">cin</span>&gt;&gt;s&gt;&gt;t&gt;&gt;k;</div><div class="line">	dis[t]=<span class="number">0</span>;</div><div class="line">	priority_queue&lt;node&gt; q;</div><div class="line">	q.push(node(t,<span class="number">0</span>));</div><div class="line">	<span class="keyword">while</span>(!q.empty())&#123;</div><div class="line">		node nd=q.top();q.pop();</div><div class="line">		<span class="keyword">if</span>(vis[nd.curr])<span class="keyword">continue</span>;</div><div class="line">		vis[nd.curr]=<span class="literal">true</span>;</div><div class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i=rhead[nd.curr];i+<span class="number">1</span>;i=e[i].rnex)</div><div class="line">			<span class="keyword">if</span>(dis[e[i].u]&gt;dis[nd.curr]+e[i].w)&#123;</div><div class="line">				dis[e[i].u]=dis[nd.curr]+e[i].w;</div><div class="line">				q.push(node(e[i].u,<span class="number">0</span>));</div><div class="line">			&#125;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">if</span>(dis[s]==inf)&#123;</div><div class="line">		<span class="built_in">cout</span>&lt;&lt;<span class="number">-1</span>&lt;&lt;<span class="built_in">endl</span>;</div><div class="line">		<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">while</span>(!q.empty())q.pop();</div><div class="line">	q.push(node(s,<span class="number">0</span>));</div><div class="line">	<span class="keyword">if</span>(s==t)++k;</div><div class="line">	<span class="keyword">while</span>(!q.empty())&#123;</div><div class="line">		node nd=q.top();q.pop();</div><div class="line">		<span class="keyword">if</span>(nd.curr==t)&#123;</div><div class="line">			<span class="keyword">if</span>(k&gt;<span class="number">1</span>)--k;</div><div class="line">			<span class="keyword">else</span>&#123;</div><div class="line">				<span class="built_in">cout</span>&lt;&lt;nd.g&lt;&lt;<span class="built_in">endl</span>;</div><div class="line">				<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i=head[nd.curr]; i+<span class="number">1</span>; i=e[i].nex)</div><div class="line">			q.push(node(e[i].v, nd.g + e[i].w));</div><div class="line">	&#125;</div><div class="line">	<span class="built_in">cout</span>&lt;&lt;<span class="number">-1</span>&lt;&lt;<span class="built_in">endl</span>;</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">OJ</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Dijkstra</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">A*</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/09/30/POJ/POJ-2449-Remmarguts-Date/">展开全文 >></a>
         </p>
       
 
