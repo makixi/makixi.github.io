@@ -162,6 +162,66 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-算法/网络流初步" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/07/26/算法/网络流初步/">网络流初步</a>
+    </h1>
+  
+
+        
+        <a href="/2017/07/26/算法/网络流初步/" class="archive-article-date">
+  	<time datetime="2017-07-26T04:52:52.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-26</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="增广路算法"><a href="#增广路算法" class="headerlink" title="增广路算法"></a>增广路算法</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">queue</span>&lt;<span class="keyword">int</span>&gt; q;</div><div class="line"><span class="built_in">memset</span>(flow,<span class="number">0</span>,<span class="keyword">sizeof</span>(flow));</div><div class="line">f=<span class="number">0</span>;</div><div class="line">f(;;)&#123;</div><div class="line">	<span class="built_in">memset</span>(a,<span class="number">0</span>,<span class="keyword">sizeof</span>(a));</div><div class="line">	a[s]=INF;</div><div class="line">	q.push(a);</div><div class="line">	<span class="keyword">while</span>(!q.empty())&#123;</div><div class="line">		<span class="keyword">int</span> u=q.front();q.pop();</div><div class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> v=<span class="number">1</span>;v&lt;=n;++v)</div><div class="line">			<span class="keyword">if</span>(!a[v]&amp;&amp;cap[u][v]&gt;flow[u][v])&#123;</div><div class="line">				p[v]=u;q.push(v);	<span class="comment">//记录v的父亲</span></div><div class="line">				a[v]=a[u]&lt;?cap[u][v]-flow[u][v];	<span class="comment">//s-v路径中的最小残量</span></div><div class="line">			&#125;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">if</span>(a[t]==<span class="number">0</span>)<span class="keyword">break</span>;</div><div class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> u=t;u!=s;u=p[u])&#123;</div><div class="line">		flow[p[u]][u]+=a[t];</div><div class="line">		flow[u][p[u]]-=a[t];</div><div class="line">	&#125;</div><div class="line">	f+=a[t];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="最小费用最大流问题"><a href="#最小费用最大流问题" class="headerlink" title="最小费用最大流问题"></a>最小费用最大流问题</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">queue</span>&lt;<span class="keyword">int</span>&gt; q;</div><div class="line"><span class="keyword">int</span> d[maxn];</div><div class="line"><span class="built_in">memset</span>(flow,<span class="number">0</span>,<span class="keyword">sizeof</span>(flow));</div><div class="line">c=f=<span class="number">0</span>;</div><div class="line"><span class="keyword">for</span>(;;)&#123;</div><div class="line">	<span class="comment">//bellman-ford算法</span></div><div class="line">	<span class="keyword">bool</span> inq[maxn];</div><div class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;n;++i)</div><div class="line">		d[i]=(i==s?<span class="number">0</span>:INF);</div><div class="line">	<span class="built_in">memset</span>(inq,<span class="number">0</span>,<span class="keyword">sizeof</span>(inq));</div><div class="line">	q.push(s);</div><div class="line">	<span class="keyword">while</span>(!q.empty())&#123;</div><div class="line">		<span class="keyword">int</span> u=q.front();q.pop();</div><div class="line">		inq[u]=<span class="literal">false</span>;</div><div class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> v=<span class="number">0</span>;v&lt;n;++v)</div><div class="line">			<span class="keyword">if</span>(cap[u][v]&gt;flow[u][v]&amp;&amp;d[v]&gt;d[u]+cost[u][v])&#123;</div><div class="line">				d[v]=d[u]+cost[u][v];</div><div class="line">				p[v]=u;</div><div class="line">				<span class="keyword">if</span>(!inq[v])&#123;</div><div class="line">					inq[v]=<span class="literal">true</span>;</div><div class="line">					q.push(v);</div><div class="line">				&#125;</div><div class="line">			&#125;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">if</span>(d[t]==INF)<span class="keyword">break</span>;</div><div class="line">	<span class="keyword">int</span> a=INF;</div><div class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> u=t;u!=s;u=p[u])</div><div class="line">		a&lt;?=cap[p[u]][u]-flow[p[u]][u];</div><div class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> u=t;u!=s;u=p[u])&#123;</div><div class="line">		flow[p[u]][u]+=a;</div><div class="line">		flow[u][p[u]]-=a;</div><div class="line">	&#125;</div><div class="line">	c+=d[t]*a;</div><div class="line">	f+=a;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">算法</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/07/26/算法/网络流初步/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
     <article id="post-HDOJ/HDOJ-1015-Safecracker" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -755,70 +815,6 @@
 
 
   
-    <article id="post-练手/考研题/编程题-成绩排序" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/07/24/练手/考研题/编程题-成绩排序/">编程题-成绩排序</a>
-    </h1>
-  
-
-        
-        <a href="/2017/07/24/练手/考研题/编程题-成绩排序/" class="archive-article-date">
-  	<time datetime="2017-07-24T10:02:51.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-24</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><strong>题目描述</strong><br>题目：输入任意（用户，成绩）序列，可以获得成绩从高到低或从低到高的排列,<strong>相同成绩都按先录入排列在前的规则处理。</strong><br>   例示：<br>   jack      70<br>   peter     96<br>   Tom       70<br>   smith     67<br>   从高到低  成绩<br>   peter     96<br>   jack      70<br>   Tom       70<br>   smith     67<br>   从低到高<br>   smith     67<br>   Tom       70<br>   jack      70<br>   peter     96</p>
-<p><strong>输入描述:</strong><br>输入多行，先输入要排序的人的个数，然后输入排序方法0（降序）或者1（升序）再分别输入他们的名字和成绩，以一个空格隔开</p>
-<p><strong>输出描述:</strong><br>按照指定方式输出名字和成绩，名字和成绩之间以一个空格隔开</p>
-<p><strong>输入</strong><br>3<br>0<br>fang 90<br>yang 50<br>ning 70</p>
-<p><strong>输出</strong><br>fang 90<br>ning 70<br>yang 50</p>
-<p>稳定排序stable_sort()<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;vector&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;string&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;algorithm&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">node</span>&#123;</span></div><div class="line">	<span class="built_in">string</span> name;</div><div class="line">	<span class="keyword">int</span> score;</div><div class="line">&#125;;</div><div class="line"><span class="built_in">vector</span>&lt;node&gt; stu;</div><div class="line"><span class="function"><span class="keyword">bool</span> <span class="title">cmp0</span><span class="params">(node a,node b)</span></span>&#123;</div><div class="line">	<span class="keyword">return</span> a.score&gt;b.score;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">bool</span> <span class="title">cmp1</span><span class="params">(node a,node b)</span></span>&#123;</div><div class="line">	<span class="keyword">return</span> a.score&lt;b.score;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</div><div class="line">  <span class="keyword">int</span> n,way,score;</div><div class="line">  <span class="built_in">string</span> name;</div><div class="line">  node tmp;</div><div class="line">  <span class="keyword">while</span>(<span class="built_in">cin</span>&gt;&gt;n)&#123;</div><div class="line">  	<span class="built_in">cin</span>&gt;&gt;way;</div><div class="line">  	stu.clear();</div><div class="line">  	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;n;++i)&#123;</div><div class="line">  		<span class="built_in">cin</span>&gt;&gt;name&gt;&gt;score;</div><div class="line">  		tmp.name=name;tmp.score=score;</div><div class="line">  		stu.push_back(tmp);</div><div class="line">	  &#125;</div><div class="line">	<span class="keyword">if</span>(way==<span class="number">0</span>)stable_sort(stu.begin(),stu.end(),cmp0);</div><div class="line">	<span class="keyword">else</span> <span class="keyword">if</span>(way==<span class="number">1</span>)stable_sort(stu.begin(),stu.end(),cmp1);</div><div class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;n;++i)&#123;</div><div class="line">		<span class="built_in">cout</span>&lt;&lt;stu[i].name&lt;&lt;<span class="string">" "</span>&lt;&lt;stu[i].score&lt;&lt;<span class="built_in">endl</span>;</div><div class="line">	&#125;</div><div class="line">  &#125;</div><div class="line">  <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">C++练手题</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/07/24/练手/考研题/编程题-成绩排序/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/39/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/38/">38</a><a class="page-number" href="/page/39/">39</a><span class="page-number current">40</span><a class="page-number" href="/page/41/">41</a><a class="page-number" href="/page/42/">42</a><span class="space">&hellip;</span><a class="page-number" href="/page/60/">60</a><a class="extend next" rel="next" href="/page/41/">Next &raquo;</a>
@@ -958,11 +954,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">STL</a>
+                <a href="javascript:void(0)" class="js-tag color3">数学</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">数学</a>
+                <a href="javascript:void(0)" class="js-tag color4">STL</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1014,11 +1010,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">字典树</a>
+                <a href="javascript:void(0)" class="js-tag color5">组合数学</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">组合数学</a>
+                <a href="javascript:void(0)" class="js-tag color4">字典树</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1062,7 +1058,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">C++</a>
+                <a href="javascript:void(0)" class="js-tag color3">Android</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">SQL</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1078,11 +1078,7 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Android</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">SQL</a>
+                <a href="javascript:void(0)" class="js-tag color4">C++</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1102,15 +1098,15 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">HTML</a>
+              </li>
+            
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">操作系统</a>
               </li>
             
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">错题集</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">HTML</a>
               </li>
             
               <li class="article-tag-list-item">
