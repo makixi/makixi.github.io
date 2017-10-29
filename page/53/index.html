@@ -162,6 +162,80 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-android/Android-ListView相关" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/06/26/android/Android-ListView相关/">Android ListView\Spinner\GridView</a>
+    </h1>
+  
+
+        
+        <a href="/2017/06/26/android/Android-ListView相关/" class="archive-article-date">
+  	<time datetime="2017-06-26T01:30:28.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-06-26</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="Adapter"><a href="#Adapter" class="headerlink" title="Adapter"></a>Adapter</h2><p><img src="https://github.com/makixi/makixi.github.io/raw/master/img/adapter.jpg" alt="Adapter"></p>
+<ul>
+<li>BaseAdapter是一个抽象类，继承它需要实现较多的方法，所以也就具有较高的灵活性；</li>
+<li>ArrayAdapter支持泛型操作，最为简单，只能展示一行字。</li>
+<li>SimpleAdapter有最好的扩充性，可以自定义出各种效果。</li>
+<li>SimpleCursorAdapter可以适用于简单的纯文字型ListView，它需要Cursor的字段和UI的id对应起来。如需要实现更复杂的UI也可以重写其他方法。可以认为是SimpleAdapter对数据库的简单结合，可以方便地把数据库的内容以列表的形式展示出来。</li>
+</ul>
+<h3 id="ArrayAdapter"><a href="#ArrayAdapter" class="headerlink" title="ArrayAdapter"></a>ArrayAdapter</h3><p>初始化<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">private</span> ArrayList&lt;ClaaName&gt; name = <span class="keyword">new</span> ArrayList&lt;&gt;();</div><div class="line"><span class="keyword">private</span> ArrayAdapter&lt;ClassName&gt; adapter;</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</div><div class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</div><div class="line">        setContentView(R.layout.activity_list_view);</div><div class="line"></div><div class="line">        <span class="comment">//this,布局文件，数据源</span></div><div class="line">        adapter=<span class="keyword">new</span> ArrayAdapter&lt;&gt;(<span class="keyword">this</span>,android.R.layout.simple_list_item_1,items);</div><div class="line"></div><div class="line">        <span class="comment">/*</span></div><div class="line">        list=(ListView)findViewById(R.id.list);</div><div class="line">        list.setAdapter(adapter</div><div class="line">        */</div><div class="line">        setListAdapter(adapter);   <span class="comment">//extends ListActivity时用</span></div><div class="line"></div><div class="line">        */</div><div class="line">        list.setOnItemClickListener(<span class="keyword">new</span> AdapterView.OnItemClickListener() &#123;</div><div class="line">            <span class="meta">@Override</span></div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onItemClick</span><span class="params">(AdapterView&lt;?&gt; adapterView, View view, <span class="keyword">int</span> position, <span class="keyword">long</span> id)</span> </span>&#123;</div><div class="line"></div><div class="line">            &#125;</div><div class="line">        &#125;);</div><div class="line">        */</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>基本操作<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">showDetails</span><span class="params">(View view)</span> </span>&#123;</div><div class="line">        Object selectedObject=spinner.getSelectedItem();</div><div class="line">        <span class="keyword">if</span>(selectedObject==<span class="keyword">null</span>||!(selectedObject <span class="keyword">instanceof</span> Mobile))</div><div class="line">            <span class="keyword">return</span>;</div><div class="line">        ClassName newname=(ClassName)selectedObject;</div><div class="line">        String message=newname.getInfo();</div><div class="line">        info.setText(message);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addItem</span><span class="params">(View view)</span> </span>&#123;</div><div class="line">        name.add(...);</div><div class="line">        adapter.notifyDataSetChanged();</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">removeItem</span><span class="params">(View view)</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span> (name.size() &lt; <span class="number">1</span>)</div><div class="line">            <span class="keyword">return</span>;</div><div class="line">        name.remove(<span class="number">0</span>);</div><div class="line">        adapter.notifyDataSetChanged();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="Spinner"><a href="#Spinner" class="headerlink" title="Spinner"></a>Spinner</h2><p>初始化<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">private</span> ArrayList&lt;ClassName&gt; name = <span class="keyword">new</span> ArrayList&lt;&gt;();</div><div class="line"><span class="keyword">private</span> ArrayAdapter&lt;ClassName&gt; adapter;</div><div class="line"><span class="keyword">private</span> Spinner spinner;</div><div class="line"></div><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</div><div class="line">    <span class="keyword">super</span>.onCreate(savedInstanceState);</div><div class="line">    setContentView(R.layout.activity_spinner);</div><div class="line"></div><div class="line">    spinner = (Spinner)findViewById(R.id.spinner);</div><div class="line">    adapter = <span class="keyword">new</span> ArrayAdapter&lt;&gt;(<span class="keyword">this</span>, android.R.layout.simple_list_item_1, people);</div><div class="line">    spinner.setAdapter(adapter);</div><div class="line">    <span class="comment">/*</span></div><div class="line">    spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() &#123;</div><div class="line">        @Override</div><div class="line">        public void onItemSelected(AdapterView&lt;?&gt; parent, View view, int position, long id) &#123;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        @Override</div><div class="line">        public void onNothingSelected(AdapterView&lt;?&gt; parent) &#123;</div><div class="line">        &#125;</div><div class="line">    &#125;);</div><div class="line">     */</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="GridView"><a href="#GridView" class="headerlink" title="GridView"></a>GridView</h2><p>java方面的操作和listview差不多</p>
+<p>下面是xml里面的设置<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">android:numColumns="auto_fit"         <span class="comment">&lt;!--列数设置为自动--&gt;</span></div><div class="line">android:columnWidth="90dp"，           <span class="comment">&lt;!--每列的宽度，也就是Item的宽度--&gt;</span></div><div class="line">android:stretchMode="columnWidth"       <span class="comment">&lt;!--缩放与列宽大小同步--&gt;</span></div><div class="line">android:verticalSpacing="10dp"            <span class="comment">&lt;!--垂直边距--&gt;</span></div><div class="line">android:horizontalSpacing="10dp"          <span class="comment">&lt;!--水平边距--&gt;</span></div></pre></td></tr></table></figure></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Android</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/06/26/android/Android-ListView相关/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
     <article id="post-算法/算法-回溯法" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -204,11 +278,11 @@
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">C++练手题</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">算法</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">算法</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">C++练手题</a>
         		</li>
       		
 		</ul>
@@ -729,70 +803,6 @@
 
 
   
-    <article id="post-练手/Semi-Prime" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/06/24/练手/Semi-Prime/">Semi-Prime</a>
-    </h1>
-  
-
-        
-        <a href="/2017/06/24/练手/Semi-Prime/" class="archive-article-date">
-  	<time datetime="2017-06-24T13:18:48.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-06-24</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><strong>Prime Number Definition</strong><br>An integer greater than one is called a prime number if its only positive divisors (factors) are one and itself. For instance, 2, 11, 67, 89 are prime numbers but 8, 20, 27 are not.<br><strong>Semi-Prime Number Definition</strong><br>An integer greater than one is called a semi-prime number if it can be decompounded to TWO prime numbers. For example, 6 is a semi-prime number but 12 is not.</p>
-<p>Your task is just to determinate whether a given number is a semi-prime number.</p>
-<p><strong>Input</strong><br>There are several test cases in the input. Each case contains a single integer N (2≤N≤1 000 000).<br><strong>Output</strong><br>One line with a single integer for each case. If the number is a semi-prime number, then output “Yes”, otherwise “No”.<br><strong>Sample Input</strong><br>3<br>4<br>6<br>12<br><strong>Sample Output</strong><br>No<br>Yes<br>Yes<br>No</p>
-<p>打表咯<br>求出所有素数和半素数<br>输入n的时候直接输出结果</p>
-<p>一定一定一定一定要多多break 多多continue！！！<br>我在find_semiprime少了一句break然后时间超了N倍<br>生气！！！！！！！！！</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#include&lt;iostream&gt;</span></div><div class="line"><span class="comment">#include&lt;set&gt;</span></div><div class="line"><span class="comment">#include&lt;vector&gt;</span></div><div class="line">using namespace std;</div><div class="line"><span class="built_in">set</span>&lt;int&gt; semi_prime;</div><div class="line">vector&lt;int&gt; prime;</div><div class="line"></div><div class="line">void <span class="function"><span class="title">find_prime</span></span>() &#123;</div><div class="line">	<span class="keyword">for</span> (int i = 2; i &lt;= 500000; ++i)</div><div class="line">	&#123;</div><div class="line">		//排除除了2以外的偶数，减少计算</div><div class="line">		<span class="keyword">if</span> (i != 2 &amp;&amp; i % 2 == 0)</div><div class="line">			<span class="built_in">continue</span>;</div><div class="line">		<span class="keyword">for</span> (int j = 3; j*j &lt;= i; j+=2)</div><div class="line">		&#123;</div><div class="line">			<span class="keyword">if</span> (i%j == 0)goto next_prime;</div><div class="line">		&#125;</div><div class="line">		prime.push_back(i);</div><div class="line">	next_prime:</div><div class="line">		<span class="built_in">continue</span>;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">void <span class="function"><span class="title">find_semiprime</span></span>() &#123;</div><div class="line">	<span class="keyword">for</span> (int i = 0; i &lt; prime.size(); ++i) &#123;</div><div class="line">		<span class="keyword">for</span> (int j = 0; j &lt; prime.size(); ++j) &#123;</div><div class="line">			int mul = prime[i] * prime[j];</div><div class="line">			<span class="keyword">if</span>(mul&lt;1000000)</div><div class="line">				semi_prime.insert(mul);</div><div class="line">			<span class="keyword">else</span> <span class="built_in">break</span>;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">int <span class="function"><span class="title">main</span></span>() &#123;</div><div class="line">	//找到所有素数</div><div class="line">	find_prime();</div><div class="line">	//找到所有半素数</div><div class="line">	find_semiprime();</div><div class="line">	int n;</div><div class="line">	<span class="keyword">while</span> (cin &gt;&gt; n) &#123;</div><div class="line">		<span class="keyword">if</span> (semi_prime.find(n) != semi_prime.end())</div><div class="line">			cout &lt;&lt; <span class="string">"Yes"</span> &lt;&lt; endl;</div><div class="line">		<span class="keyword">else</span></div><div class="line">			cout &lt;&lt; <span class="string">"No"</span> &lt;&lt; endl;</div><div class="line">	&#125;</div><div class="line">	<span class="built_in">return</span> 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">C++练手题</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/06/24/练手/Semi-Prime/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/52/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/51/">51</a><a class="page-number" href="/page/52/">52</a><span class="page-number current">53</span><a class="page-number" href="/page/54/">54</a><a class="page-number" href="/page/55/">55</a><span class="space">&hellip;</span><a class="page-number" href="/page/60/">60</a><a class="extend next" rel="next" href="/page/54/">Next &raquo;</a>
@@ -932,39 +942,7 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">PAT甲级</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Dijkstra</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">BFS</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">二分法</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">数据结构</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">树</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">BST</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">DP</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Hash</a>
+                <a href="javascript:void(0)" class="js-tag color4">STL</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -972,35 +950,23 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">AVL</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">贪心算法</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">递归</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">逻辑</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">堆</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">STL</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">C++练手题</a>
-              </li>
-            
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">算法</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">DP</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">二分法</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">BFS</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Hash</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1009,6 +975,10 @@ MathJax.Hub.Queue(function() {
             
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">A*</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">贪心算法</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1024,11 +994,15 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">字典树</a>
+                <a href="javascript:void(0)" class="js-tag color4">Dijkstra</a>
               </li>
             
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">组合数学</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">字典树</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1037,6 +1011,42 @@ MathJax.Hub.Queue(function() {
             
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">博弈论</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">PAT甲级</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">数据结构</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">树</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">BST</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">AVL</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">递归</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">逻辑</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">堆</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">C++练手题</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1060,11 +1070,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">天梯赛</a>
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+                <a href="javascript:void(0)" class="js-tag color4">天梯赛</a>
               </li>
             
               <li class="article-tag-list-item">

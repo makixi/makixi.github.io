@@ -162,6 +162,70 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-HDOJ/HDOJ-1140-War-on-Weather" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/09/02/HDOJ/HDOJ-1140-War-on-Weather/">HDOJ 1140 War on Weather(几何)</a>
+    </h1>
+  
+
+        
+        <a href="/2017/09/02/HDOJ/HDOJ-1140-War-on-Weather/" class="archive-article-date">
+  	<time datetime="2017-09-02T02:27:29.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-09-02</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong>Problem Description</strong><br>After an unprovoked hurricane attack on the south shore, Glorious Warrior has declared war on weather. The first salvo in this campaign will be a coordinated pre-emptive attack on as many tropical depressions as possible. GW reckons that the attack will neutralize the tropical depressions before they become storms, and dissuade others from forming.<br>GW has at his disposal k space-to-earth killer satellites at various locations in space. m tropical depressions are known to exist at various locations on the earth’s surface. Each satellite can attack any number of targets on the earth provided there is line of sight between the satellite and each target. How many different targets can be hit?</p>
+<p><strong>Input</strong><br>The input consists of several test cases. Each case begins with a line containing integers 0 &lt; k, m &amp;le 100 as defined above. k lines follow, each giving x,y,z - the location in space of a satellite at the scheduled time of attack. m lines then follow, each giving x,y,z - the location of a target tropical depression. Assume the earth is a sphere centred at (0,0,0) with circumference 40,000 km. All targets will be on the surface of the earth (within 10-9 km) and all satellites will be at least 50 km above the surface. A line containing 0 0 follows the last test case.</p>
+<p><strong>Output</strong><br>For each test case, output a line giving the total number of targets that can be hit. If a particular target falls within 10-8 km of the boundary between being within line-of-sight and not, it may be counted either way. (That is, you need not consider rounding error so long as it does not exceed 10-8 km.)</p>
+<p><strong>Sample Input</strong><br>3 2<br>-10.82404031 -1594.10929753 -6239.77925152<br>692.58497298 -5291.64700245 4116.92402298<br>3006.49210582 2844.61925179 5274.03201053<br>2151.03635167 2255.29684503 5551.13972186<br>-1000.08700886 -4770.25497971 4095.48127333<br>3 4<br>0 0 6466.197723676<br>0 6466.197723676 0<br>6466.197723676 0 0<br>6366.197723676 0 0<br>6365.197723676 112.833485488 0<br>0 0 6366.197723676<br>0 -6366.197723676 0<br>0 0</p>
+<p><strong>Sample Output</strong><br>2<br>3</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;queue&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;functional&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;algorithm&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stack&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;string&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cstring&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;vector&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;map&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;set&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> PI acos(-1.0)</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> R (20000.0/PI)</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> eps 11e-9</span></div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> inf = <span class="number">0x3f3f3f3f</span>;</div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> maxn = <span class="number">105</span>;</div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">node</span> &#123;</span></div><div class="line">	<span class="keyword">double</span> x, y, z;</div><div class="line">&#125;sate[maxn],tar[maxn];</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="keyword">int</span> k, m;</div><div class="line">	<span class="keyword">while</span> (<span class="built_in">cin</span> &gt;&gt; k &gt;&gt; m&amp;&amp;(k+m)) &#123;</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; k; ++i)<span class="built_in">cin</span> &gt;&gt; sate[i].x &gt;&gt; sate[i].y &gt;&gt; sate[i].z;</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; m; ++i)<span class="built_in">cin</span> &gt;&gt; tar[i].x &gt;&gt; tar[i].y &gt;&gt; tar[i].z;</div><div class="line">		<span class="keyword">int</span> res = <span class="number">0</span>;</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; m; ++i)</div><div class="line">			<span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; k; ++j) &#123;</div><div class="line">				<span class="keyword">double</span>  d = <span class="built_in">sqrt</span>(<span class="built_in">pow</span>(sate[j].x,<span class="number">2</span>) + <span class="built_in">pow</span>(sate[j].y,<span class="number">2</span>) + <span class="built_in">pow</span>(sate[j].z,<span class="number">2</span>) - R*R);</div><div class="line">				<span class="keyword">double</span> dst = <span class="built_in">sqrt</span>(<span class="built_in">pow</span>(sate[j].x - tar[i].x, <span class="number">2</span>) + <span class="built_in">pow</span>(sate[j].y - tar[i].y, <span class="number">2</span>) + <span class="built_in">pow</span>(sate[j].z - tar[i].z, <span class="number">2</span>));</div><div class="line">				<span class="keyword">if</span> (<span class="built_in">fabs</span>(dst - d) &lt; eps||(dst-d)&lt;<span class="number">0</span>) &#123; ++res; <span class="keyword">break</span>; &#125;</div><div class="line">			&#125;</div><div class="line">		<span class="built_in">cout</span> &lt;&lt; res &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">OJ</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/09/02/HDOJ/HDOJ-1140-War-on-Weather/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+  
     <article id="post-HDOJ/HDOJ-1134-Game-of-Connections" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -736,71 +800,6 @@
 
 
   
-    <article id="post-HDOJ/HDOJ-1119-Simple-Algorithmetics" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/08/31/HDOJ/HDOJ-1119-Simple-Algorithmetics/">HDOJ 1119 Simple Algorithmetics(格式控制+大数运算)</a>
-    </h1>
-  
-
-        
-        <a href="/2017/08/31/HDOJ/HDOJ-1119-Simple-Algorithmetics/" class="archive-article-date">
-  	<time datetime="2017-08-31T07:07:45.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-08-31</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><strong>Problem Description</strong><br>One part of the new WAP portal is also a calculator computing expressions with very long numbers. To make the output look better, the result is formated the same way as is it usually used with manual calculations.<br>Your task is to write the core part of this calculator. Given two numbers and the requested operation, you are to compute the result and print it in the form specified below. With addition and subtraction, the numbers are written below each other. Multiplication is a little bit more complex: first of all, we make a partial result for every digit of one of the numbers, and then sum the results together.</p>
-<p><strong>Input</strong><br>There is a single positive integer T on the first line of input. It stands for the number of expressions to follow. Each expression consists of a single line containing a positive integer number, an operator (one of +, - and *) and the second positive integer number. Every number has at most 500 digits. There are no spaces on the line. If the operation is subtraction, the second number is always lower than the first one. No number will begin with zero.</p>
-<p><strong>Output</strong><br>For each expression, print two lines with two given numbers, the second number below the first one, last digits (representing unities) must be aligned in the same column. Put the operator right in front of the first digit of the second number. After the second number, there must be a horizontal line made of dashes (-).<br>For each addition or subtraction, put the result right below the horizontal line, with last digit aligned to the last digit of both operands.<br>For each multiplication, multiply the first number by each digit of the second number. Put the partial results one below the other, starting with the product of the last digit of the second number. Each partial result should be aligned with the corresponding digit. That means the last digit of the partial product must be in the same column as the digit of the second number. No product may begin with any additional zeros. If a particular digit is zero, the product has exactly one digit – zero. If the second number has more than one digit, print another horizontal line under the partial results, and then print the sum of them.<br>There must be minimal number of spaces on the beginning of lines, with respect to other constraints. The horizontal line is always as long as necessary to reach the left and right end of both numbers (and operators) right below and above it. That means it begins in the same column where the leftmost digit or operator of that two lines (one below and one above) is. It ends in the column where is the rightmost digit of that two numbers. The line can be neither longer nor shorter than specified.<br>Print one blank line after each test case, including the last one.</p>
-<p><strong>Sample Input</strong><br>4<br>12345+67890<br>324-111<br>325<em>4405<br>1234</em>4</p>
-<p><strong>Sample Output</strong><br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"> 12345</div><div class="line">+67890</div><div class="line">------</div><div class="line"> 80235</div><div class="line"></div><div class="line"> 324</div><div class="line">-111</div><div class="line">----</div><div class="line"> 213</div><div class="line"></div><div class="line">    325</div><div class="line">  *4405</div><div class="line">  -----</div><div class="line">   1625</div><div class="line">     0</div><div class="line"> 1300</div><div class="line">1300</div><div class="line">-------</div><div class="line">1431625</div><div class="line"></div><div class="line">1234</div><div class="line">  *4</div><div class="line">----</div><div class="line">4936</div></pre></td></tr></table></figure></p>
-<p>居然WA了。。估计格式哪里错了<br>捉急</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div><div class="line">149</div><div class="line">150</div><div class="line">151</div><div class="line">152</div><div class="line">153</div><div class="line">154</div><div class="line">155</div><div class="line">156</div><div class="line">157</div><div class="line">158</div><div class="line">159</div><div class="line">160</div><div class="line">161</div><div class="line">162</div><div class="line">163</div><div class="line">164</div><div class="line">165</div><div class="line">166</div><div class="line">167</div><div class="line">168</div><div class="line">169</div><div class="line">170</div><div class="line">171</div><div class="line">172</div><div class="line">173</div><div class="line">174</div><div class="line">175</div><div class="line">176</div><div class="line">177</div><div class="line">178</div><div class="line">179</div><div class="line">180</div><div class="line">181</div><div class="line">182</div><div class="line">183</div><div class="line">184</div><div class="line">185</div><div class="line">186</div><div class="line">187</div><div class="line">188</div><div class="line">189</div><div class="line">190</div><div class="line">191</div><div class="line">192</div><div class="line">193</div><div class="line">194</div><div class="line">195</div><div class="line">196</div><div class="line">197</div><div class="line">198</div><div class="line">199</div><div class="line">200</div><div class="line">201</div><div class="line">202</div><div class="line">203</div><div class="line">204</div><div class="line">205</div><div class="line">206</div><div class="line">207</div><div class="line">208</div><div class="line">209</div><div class="line">210</div><div class="line">211</div><div class="line">212</div><div class="line">213</div><div class="line">214</div><div class="line">215</div><div class="line">216</div><div class="line">217</div><div class="line">218</div><div class="line">219</div><div class="line">220</div><div class="line">221</div><div class="line">222</div><div class="line">223</div><div class="line">224</div><div class="line">225</div><div class="line">226</div><div class="line">227</div><div class="line">228</div><div class="line">229</div><div class="line">230</div><div class="line">231</div><div class="line">232</div><div class="line">233</div><div class="line">234</div><div class="line">235</div><div class="line">236</div><div class="line">237</div><div class="line">238</div><div class="line">239</div><div class="line">240</div><div class="line">241</div><div class="line">242</div><div class="line">243</div><div class="line">244</div><div class="line">245</div><div class="line">246</div><div class="line">247</div><div class="line">248</div><div class="line">249</div><div class="line">250</div><div class="line">251</div><div class="line">252</div><div class="line">253</div><div class="line">254</div><div class="line">255</div><div class="line">256</div><div class="line">257</div><div class="line">258</div><div class="line">259</div><div class="line">260</div><div class="line">261</div><div class="line">262</div><div class="line">263</div><div class="line">264</div><div class="line">265</div><div class="line">266</div><div class="line">267</div><div class="line">268</div><div class="line">269</div><div class="line">270</div><div class="line">271</div><div class="line">272</div><div class="line">273</div><div class="line">274</div><div class="line">275</div><div class="line">276</div><div class="line">277</div><div class="line">278</div><div class="line">279</div><div class="line">280</div><div class="line">281</div><div class="line">282</div><div class="line">283</div><div class="line">284</div><div class="line">285</div><div class="line">286</div><div class="line">287</div><div class="line">288</div><div class="line">289</div><div class="line">290</div><div class="line">291</div><div class="line">292</div><div class="line">293</div><div class="line">294</div><div class="line">295</div><div class="line">296</div><div class="line">297</div><div class="line">298</div><div class="line">299</div><div class="line">300</div><div class="line">301</div><div class="line">302</div><div class="line">303</div><div class="line">304</div><div class="line">305</div><div class="line">306</div><div class="line">307</div><div class="line">308</div><div class="line">309</div><div class="line">310</div><div class="line">311</div><div class="line">312</div><div class="line">313</div><div class="line">314</div><div class="line">315</div><div class="line">316</div><div class="line">317</div><div class="line">318</div><div class="line">319</div><div class="line">320</div><div class="line">321</div><div class="line">322</div><div class="line">323</div><div class="line">324</div><div class="line">325</div><div class="line">326</div><div class="line">327</div><div class="line">328</div><div class="line">329</div><div class="line">330</div><div class="line">331</div><div class="line">332</div><div class="line">333</div><div class="line">334</div><div class="line">335</div><div class="line">336</div><div class="line">337</div><div class="line">338</div><div class="line">339</div><div class="line">340</div><div class="line">341</div><div class="line">342</div><div class="line">343</div><div class="line">344</div><div class="line">345</div><div class="line">346</div><div class="line">347</div><div class="line">348</div><div class="line">349</div><div class="line">350</div><div class="line">351</div><div class="line">352</div><div class="line">353</div><div class="line">354</div><div class="line">355</div><div class="line">356</div><div class="line">357</div><div class="line">358</div><div class="line">359</div><div class="line">360</div><div class="line">361</div><div class="line">362</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;map&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;string&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cstring&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;queue&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;algorithm&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;vector&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cmath&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;ctime&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> inf = <span class="number">0x3f3f3f3f</span>;</div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> MAXN = <span class="number">1500</span>;</div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">bign</span></span></div><div class="line">&#123;</div><div class="line">	<span class="keyword">int</span> len, s[MAXN];</div><div class="line">	bign()</div><div class="line">	&#123;</div><div class="line">		<span class="built_in">memset</span>(s, <span class="number">0</span>, <span class="keyword">sizeof</span>(s));</div><div class="line">		len = <span class="number">1</span>;</div><div class="line">	&#125;</div><div class="line">	bign(<span class="keyword">int</span> num) &#123; *<span class="keyword">this</span> = num; &#125;</div><div class="line">	bign(<span class="keyword">const</span> <span class="keyword">char</span> *num) &#123; *<span class="keyword">this</span> = num; &#125;</div><div class="line">	bign <span class="keyword">operator</span> = (<span class="keyword">const</span> <span class="keyword">int</span> num)</div><div class="line">	&#123;</div><div class="line">		<span class="keyword">char</span> s[MAXN];</div><div class="line">		<span class="built_in">sprintf</span>(s, <span class="string">"%d"</span>, num);</div><div class="line">		*<span class="keyword">this</span> = s;</div><div class="line">		<span class="keyword">return</span> *<span class="keyword">this</span>;</div><div class="line">	&#125;</div><div class="line">	bign <span class="keyword">operator</span> = (<span class="keyword">const</span> <span class="keyword">char</span> *num)</div><div class="line">	&#123;</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; num[i] == <span class="string">'0'</span>; num++);  <span class="comment">//去前导0</span></div><div class="line">		len = <span class="built_in">strlen</span>(num);</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; len; i++) s[i] = num[len - i - <span class="number">1</span>] - <span class="string">'0'</span>;</div><div class="line">		<span class="keyword">return</span> *<span class="keyword">this</span>;</div><div class="line">	&#125;</div><div class="line">	bign <span class="keyword">operator</span> + (<span class="keyword">const</span> bign &amp;b) <span class="keyword">const</span> <span class="comment">//+</span></div><div class="line">	&#123;</div><div class="line">		bign c;</div><div class="line">		c.len = <span class="number">0</span>;</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>, g = <span class="number">0</span>; g || i &lt; max(len, b.len); i++)</div><div class="line">		&#123;</div><div class="line">			<span class="keyword">int</span> x = g;</div><div class="line">			<span class="keyword">if</span> (i &lt; len) x += s[i];</div><div class="line">			<span class="keyword">if</span> (i &lt; b.len) x += b.s[i];</div><div class="line">			c.s[c.len++] = x % <span class="number">10</span>;</div><div class="line">			g = x / <span class="number">10</span>;</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">return</span> c;</div><div class="line">	&#125;</div><div class="line">	bign <span class="keyword">operator</span> += (<span class="keyword">const</span> bign &amp;b)</div><div class="line">	&#123;</div><div class="line">		*<span class="keyword">this</span> = *<span class="keyword">this</span> + b;</div><div class="line">		<span class="keyword">return</span> *<span class="keyword">this</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="function"><span class="keyword">void</span> <span class="title">clean</span><span class="params">()</span></span></div><div class="line">	&#123;</div><div class="line">		<span class="keyword">while</span> (len &gt; <span class="number">1</span> &amp;&amp; !s[len - <span class="number">1</span>]) len--;</div><div class="line">	&#125;</div><div class="line">	bign <span class="keyword">operator</span> * (<span class="keyword">const</span> bign &amp;b) <span class="comment">//*</span></div><div class="line">	&#123;</div><div class="line">		bign c;</div><div class="line">		c.len = len + b.len;</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; len; i++)</div><div class="line">		&#123;</div><div class="line">			<span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; b.len; j++)</div><div class="line">			&#123;</div><div class="line">				c.s[i + j] += s[i] * b.s[j];</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; c.len; i++)</div><div class="line">		&#123;</div><div class="line">			c.s[i + <span class="number">1</span>] += c.s[i] / <span class="number">10</span>;</div><div class="line">			c.s[i] %= <span class="number">10</span>;</div><div class="line">		&#125;</div><div class="line">		c.clean();</div><div class="line">		<span class="keyword">return</span> c;</div><div class="line">	&#125;</div><div class="line">	bign <span class="keyword">operator</span> *= (<span class="keyword">const</span> bign &amp;b)</div><div class="line">	&#123;</div><div class="line">		*<span class="keyword">this</span> = *<span class="keyword">this</span> * b;</div><div class="line">		<span class="keyword">return</span> *<span class="keyword">this</span>;</div><div class="line">	&#125;</div><div class="line">	bign <span class="keyword">operator</span> - (<span class="keyword">const</span> bign &amp;b)</div><div class="line">	&#123;</div><div class="line">		bign c;</div><div class="line">		c.len = <span class="number">0</span>;</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>, g = <span class="number">0</span>; i &lt; len; i++)</div><div class="line">		&#123;</div><div class="line">			<span class="keyword">int</span> x = s[i] - g;</div><div class="line">			<span class="keyword">if</span> (i &lt; b.len) x -= b.s[i];</div><div class="line">			<span class="keyword">if</span> (x &gt;= <span class="number">0</span>) g = <span class="number">0</span>;</div><div class="line">			<span class="keyword">else</span></div><div class="line">			&#123;</div><div class="line">				g = <span class="number">1</span>;</div><div class="line">				x += <span class="number">10</span>;</div><div class="line">			&#125;</div><div class="line">			c.s[c.len++] = x;</div><div class="line">		&#125;</div><div class="line">		c.clean();</div><div class="line">		<span class="keyword">return</span> c;</div><div class="line">	&#125;</div><div class="line">	bign <span class="keyword">operator</span> -= (<span class="keyword">const</span> bign &amp;b)</div><div class="line">	&#123;</div><div class="line">		*<span class="keyword">this</span> = *<span class="keyword">this</span> - b;</div><div class="line">		<span class="keyword">return</span> *<span class="keyword">this</span>;</div><div class="line">	&#125;</div><div class="line">	bign <span class="keyword">operator</span> / (<span class="keyword">const</span> bign &amp;b)</div><div class="line">	&#123;</div><div class="line">		bign c, f = <span class="number">0</span>;</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = len - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i--)</div><div class="line">		&#123;</div><div class="line">			f = f * <span class="number">10</span>;</div><div class="line">			f.s[<span class="number">0</span>] = s[i];</div><div class="line">			<span class="keyword">while</span> (f &gt;= b)</div><div class="line">			&#123;</div><div class="line">				f -= b;</div><div class="line">				c.s[i]++;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">		c.len = len;</div><div class="line">		c.clean();</div><div class="line">		<span class="keyword">return</span> c;</div><div class="line">	&#125;</div><div class="line">	bign <span class="keyword">operator</span> /= (<span class="keyword">const</span> bign &amp;b)</div><div class="line">	&#123;</div><div class="line">		*<span class="keyword">this</span> = *<span class="keyword">this</span> / b;</div><div class="line">		<span class="keyword">return</span> *<span class="keyword">this</span>;</div><div class="line">	&#125;</div><div class="line">	bign <span class="keyword">operator</span> % (<span class="keyword">const</span> bign &amp;b)</div><div class="line">	&#123;</div><div class="line">		bign r = *<span class="keyword">this</span> / b;</div><div class="line">		r = *<span class="keyword">this</span> - r*b;</div><div class="line">		<span class="keyword">return</span> r;</div><div class="line">	&#125;</div><div class="line">	bign <span class="keyword">operator</span> %= (<span class="keyword">const</span> bign &amp;b)</div><div class="line">	&#123;</div><div class="line">		*<span class="keyword">this</span> = *<span class="keyword">this</span> % b;</div><div class="line">		<span class="keyword">return</span> *<span class="keyword">this</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">bool</span> <span class="keyword">operator</span> &lt; (<span class="keyword">const</span> bign &amp;b)</div><div class="line">	&#123;</div><div class="line">		<span class="keyword">if</span> (len != b.len) <span class="keyword">return</span> len &lt; b.len;</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = len - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i--)</div><div class="line">		&#123;</div><div class="line">			<span class="keyword">if</span> (s[i] != b.s[i]) <span class="keyword">return</span> s[i] &lt; b.s[i];</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">bool</span> <span class="keyword">operator</span> &gt; (<span class="keyword">const</span> bign &amp;b)</div><div class="line">	&#123;</div><div class="line">		<span class="keyword">if</span> (len != b.len) <span class="keyword">return</span> len &gt; b.len;</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = len - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i--)</div><div class="line">		&#123;</div><div class="line">			<span class="keyword">if</span> (s[i] != b.s[i]) <span class="keyword">return</span> s[i] &gt; b.s[i];</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">bool</span> <span class="keyword">operator</span> == (<span class="keyword">const</span> bign &amp;b)</div><div class="line">	&#123;</div><div class="line">		<span class="keyword">return</span> !(*<span class="keyword">this</span> &gt; b) &amp;&amp; !(*<span class="keyword">this</span> &lt; b);</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">bool</span> <span class="keyword">operator</span> != (<span class="keyword">const</span> bign &amp;b)</div><div class="line">	&#123;</div><div class="line">		<span class="keyword">return</span> !(*<span class="keyword">this</span> == b);</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">bool</span> <span class="keyword">operator</span> &lt;= (<span class="keyword">const</span> bign &amp;b)</div><div class="line">	&#123;</div><div class="line">		<span class="keyword">return</span> *<span class="keyword">this</span> &lt; b || *<span class="keyword">this</span> == b;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">bool</span> <span class="keyword">operator</span> &gt;= (<span class="keyword">const</span> bign &amp;b)</div><div class="line">	&#123;</div><div class="line">		<span class="keyword">return</span> *<span class="keyword">this</span> &gt; b || *<span class="keyword">this</span> == b;</div><div class="line">	&#125;</div><div class="line">	<span class="function"><span class="built_in">string</span> <span class="title">str</span><span class="params">()</span> <span class="keyword">const</span></span></div><div class="line">	&#123;</div><div class="line">		<span class="built_in">string</span> res = <span class="string">""</span>;</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; len; i++) res = <span class="keyword">char</span>(s[i] + <span class="string">'0'</span>) + res;</div><div class="line">		<span class="keyword">return</span> res;</div><div class="line">	&#125;</div><div class="line">&#125;;</div><div class="line">istream&amp; <span class="keyword">operator</span> &gt;&gt; (istream &amp;in, bign &amp;x)</div><div class="line">&#123;</div><div class="line">	<span class="built_in">string</span> s;</div><div class="line">	in &gt;&gt; s;</div><div class="line">	x = s.c_str();</div><div class="line">	<span class="keyword">return</span> in;</div><div class="line">&#125;</div><div class="line">ostream&amp; <span class="keyword">operator</span> &lt;&lt; (ostream &amp;out, <span class="keyword">const</span> bign &amp;x)</div><div class="line">&#123;</div><div class="line">	out &lt;&lt; x.str();</div><div class="line">	<span class="keyword">return</span> out;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="keyword">char</span> c[<span class="number">1010</span>];</div><div class="line">	bign a, b;</div><div class="line">	<span class="keyword">int</span> t;</div><div class="line">	<span class="built_in">cin</span> &gt;&gt; t;</div><div class="line">	<span class="keyword">while</span> (t--) &#123;</div><div class="line">		<span class="built_in">scanf</span>(<span class="string">"%s"</span>, c);</div><div class="line">		<span class="keyword">char</span> tmp[<span class="number">510</span>], tmp2[<span class="number">510</span>];</div><div class="line">		<span class="keyword">int</span> ti = <span class="number">0</span>;</div><div class="line">		<span class="keyword">bool</span> flag = <span class="literal">false</span>;</div><div class="line">		<span class="keyword">int</span> op;</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="built_in">strlen</span>(c); ++i) &#123;</div><div class="line">			<span class="keyword">if</span> ((c[i] == <span class="string">'+'</span> || c[i] == <span class="string">'-'</span> || c[i] == <span class="string">'*'</span>) &amp;&amp; !flag) &#123;</div><div class="line">				<span class="keyword">if</span> (c[i] == <span class="string">'+'</span>)op = <span class="number">1</span>;</div><div class="line">				<span class="keyword">else</span> <span class="keyword">if</span> (c[i] == <span class="string">'-'</span>)op = <span class="number">2</span>;</div><div class="line">				<span class="keyword">else</span> op = <span class="number">3</span>;</div><div class="line">				flag = <span class="number">1</span>;</div><div class="line">				tmp[ti] = <span class="string">'\0'</span>;</div><div class="line">				ti = <span class="number">0</span>;</div><div class="line">				a = bign(tmp);</div><div class="line">			&#125;</div><div class="line">			<span class="keyword">else</span> <span class="keyword">if</span> (!flag)</div><div class="line">				tmp[ti++] = c[i];</div><div class="line">			<span class="keyword">else</span></div><div class="line">				tmp2[ti++] = c[i];</div><div class="line">		&#125;</div><div class="line"></div><div class="line">		tmp2[ti] = <span class="string">'\0'</span>;</div><div class="line">		b = bign(tmp2);</div><div class="line">		bign c;</div><div class="line">		<span class="keyword">int</span> lena = a.len, lenb = b.len, lenc;</div><div class="line">		<span class="keyword">int</span> blank;</div><div class="line">		<span class="keyword">if</span> (op == <span class="number">1</span>) &#123;<span class="comment">//+</span></div><div class="line">			c = a + b;</div><div class="line">			lenc = c.len;</div><div class="line">			blank = <span class="number">0</span>;</div><div class="line">			<span class="keyword">int</span> t = max(lenc, max(lenb + <span class="number">1</span>, lena));</div><div class="line">			<span class="keyword">while</span> (lena + blank &lt; t) &#123;</div><div class="line">				<span class="built_in">cout</span> &lt;&lt; <span class="string">" "</span>; ++blank;</div><div class="line">			&#125;</div><div class="line">			<span class="built_in">cout</span> &lt;&lt; a &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">			blank = <span class="number">0</span>;</div><div class="line">			<span class="keyword">while</span> (lenb + blank + <span class="number">1</span> &lt; t) &#123;</div><div class="line">				<span class="built_in">cout</span> &lt;&lt; <span class="string">" "</span>; ++blank;</div><div class="line">			&#125;</div><div class="line">			<span class="built_in">cout</span> &lt;&lt; <span class="string">"+"</span> &lt;&lt; b &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">			blank = <span class="number">0</span>;</div><div class="line">			<span class="keyword">while</span> (blank &lt; t) &#123;</div><div class="line">				<span class="built_in">cout</span> &lt;&lt; <span class="string">"-"</span>; ++blank;</div><div class="line">			&#125;</div><div class="line">			<span class="built_in">cout</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">			blank = <span class="number">0</span>;</div><div class="line">			<span class="keyword">while</span> (lenc + blank &lt; t) &#123;</div><div class="line">				<span class="built_in">cout</span> &lt;&lt; <span class="string">" "</span>; ++blank;</div><div class="line">			&#125;</div><div class="line">			<span class="built_in">cout</span> &lt;&lt; c &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">else</span> <span class="keyword">if</span> (op == <span class="number">2</span>) &#123;<span class="comment">//-</span></div><div class="line">			c = a - b;</div><div class="line">			lenc = c.len;</div><div class="line">			blank = <span class="number">0</span>;</div><div class="line">			<span class="keyword">int</span> t = max(lena, max(lenb + <span class="number">1</span>, lenc));</div><div class="line">			<span class="keyword">while</span> (lena + blank &lt;t) &#123;</div><div class="line">				<span class="built_in">cout</span> &lt;&lt; <span class="string">" "</span>; ++blank;</div><div class="line">			&#125;</div><div class="line">			<span class="built_in">cout</span> &lt;&lt; a &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">			blank = <span class="number">0</span>;</div><div class="line">			<span class="keyword">while</span> (lenb + blank + <span class="number">1</span> &lt; t) &#123;</div><div class="line">				<span class="built_in">cout</span> &lt;&lt; <span class="string">" "</span>; ++blank;</div><div class="line">			&#125;</div><div class="line">			<span class="built_in">cout</span> &lt;&lt; <span class="string">"-"</span> &lt;&lt; b &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">			blank = <span class="number">0</span>;</div><div class="line">			<span class="keyword">while</span> (blank &lt; t - max(lenb + <span class="number">1</span>, lenc)) &#123;</div><div class="line">				<span class="built_in">cout</span> &lt;&lt; <span class="string">" "</span>; ++blank;</div><div class="line">			&#125;</div><div class="line">			blank = <span class="number">0</span>;</div><div class="line">			<span class="keyword">while</span> (blank &lt; max(lenc, lenb + <span class="number">1</span>)) &#123;</div><div class="line">				<span class="built_in">cout</span> &lt;&lt; <span class="string">"-"</span>; ++blank;</div><div class="line">			&#125;</div><div class="line">			<span class="built_in">cout</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">			blank = <span class="number">0</span>;</div><div class="line">			<span class="keyword">while</span> (lenc + blank &lt; t) &#123;</div><div class="line">				<span class="built_in">cout</span> &lt;&lt; <span class="string">" "</span>; ++blank;</div><div class="line">			&#125;</div><div class="line">			<span class="built_in">cout</span> &lt;&lt; c &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">else</span> &#123;<span class="comment">//*</span></div><div class="line">			c = a * b;</div><div class="line">			lenc = c.len;</div><div class="line">			<span class="keyword">if</span> (lenb == <span class="number">1</span>) &#123;</div><div class="line">				blank = <span class="number">0</span>;</div><div class="line">				<span class="keyword">while</span> (lena + blank &lt; max(lenc, max(lenb + <span class="number">1</span>, lena))) &#123;</div><div class="line">					<span class="built_in">cout</span> &lt;&lt; <span class="string">" "</span>; ++blank;</div><div class="line">				&#125;</div><div class="line">				<span class="built_in">cout</span> &lt;&lt; a &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">				blank = <span class="number">0</span>;</div><div class="line">				<span class="keyword">while</span> (lenb + blank + <span class="number">1</span> &lt; max(lenc, max(lenb + <span class="number">1</span>, lena))) &#123;</div><div class="line">					<span class="built_in">cout</span> &lt;&lt; <span class="string">" "</span>; ++blank;</div><div class="line">				&#125;</div><div class="line">				<span class="built_in">cout</span> &lt;&lt; <span class="string">"*"</span> &lt;&lt; b &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">				blank = <span class="number">0</span>;</div><div class="line">				<span class="keyword">while</span> (blank &lt; max(lenc, max(lenb + <span class="number">1</span>, lena))) &#123;</div><div class="line">					<span class="built_in">cout</span> &lt;&lt; <span class="string">"-"</span>; ++blank;</div><div class="line">				&#125;</div><div class="line">				<span class="built_in">cout</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">				blank = <span class="number">0</span>;</div><div class="line">				<span class="keyword">while</span> (lenc + blank &lt; max(lenc, max(lenb + <span class="number">1</span>, lena))) &#123;</div><div class="line">					<span class="built_in">cout</span> &lt;&lt; <span class="string">" "</span>; ++blank;</div><div class="line">				&#125;</div><div class="line">				<span class="built_in">cout</span> &lt;&lt; c &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">			&#125;</div><div class="line">			<span class="keyword">else</span> &#123;</div><div class="line">				blank = <span class="number">0</span>;</div><div class="line">				<span class="keyword">int</span> t = max(lenb + <span class="number">1</span>, max(lena, lenc));</div><div class="line">				<span class="keyword">while</span> (lena + blank &lt; t) &#123;</div><div class="line">					<span class="built_in">cout</span> &lt;&lt; <span class="string">" "</span>; ++blank;</div><div class="line">				&#125;</div><div class="line">				<span class="built_in">cout</span> &lt;&lt; a &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">				blank = <span class="number">0</span>;</div><div class="line">				<span class="keyword">while</span> (lenb + blank + <span class="number">1</span> &lt; t) &#123;</div><div class="line">					<span class="built_in">cout</span> &lt;&lt; <span class="string">" "</span>; ++blank;</div><div class="line">				&#125;</div><div class="line">				<span class="built_in">cout</span> &lt;&lt; <span class="string">"*"</span> &lt;&lt; b &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">				blank = <span class="number">0</span>;</div><div class="line">				bign tmp;</div><div class="line">				tmp = bign(b.s[<span class="number">0</span>])*a;</div><div class="line">				<span class="keyword">int</span> len = tmp.len;</div><div class="line">				<span class="keyword">while</span> (blank &lt;t - max(len, max(lenb + <span class="number">1</span>, lena))) &#123;</div><div class="line">					<span class="built_in">cout</span> &lt;&lt; <span class="string">" "</span>; ++blank;</div><div class="line">				&#125;</div><div class="line">				blank = <span class="number">0</span>;</div><div class="line">				<span class="keyword">while</span> (blank &lt; max(len, max(lenb + <span class="number">1</span>, lena))) &#123;</div><div class="line">					<span class="built_in">cout</span> &lt;&lt; <span class="string">"-"</span>; ++blank;</div><div class="line">				&#125;</div><div class="line">				<span class="built_in">cout</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">				ti = <span class="number">0</span>;</div><div class="line">				<span class="keyword">while</span> (ti &lt; lenb) &#123;</div><div class="line">					<span class="keyword">if</span> (ti != <span class="number">0</span>) &#123;</div><div class="line">						tmp = bign(b.s[ti])*a;</div><div class="line">						len = tmp.len;</div><div class="line">					&#125;</div><div class="line">					blank = <span class="number">0</span>;</div><div class="line">					<span class="keyword">while</span> (blank + ti &lt;t - len) &#123;</div><div class="line">						<span class="built_in">cout</span> &lt;&lt; <span class="string">" "</span>; ++blank;</div><div class="line">					&#125;</div><div class="line">					<span class="built_in">cout</span> &lt;&lt; tmp &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">					++ti;</div><div class="line">				&#125;</div><div class="line">				blank = <span class="number">0</span>;</div><div class="line">				<span class="keyword">while</span> (blank &lt;t - lenc) &#123;</div><div class="line">					<span class="built_in">cout</span> &lt;&lt; <span class="string">" "</span>; ++blank;</div><div class="line">				&#125;</div><div class="line">				blank = <span class="number">0</span>;</div><div class="line">				<span class="keyword">while</span> (blank &lt; lenc) &#123;</div><div class="line">					<span class="built_in">cout</span> &lt;&lt; <span class="string">"-"</span>; ++blank;</div><div class="line">				&#125;</div><div class="line">				<span class="built_in">cout</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">				blank = <span class="number">0</span>;</div><div class="line">				<span class="keyword">while</span> (blank &lt;t - lenc) &#123;</div><div class="line">					<span class="built_in">cout</span> &lt;&lt; <span class="string">" "</span>; ++blank;</div><div class="line">				&#125;</div><div class="line">				<span class="built_in">cout</span> &lt;&lt; c &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">OJ</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/08/31/HDOJ/HDOJ-1119-Simple-Algorithmetics/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/14/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><a class="page-number" href="/page/14/">14</a><span class="page-number current">15</span><a class="page-number" href="/page/16/">16</a><a class="page-number" href="/page/17/">17</a><span class="space">&hellip;</span><a class="page-number" href="/page/60/">60</a><a class="extend next" rel="next" href="/page/16/">Next &raquo;</a>
@@ -940,39 +939,7 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">PAT甲级</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Dijkstra</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">BFS</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">二分法</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">数据结构</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">树</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">BST</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">DP</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Hash</a>
+                <a href="javascript:void(0)" class="js-tag color4">STL</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -980,35 +947,23 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">AVL</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">贪心算法</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">递归</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">逻辑</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">堆</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">STL</a>
-              </li>
-            
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">C++练手题</a>
-              </li>
-            
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">算法</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">DP</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">二分法</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">BFS</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Hash</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1017,6 +972,10 @@ MathJax.Hub.Queue(function() {
             
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">A*</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">贪心算法</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1032,11 +991,15 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">字典树</a>
+                <a href="javascript:void(0)" class="js-tag color4">Dijkstra</a>
               </li>
             
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">组合数学</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">字典树</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1045,6 +1008,42 @@ MathJax.Hub.Queue(function() {
             
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">博弈论</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">PAT甲级</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">数据结构</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">树</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">BST</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">AVL</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">递归</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">逻辑</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">堆</a>
+              </li>
+            
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">C++练手题</a>
               </li>
             
               <li class="article-tag-list-item">
@@ -1068,11 +1067,11 @@ MathJax.Hub.Queue(function() {
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">天梯赛</a>
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
               </li>
             
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+                <a href="javascript:void(0)" class="js-tag color4">天梯赛</a>
               </li>
             
               <li class="article-tag-list-item">
