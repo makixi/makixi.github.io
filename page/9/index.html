@@ -162,6 +162,97 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-POJ/POJ-1113-Wall" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/09/21/POJ/POJ-1113-Wall/">POJ 1113 Wall(极角序扫描法)</a>
+    </h1>
+  
+
+        
+        <a href="/2017/09/21/POJ/POJ-1113-Wall/" class="archive-article-date">
+  	<time datetime="2017-09-21T07:11:25.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-09-21</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong>Description</strong><br>Once upon a time there was a greedy King who ordered his chief Architect to build a wall around the King’s castle. The King was so greedy, that he would not listen to his Architect’s proposals to build a beautiful brick wall with a perfect shape and nice tall towers. Instead, he ordered to build the wall around the whole castle using the least amount of stone and labor, but demanded that the wall should not come closer to the castle than a certain distance. If the King finds that the Architect has used more resources to build the wall than it was absolutely necessary to satisfy those requirements, then the Architect will loose his head. Moreover, he demanded Architect to introduce at once a plan of the wall listing the exact amount of resources that are needed to build the wall.<br>Your task is to help poor Architect to save his head, by writing a program that will find the minimum possible length of the wall that he could build around the castle to satisfy King’s requirements.<br>The task is somewhat simplified by the fact, that the King’s castle has a polygonal shape and is situated on a flat ground. The Architect has already established a Cartesian coordinate system and has precisely measured the coordinates of all castle’s vertices in feet.</p>
+<p><strong>Input</strong><br>The first line of the input file contains two integer numbers N and L separated by a space. N (3 &lt;= N &lt;= 1000) is the number of vertices in the King’s castle, and L (1 &lt;= L &lt;= 1000) is the minimal number of feet that King allows for the wall to come close to the castle.<br>Next N lines describe coordinates of castle’s vertices in a clockwise order. Each line contains two integer numbers Xi and Yi separated by a space (-10000 &lt;= Xi, Yi &lt;= 10000) that represent the coordinates of ith vertex. All vertices are different and the sides of the castle do not intersect anywhere except for vertices.<br>Output<br>Write to the output file the single number that represents the minimal possible length of the wall in feet that could be built around the castle to satisfy King’s requirements. You must present the integer number of feet to the King, because the floating numbers are not invented yet. However, you must round the result in such a way, that it is accurate to 8 inches (1 foot is equal to 12 inches), since the King will not tolerate larger error in the estimates.</p>
+<p><strong>Sample Input</strong><br>9 100<br>200 400<br>300 400<br>300 300<br>400 300<br>400 400<br>500 400<br>500 200<br>350 200<br>200 200</p>
+<p><strong>Sample Output</strong><br>1628</p>
+<p><strong>Hint</strong><br>结果四舍五入就可以了</p>
+<p>给定n个点，要求建尽量短的、包围所有点的围墙，且每个点到围墙的最短距离不得小于8英尺<br>求凸包的周长，然后加上一个圆的周长就行了~</p>
+<p>极角序扫描法：</p>
+<ol>
+<li>找出最左下的点（首先要最下，有多个最下则找最左），记为p[0]</li>
+<li>以p[0]为原点,对p[1]…p[n-1]进行按极角排序。极角相同的，距离p[0]近的算小</li>
+<li><p>栈里面放入p[0],p[1],p[2]</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"> <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">3</span>; i &lt; n; ++i) &#123;</div><div class="line"><span class="keyword">while</span>(<span class="literal">true</span>) &#123;</div><div class="line">  考察栈顶元素 k2,k2下方元素k1,以及p[i]</div><div class="line">  考虑 k1-&gt;k2-&gt;p[i]</div><div class="line"> <span class="keyword">if</span>(在k2这一点直走或者向右拐了)</div><div class="line">  将k2出栈</div><div class="line"> <span class="keyword">else</span> <span class="keyword">break</span>;</div><div class="line"> &#125;</div><div class="line">p[i]入栈</div><div class="line"> &#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>栈中的点就是凸包的所有顶点</p>
+</li>
+</ol>
+<p>PS：如果要保留凸包边上非顶点（只有右拐时才出栈），则极角序法不适用</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cstdio&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cstring&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cmath&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;algorithm&gt;</span></span></div><div class="line"><span class="keyword">const</span> <span class="keyword">double</span> PI = <span class="built_in">acos</span>(<span class="number">-1.0</span>);</div><div class="line"><span class="keyword">const</span> <span class="keyword">double</span> eps = <span class="number">1e-8</span>;</div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> maxn = <span class="number">1000</span> + <span class="number">10</span>;</div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">node</span> &#123;</span></div><div class="line">	<span class="keyword">double</span> x, y;</div><div class="line">	node()&#123;&#125;</div><div class="line">	node(<span class="keyword">double</span> xx,<span class="keyword">double</span> yy):x(xx),y(yy)&#123;&#125;</div><div class="line">&#125;v[maxn], res[maxn];</div><div class="line"><span class="function"><span class="keyword">bool</span> <span class="title">same</span><span class="params">(<span class="keyword">double</span> n)</span> </span>&#123;</div><div class="line">	<span class="keyword">return</span> <span class="built_in">fabs</span>(n)&lt;eps;</div><div class="line">&#125;</div><div class="line">node <span class="keyword">operator</span> -(<span class="keyword">const</span> node&amp;a, <span class="keyword">const</span> node &amp;b) &#123;</div><div class="line">	<span class="keyword">return</span> node(a.x - b.x, a.y - b.y);</div><div class="line">&#125;</div><div class="line"><span class="keyword">double</span> <span class="keyword">operator</span> ^(<span class="keyword">const</span> node &amp;a, <span class="keyword">const</span> node &amp;b) &#123;</div><div class="line">	<span class="keyword">return</span> a.x*b.y - a.y*b.x;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">double</span> <span class="title">cp</span><span class="params">(<span class="keyword">const</span> node &amp;a, <span class="keyword">const</span> node &amp;b, <span class="keyword">const</span> node &amp;c)</span> </span>&#123;</div><div class="line">	<span class="keyword">return</span> (b - a) ^ (c - a);</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">double</span> <span class="title">dis</span><span class="params">(<span class="keyword">const</span> node &amp;a, <span class="keyword">const</span> node &amp;b)</span> </span>&#123;</div><div class="line">	<span class="keyword">return</span> <span class="built_in">sqrt</span>((a.x - b.x)*(a.x - b.x) + (a.y - b.y)*(a.y - b.y));</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">bool</span> <span class="title">cmp</span><span class="params">(<span class="keyword">const</span> node &amp;a, <span class="keyword">const</span> node &amp;b)</span> </span>&#123;</div><div class="line">	<span class="keyword">double</span> ans = cp(v[<span class="number">0</span>], a, b);</div><div class="line">	<span class="comment">//极角相同的</span></div><div class="line">	<span class="keyword">if</span> (same(ans))<span class="keyword">return</span> dis(v[<span class="number">0</span>], a) - dis(v[<span class="number">0</span>], b) &lt;= <span class="number">0</span>;</div><div class="line">	<span class="keyword">return</span> ans&gt;<span class="number">0</span>;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</div><div class="line">	<span class="keyword">int</span> n, i, j, l;</div><div class="line">	<span class="keyword">while</span> (<span class="built_in">cin</span>&gt;&gt;n&gt;&gt;l) &#123;</div><div class="line">		<span class="keyword">int</span> pos = <span class="number">0</span>;</div><div class="line">		<span class="keyword">for</span> (i = <span class="number">0</span>; i&lt;n; ++i) &#123;</div><div class="line">			<span class="built_in">cin</span> &gt;&gt; v[i].x &gt;&gt; v[i].y;</div><div class="line">			<span class="keyword">if</span> (v[pos].y &gt;= v[i].y) &#123;<span class="comment">//找最左下的点</span></div><div class="line">				<span class="keyword">if</span> (v[pos].y == v[i].y) &#123;</div><div class="line">					<span class="keyword">if</span> (v[pos].x &gt; v[i].x)</div><div class="line">						pos = i;</div><div class="line">				&#125;</div><div class="line">				<span class="keyword">else</span> pos = i;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">double</span> S = <span class="number">0</span>;</div><div class="line">		node tep;</div><div class="line">		swap(v[pos], v[<span class="number">0</span>]);</div><div class="line">		sort(v + <span class="number">1</span>, v + n, cmp);<span class="comment">//对1~n-1进行极角排序</span></div><div class="line">		<span class="keyword">int</span> top = <span class="number">1</span>;</div><div class="line">		res[<span class="number">0</span>] = v[<span class="number">0</span>];<span class="comment">//res模拟栈</span></div><div class="line">		res[<span class="number">1</span>] = v[<span class="number">1</span>];</div><div class="line">		<span class="keyword">for</span> (i = <span class="number">2</span>; i&lt;n; ++i) &#123;</div><div class="line">			<span class="keyword">while</span> (cp(res[top - <span class="number">1</span>], res[top], v[i])&lt;<span class="number">0</span>)top--;<span class="comment">//考察栈顶元素 k2,k2下方元素k1,以及v[i]</span></div><div class="line">															<span class="comment">//如果在k2这一点直走或者向右拐了 将k2出栈</span></div><div class="line">			res[++top] = v[i];<span class="comment">//v[i]入栈</span></div><div class="line">		&#125;</div><div class="line">		<span class="keyword">for</span> (i = <span class="number">0</span>; i &lt;= top; ++i)</div><div class="line">			S += dis(res[(i + <span class="number">1</span>) % (top + <span class="number">1</span>)], res[i]);</div><div class="line">		<span class="built_in">printf</span>(<span class="string">"%.0lf\n"</span>, S + <span class="number">2.0</span>*PI*l);</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">OJ</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/09/21/POJ/POJ-1113-Wall/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-POJ/POJ-1066-Treasure-Hunt" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -875,90 +966,6 @@
 
 
   
-    <article id="post-POJ/POJ-3304-Segments" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/09/20/POJ/POJ-3304-Segments/">POJ 3304 Segments(几何)</a>
-    </h1>
-  
-
-        
-        <a href="/2017/09/20/POJ/POJ-3304-Segments/" class="archive-article-date">
-  	<time datetime="2017-09-20T00:03:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-09-20</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><strong>Description</strong><br>Given n segments in the two dimensional space, write a program, which determines if there exists a line such that after projecting these segments on it, all projected segments have at least one point in common.</p>
-<p><strong>Input</strong><br>Input begins with a number T showing the number of test cases and then, T test cases follow. Each test case begins with a line containing a positive integer n ≤ 100 showing the number of segments. After that, n lines containing four real numbers x1 y1 x2 y2 follow, in which (x1, y1) and (x2, y2) are the coordinates of the two endpoints for one of the segments.</p>
-<p><strong>Output</strong><br>For each test case, your program must output “Yes!”, if a line with desired property exists and must output “No!” otherwise. You must assume that two floating point numbers a and b are equal if |a - b| &lt; 10-8.</p>
-<p><strong>Sample Input</strong><br>3<br>2<br>1.0 2.0 3.0 4.0<br>4.0 5.0 6.0 7.0<br>3<br>0.0 0.0 0.0 1.0<br>0.0 1.0 0.0 2.0<br>1.0 1.0 2.0 1.0<br>3<br>0.0 0.0 0.0 1.0<br>0.0 2.0 0.0 3.0<br>1.0 1.0 2.0 1.0</p>
-<p><strong>Sample Output</strong><br>Yes!<br>Yes!<br>No!</p>
-<p>给定一些线段，问是否有直线L存在，使得所有线段到L的投影有至少一个公共点。<br>实际上就是问，是否存在一条直线K, 和所有这些线段都相交。L是K的垂线即可。<br>若存在一条直线与所有线段相交，该直线必定经过这些线段的某两个端点(否则可以平移或转动使之靠上端点）。枚举任意两个端点构造直线并看它是否与每条线段相交即可。</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cmath&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cstdio&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;algorithm&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="keyword">const</span> <span class="keyword">double</span> eps = <span class="number">1e-8</span>;</div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> maxn = <span class="number">110</span>;</div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">node</span> &#123;</span></div><div class="line">	<span class="keyword">double</span> x, y;</div><div class="line">	node()&#123;&#125;</div><div class="line">	node(<span class="keyword">double</span> a,<span class="keyword">double</span> b):x(a),y(b)&#123;&#125;</div><div class="line">	node <span class="keyword">operator</span> - (<span class="keyword">const</span> node &amp;a) &#123;</div><div class="line">		<span class="keyword">return</span> node(x - a.x, y - a.y);</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">double</span> <span class="keyword">operator</span> *(<span class="keyword">const</span> node  &amp;a) &#123;</div><div class="line">		<span class="keyword">return</span> x*a.x + y*a.y;</div><div class="line">	&#125;</div><div class="line">&#125;;</div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">line</span> &#123;</span></div><div class="line">	node a, b;</div><div class="line">	line()&#123;&#125;</div><div class="line">	line(node x,node y):a(x),b(y)&#123;&#125;</div><div class="line">&#125;v[maxn];</div><div class="line"><span class="keyword">double</span> <span class="keyword">operator</span> ^(node a, node b) &#123;</div><div class="line">	<span class="keyword">return</span> a.x*b.y - a.y*b.x;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">double</span> <span class="title">dis</span><span class="params">(node a, node b)</span> </span>&#123;</div><div class="line">	<span class="keyword">return</span> <span class="built_in">sqrt</span>((b - a)*(b - a));</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">double</span> <span class="title">isleft</span><span class="params">(node a, node b, node c)</span> </span>&#123;</div><div class="line">	<span class="keyword">return</span> ((b - a) ^ (c - a));</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">bool</span> <span class="title">cross</span><span class="params">(line a, line b)</span> </span>&#123;<span class="comment">//直线a与线段b是否有交点</span></div><div class="line">	<span class="keyword">return</span> isleft(b.a, a.a, a.b)*isleft(b.b, a.a, a.b) &lt;= eps;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">bool</span> <span class="title">check</span><span class="params">(line a, <span class="keyword">int</span> n)</span> </span>&#123;</div><div class="line">	<span class="keyword">if</span> (dis(a.a, a.b)&lt;eps)<span class="keyword">return</span> <span class="literal">false</span>;<span class="comment">//没有构成直线</span></div><div class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; ++i)</div><div class="line">		<span class="keyword">if</span> (!cross(a, v[i]))<span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">	<span class="keyword">return</span> <span class="literal">true</span>;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="keyword">int</span> T;</div><div class="line">	<span class="built_in">cin</span> &gt;&gt; T;</div><div class="line">	<span class="keyword">while</span> (T--) &#123;</div><div class="line">		<span class="keyword">int</span> n;</div><div class="line">		<span class="built_in">cin</span> &gt;&gt; n;</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; ++i)</div><div class="line">			<span class="built_in">cin</span> &gt;&gt; v[i].a.x &gt;&gt; v[i].a.y &gt;&gt; v[i].b.x &gt;&gt; v[i].b.y;</div><div class="line">		<span class="keyword">bool</span> flag = <span class="literal">false</span>;</div><div class="line">		<span class="keyword">if</span> (n &lt; <span class="number">3</span>)flag = <span class="literal">true</span>;</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n&amp;&amp;!flag; ++i)</div><div class="line">			<span class="keyword">for</span> (<span class="keyword">int</span> j = i; j &lt; n&amp;&amp;!flag; ++j)</div><div class="line">				<span class="keyword">if</span> (check(line(v[i].a, v[j].a), n) || check(line(v[i].a, v[j].b), n)</div><div class="line">					|| check(line(v[i].b, v[j].a), n) || check(line(v[i].b, v[j].b), n))</div><div class="line">					flag = <span class="literal">true</span>;</div><div class="line">		<span class="keyword">if</span> (flag)<span class="built_in">cout</span> &lt;&lt; <span class="string">"Yes!"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">		<span class="keyword">else</span> <span class="built_in">cout</span> &lt;&lt; <span class="string">"No!"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">OJ</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">枚举</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/09/20/POJ/POJ-3304-Segments/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/8/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="page-number" href="/page/8/">8</a><span class="page-number current">9</span><a class="page-number" href="/page/10/">10</a><a class="page-number" href="/page/11/">11</a><span class="space">&hellip;</span><a class="page-number" href="/page/61/">61</a><a class="extend next" rel="next" href="/page/10/">Next &raquo;</a>
@@ -1084,11 +1091,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Dijkstra</a>
+                <a href="javascript:void(0)" class="js-tag color4">BFS</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">BFS</a>
+                <a href="javascript:void(0)" class="js-tag color4">Dijkstra</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1144,11 +1151,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">C++练手题</a>
+                <a href="javascript:void(0)" class="js-tag color3">算法</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">算法</a>
+                <a href="javascript:void(0)" class="js-tag color2">C++练手题</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1164,19 +1171,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Java</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">枚举</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">组合数学</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Floyd</a>
+                <a href="javascript:void(0)" class="js-tag color5">Java</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1184,7 +1183,23 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Floyd</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">博弈论</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">组合数学</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Android</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">SQL</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1196,19 +1211,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Android</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">C++</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">随笔</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">SQL</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1224,15 +1231,15 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">操作系统</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">错题集</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">js</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">操作系统</a>
               </li>
              
               <li class="article-tag-list-item">
