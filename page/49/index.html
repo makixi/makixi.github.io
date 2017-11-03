@@ -162,6 +162,85 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-PAT/PAT-advanced-1033-To-Fill-or-Not-to-Fill" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/07/02/PAT/PAT-advanced-1033-To-Fill-or-Not-to-Fill/">PAT advanced 1033 To Fill or Not to Fill</a>
+    </h1>
+  
+
+        
+        <a href="/2017/07/02/PAT/PAT-advanced-1033-To-Fill-or-Not-to-Fill/" class="archive-article-date">
+  	<time datetime="2017-07-02T04:54:18.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-02</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>With highways available, driving a car from Hangzhou to any other city is easy. But since the tank capacity of a car is limited, we have to find gas stations on the way from time to time. Different gas station may give different price. You are asked to carefully design the cheapest route to go.</p>
+<p><strong>Input Specification:</strong><br>Each input file contains one test case. For each case, the first line contains 4 positive numbers: Cmax (&lt;= 100), the maximum capacity of the tank; D (&lt;=30000), the distance between Hangzhou and the destination city; Davg (&lt;=20), the average distance per unit gas that the car can run; and N (&lt;= 500), the total number of gas stations. Then N lines follow, each contains a pair of non-negative numbers: Pi, the unit gas price, and Di (&lt;=D), the distance between this station and Hangzhou, for i=1,…N. All the numbers in a line are separated by a space.</p>
+<p><strong>Output Specification:</strong><br>For each test case, print the cheapest price in a line, accurate up to 2 decimal places. It is assumed that the tank is empty at the beginning. If it is impossible to reach the destination, print “The maximum travel distance = X” where X is the maximum possible distance the car can run, accurate up to 2 decimal places.</p>
+<p><strong>Sample Input 1:</strong><br>50 1300 12 8<br>6.00 1250<br>7.00 600<br>7.00 150<br>7.10 0<br>7.20 200<br>7.50 400<br>7.30 1000<br>6.85 300<br><strong>Sample Output 1:</strong><br>749.17</p>
+<p><strong>Sample Input 2:</strong><br>50 1300 12 2<br>7.10 0<br>7.00 600<br><strong>Sample Output 2:</strong><br>The maximum travel distance = 1200.00</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;vector&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;algorithm&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> inf = <span class="number">999999</span>;</div><div class="line"><span class="keyword">int</span> cmax;			<span class="comment">//the maximum capacity of the tank</span></div><div class="line"><span class="keyword">int</span> d;			<span class="comment">//the distance to destination</span></div><div class="line"><span class="keyword">int</span> davg;	<span class="comment">//the average distance per unit gas that the car can run</span></div><div class="line"><span class="keyword">int</span> n;			<span class="comment">//total number of gas stations</span></div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">node</span> &#123;</span></div><div class="line">	<span class="keyword">double</span> p;		<span class="comment">//the unit gas price</span></div><div class="line">	<span class="keyword">double</span> d;		<span class="comment">//distance to the station</span></div><div class="line">&#125;;</div><div class="line"><span class="function"><span class="keyword">bool</span> <span class="title">cmp</span><span class="params">(node a, node b)</span> </span>&#123;</div><div class="line">	<span class="keyword">return</span> a.d &lt; b.d;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="keyword">double</span> cheapestPrice=<span class="number">0.0</span>;</div><div class="line">	<span class="built_in">cin</span> &gt;&gt; cmax &gt;&gt; d &gt;&gt; davg &gt;&gt; n;</div><div class="line">	<span class="built_in">vector</span>&lt;node&gt; vec(n+<span class="number">1</span>);</div><div class="line">	vec[<span class="number">0</span>].d = d;</div><div class="line">	vec[<span class="number">0</span>].p = <span class="number">0</span>;</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; ++i) &#123;</div><div class="line">		<span class="built_in">cin</span> &gt;&gt; vec[i].p &gt;&gt; vec[i].d;</div><div class="line">	&#125;</div><div class="line">	sort(vec.begin(), vec.end(), cmp);</div><div class="line">	<span class="keyword">if</span> (vec[<span class="number">0</span>].d != <span class="number">0</span>) &#123;</div><div class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"The maximum travel distance = 0.00"</span>;</div><div class="line">		<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">double</span> nowPrice = vec[<span class="number">0</span>].p;</div><div class="line">	<span class="keyword">double</span> nowDis = <span class="number">0.0</span>, leftDis = <span class="number">0.0</span>, totalPri = <span class="number">0.0</span>;</div><div class="line">	<span class="keyword">double</span> maxDis = <span class="number">0.0</span>;</div><div class="line">	<span class="keyword">while</span> (nowDis &lt; d) &#123;</div><div class="line">		maxDis = nowDis + cmax*davg;</div><div class="line">		<span class="keyword">double</span> minPrice = inf, minPriceDistance = <span class="number">0.0</span>;</div><div class="line">		<span class="keyword">bool</span> flag = <span class="number">0</span>;</div><div class="line">		<span class="comment">//能到达</span></div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n&amp;&amp;vec[i].d &lt;= maxDis; ++i) &#123;</div><div class="line">			<span class="comment">//距离要比我远</span></div><div class="line">			<span class="keyword">if</span> (vec[i].d &lt;= nowDis)<span class="keyword">continue</span>;</div><div class="line">			<span class="comment">//有比我更低价格的，就加油加到刚好能到达更低价格加油站的油</span></div><div class="line">			<span class="keyword">if</span> (vec[i].p &lt; nowPrice) &#123;</div><div class="line">				totalPri += (vec[i].d - nowDis - leftDis)*nowPrice / davg;</div><div class="line">				nowPrice = vec[i].p;</div><div class="line">				nowDis = vec[i].d;</div><div class="line">				leftDis = <span class="number">0.0</span>;</div><div class="line">				flag = <span class="number">1</span>;</div><div class="line">				<span class="keyword">break</span>;</div><div class="line">			&#125;</div><div class="line">			<span class="comment">//找出加油站中最便宜的</span></div><div class="line">			<span class="keyword">if</span> (vec[i].p &lt; minPrice) &#123;</div><div class="line">				minPrice = vec[i].p;</div><div class="line">				minPriceDistance = vec[i].d;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">		<span class="comment">//去最便宜的加油站</span></div><div class="line">		<span class="keyword">if</span> (flag == <span class="number">0</span> &amp;&amp; minPrice != inf) &#123;</div><div class="line">			totalPri += (nowPrice * (cmax - leftDis / davg));</div><div class="line">			leftDis = cmax * davg - (minPriceDistance - nowDis);</div><div class="line">			nowPrice = minPrice;</div><div class="line">			nowDis = minPriceDistance;</div><div class="line">		&#125;</div><div class="line">		<span class="comment">//没有加油站了但是还没到终点</span></div><div class="line">		<span class="keyword">if</span> (flag == <span class="number">0</span> &amp;&amp; minPrice == inf) &#123;</div><div class="line">			nowDis += cmax*davg;</div><div class="line">			<span class="built_in">printf</span>(<span class="string">"The maximum travel distance = %.2f"</span>, nowDis);</div><div class="line">			<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	<span class="built_in">printf</span>(<span class="string">"%.2f"</span>, totalPri);</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">PAT甲级</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/07/02/PAT/PAT-advanced-1033-To-Fill-or-Not-to-Fill/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-算法/贪心算法相关" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -965,85 +1044,6 @@
 
 
   
-    <article id="post-PAT/PAT-advanced-1112-Stucked-Keyboard" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/06/27/PAT/PAT-advanced-1112-Stucked-Keyboard/">PAT advanced 1112 Stucked Keyboard</a>
-    </h1>
-  
-
-        
-        <a href="/2017/06/27/PAT/PAT-advanced-1112-Stucked-Keyboard/" class="archive-article-date">
-  	<time datetime="2017-06-27T06:56:12.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-06-27</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>On a broken keyboard, some of the keys are always stucked. So when you type some sentences, the characters corresponding to those keys will appear repeatedly on screen for k times.<br>Now given a resulting string on screen, you are supposed to list all the possible stucked keys, and the original string.<br>Notice that there might be some characters that are typed repeatedly. The stucked key will always repeat output for a fixed k times whenever it is pressed. For example, when k=3, from the string “thiiis iiisss a teeeeeest” we know that the keys “i” and “e” might be stucked, but “s” is not even though it appears repeatedly sometimes. The original string could be “this isss a teest”.</p>
-<p><strong>Input Specification:</strong><br>Each input file contains one test case. For each case, the 1st line gives a positive integer k ( 1&lt;k&lt;=100 ) which is the output repeating times of a stucked key. The 2nd line contains the resulting string on screen, which consists of no more than 1000 characters from {a-z}, {0-9} and “_“. It is guaranteed that the string is non-empty.</p>
-<p><strong>Output Specification:</strong><br>For each test case, print in one line the possible stucked keys, in the order of being detected. Make sure that each key is printed once only. Then in the next line print the original string. It is guaranteed that there is at least one stucked key.</p>
-<p><strong>Sample Input:</strong><br>3<br>caseee1__thiiis_iiisss_a_teeeeeest</p>
-<p><strong>Sample Output:</strong><br>ei<br>case1__this_isss_a_teest</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;string&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;set&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="keyword">int</span> k;</div><div class="line">	<span class="built_in">string</span> a;</div><div class="line">	<span class="built_in">cin</span> &gt;&gt; k;</div><div class="line">	<span class="built_in">cin</span> &gt;&gt; a;</div><div class="line">	<span class="built_in">set</span>&lt;<span class="keyword">char</span>&gt; bad,good,print;</div><div class="line">	<span class="keyword">int</span> cnt = <span class="number">1</span>;</div><div class="line">	<span class="keyword">char</span> pre = <span class="string">' '</span>;</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; a.length(); ++i) &#123;</div><div class="line">		<span class="keyword">if</span> (a[i] == pre)cnt++;</div><div class="line">		<span class="keyword">else</span> &#123;</div><div class="line">			<span class="keyword">if</span>(cnt%k!=<span class="number">0</span>)</div><div class="line">				good.insert(pre);</div><div class="line">			cnt = <span class="number">1</span>;</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">if</span>(cnt%k==<span class="number">0</span>)bad.insert(a[i]);</div><div class="line">		pre = a[i];</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">for</span> (<span class="built_in">set</span>&lt;<span class="keyword">char</span>&gt;::iterator it = good.begin(); it != good.end(); ++it)</div><div class="line">		<span class="keyword">if</span> (bad.find(*it) != bad.end())bad.erase(*it);</div><div class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;a.length();++i)</div><div class="line">		<span class="keyword">if</span>(bad.find(a[i])!=bad.end()&amp;&amp;print.find(a[i])==print.end())&#123;</div><div class="line">		<span class="built_in">cout</span>&lt;&lt;a[i];</div><div class="line">		print.insert(a[i]);</div><div class="line">		&#125;</div><div class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; a.length(); ++i) &#123;</div><div class="line">		<span class="built_in">cout</span> &lt;&lt; a[i];</div><div class="line">		<span class="keyword">if</span> (bad.find(a[i]) != bad.end())i += k<span class="number">-1</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">PAT甲级</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/06/27/PAT/PAT-advanced-1112-Stucked-Keyboard/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/48/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/47/">47</a><a class="page-number" href="/page/48/">48</a><span class="page-number current">49</span><a class="page-number" href="/page/50/">50</a><a class="page-number" href="/page/51/">51</a><span class="space">&hellip;</span><a class="page-number" href="/page/61/">61</a><a class="extend next" rel="next" href="/page/50/">Next &raquo;</a>
@@ -1161,11 +1161,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">数学</a>
+                <a href="javascript:void(0)" class="js-tag color4">STL</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">STL</a>
+                <a href="javascript:void(0)" class="js-tag color3">数学</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1177,11 +1177,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">二分法</a>
+                <a href="javascript:void(0)" class="js-tag color4">BFS</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">BFS</a>
+                <a href="javascript:void(0)" class="js-tag color4">二分法</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1269,10 +1269,6 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">C++</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Android</a>
               </li>
              
@@ -1286,6 +1282,10 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">POJ</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">C++</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1309,15 +1309,15 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">HTML</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">错题集</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">js</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">HTML</a>
               </li>
              
               <li class="article-tag-list-item">
