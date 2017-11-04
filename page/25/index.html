@@ -162,6 +162,91 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-PAT/PAT-advanced-1130-Infix-Expression" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/08/21/PAT/PAT-advanced-1130-Infix-Expression/">PAT advanced 1130 Infix Expression</a>
+    </h1>
+  
+
+        
+        <a href="/2017/08/21/PAT/PAT-advanced-1130-Infix-Expression/" class="archive-article-date">
+  	<time datetime="2017-08-21T02:22:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-08-21</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Given a syntax tree (binary), you are supposed to output the corresponding infix expression, with parentheses reflecting the precedences of the operators.</p>
+<p><strong>Input Specification:</strong><br>Each input file contains one test case. For each case, the first line gives a positive integer N ( &lt;= 20 ) which is the total number of nodes in the syntax tree. Then N lines follow, each gives the information of a node (the i-th line corresponds to the i-th node) in the format:<br>data left_child right_child<br>where data is a string of no more than 10 characters, left_child and right_child are the indices of this node’s left and right children, respectively. The nodes are indexed from 1 to N. The NULL link is represented by -1. The figures 1 and 2 correspond to the samples 1 and 2, respectively.</p>
+<p><strong>Output Specification:</strong><br>For each case, print in a line the infix expression, with parentheses reflecting the precedences of the operators. Note that there must be no extra parentheses for the final expression, as is shown by the samples. There must be no space between any symbols.</p>
+<p><strong>Sample Input 1:</strong><br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">8</div><div class="line">* 8 7</div><div class="line">a -1 -1</div><div class="line">* 4 1</div><div class="line">+ 2 5</div><div class="line">b -1 -1</div><div class="line">d -1 -1</div><div class="line">- -1 6</div><div class="line">c -1 -1</div></pre></td></tr></table></figure></p>
+<p><strong>Sample Output 1:</strong><br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">(a+b)*(c*(<span class="_">-d</span>))</div></pre></td></tr></table></figure></p>
+<p><strong>Sample Input 2:</strong><br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">8</div><div class="line">2.35 -1 -1</div><div class="line">* 6 1</div><div class="line">- -1 4</div><div class="line">% 7 8</div><div class="line">+ 2 3</div><div class="line">a -1 -1</div><div class="line">str -1 -1</div><div class="line">871 -1 -1</div></pre></td></tr></table></figure></p>
+<p><strong>Sample Output 2:</strong><br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">(a*2.35)+(-(str%871))</div></pre></td></tr></table></figure></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;string&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="keyword">int</span> vis[<span class="number">21</span>],root;</div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">node</span>&#123;</span></div><div class="line">	<span class="keyword">int</span> lchild,rchild;</div><div class="line">	<span class="built_in">string</span> val;</div><div class="line">&#125;v[<span class="number">21</span>];</div><div class="line"><span class="function"><span class="built_in">string</span> <span class="title">dfs</span><span class="params">(<span class="keyword">int</span> curr)</span></span>&#123;</div><div class="line">	<span class="keyword">if</span>(curr==<span class="number">-1</span>)<span class="keyword">return</span> <span class="string">""</span>;</div><div class="line">	<span class="keyword">if</span>(v[curr].rchild!=<span class="number">-1</span>)</div><div class="line">		<span class="keyword">if</span>(root!=curr)</div><div class="line">			<span class="keyword">return</span> <span class="string">"("</span>+dfs(v[curr].lchild)+v[curr].val+dfs(v[curr].rchild)+<span class="string">")"</span>;</div><div class="line">		<span class="keyword">else</span> <span class="keyword">return</span> dfs(v[curr].lchild)+v[curr].val+dfs(v[curr].rchild);</div><div class="line">	<span class="keyword">return</span> v[curr].val;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</div><div class="line">    <span class="keyword">int</span> n;</div><div class="line">    <span class="built_in">cin</span>&gt;&gt;n;</div><div class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=n;++i)&#123;</div><div class="line">    	<span class="built_in">cin</span>&gt;&gt;v[i].val&gt;&gt;v[i].lchild&gt;&gt;v[i].rchild;</div><div class="line">    	<span class="keyword">if</span>(v[i].lchild!=<span class="number">-1</span>)vis[v[i].lchild]=<span class="literal">true</span>;</div><div class="line">    	<span class="keyword">if</span>(v[i].rchild!=<span class="number">-1</span>)vis[v[i].rchild]=<span class="literal">true</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=n;++i)</div><div class="line">		<span class="keyword">if</span>(!vis[i])&#123;</div><div class="line">			root=i;</div><div class="line">			<span class="keyword">break</span>;</div><div class="line">		&#125;</div><div class="line">	<span class="built_in">cout</span>&lt;&lt;dfs(root);</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;urn <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">PAT甲级</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">树</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/08/21/PAT/PAT-advanced-1130-Infix-Expression/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-PAT/PAT-advanced-1131-Subway-Map-30" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -914,100 +999,6 @@
 
 
   
-    <article id="post-天梯赛/L2-004-这是二叉搜索树吗？" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/08/20/天梯赛/L2-004-这是二叉搜索树吗？/">L2-004.这是二叉搜索树吗？</a>
-    </h1>
-  
-
-        
-        <a href="/2017/08/20/天梯赛/L2-004-这是二叉搜索树吗？/" class="archive-article-date">
-  	<time datetime="2017-08-20T05:41:02.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-08-20</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>一棵二叉搜索树可被递归地定义为具有下列性质的二叉树：对于任一结点，</p>
-<ul>
-<li>其左子树中所有结点的键值小于该结点的键值；</li>
-<li>其右子树中所有结点的键值大于等于该结点的键值；</li>
-<li>其左右子树都是二叉搜索树。</li>
-<li>所谓二叉搜索树的“镜像”，即将所有结点的左右子树对换位置后所得到的树。<br>给定一个整数键值序列，现请你编写程序，判断这是否是对一棵二叉搜索树或其镜像进行前序遍历的结果。</li>
-</ul>
-<p><strong>输入格式：</strong><br>输入的第一行给出正整数N（&lt;=1000）。随后一行给出N个整数键值，其间以空格分隔。</p>
-<p><strong>输出格式：</strong><br>如果输入序列是对一棵二叉搜索树或其镜像进行前序遍历的结果，则首先在一行中输出“YES”，然后在下一行输出该树后序遍历的结果。数字间有1个空格，一行的首尾不得有多余空格。若答案是否，则输出“NO”。</p>
-<p><strong>输入样例1：</strong><br>7<br>8 6 5 7 10 8 11</p>
-<p><strong>输出样例1：</strong><br>YES<br>5 7 6 8 11 10 8</p>
-<p><strong>输入样例2：</strong><br>7<br>8 10 11 8 6 7 5</p>
-<p><strong>输出样例2：</strong><br>YES<br>11 8 10 7 5 6 8</p>
-<p><strong>输入样例3：</strong><br>7<br>8 6 8 5 10 9 11</p>
-<p><strong>输出样例3：</strong><br>NO</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;vector&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;algorithm&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">node</span>&#123;</span></div><div class="line">	<span class="keyword">int</span> val;</div><div class="line">	node *lchild,*rchild;</div><div class="line">	node()&#123;</div><div class="line">		lchild=rchild=<span class="literal">NULL</span>;</div><div class="line">	&#125;</div><div class="line">&#125;;</div><div class="line"><span class="function">node* <span class="title">buildTree</span><span class="params">(node* root,<span class="keyword">int</span> val)</span></span>&#123;</div><div class="line">	<span class="keyword">if</span>(root==<span class="literal">NULL</span>)&#123;</div><div class="line">		root =<span class="keyword">new</span> node();</div><div class="line">		root-&gt;val=val;</div><div class="line">	&#125;<span class="keyword">else</span> <span class="keyword">if</span>(root-&gt;val&gt;val)&#123;</div><div class="line">		root-&gt;lchild=buildTree(root-&gt;lchild,val);</div><div class="line">	&#125;<span class="keyword">else</span></div><div class="line">		root-&gt;rchild=buildTree(root-&gt;rchild,val);</div><div class="line">	<span class="keyword">return</span> root;</div><div class="line">&#125;</div><div class="line"><span class="function">node* <span class="title">buildMirrorTree</span><span class="params">(node* root,<span class="keyword">int</span> val)</span></span>&#123;</div><div class="line">	<span class="keyword">if</span>(root==<span class="literal">NULL</span>)&#123;</div><div class="line">		root =<span class="keyword">new</span> node();</div><div class="line">		root-&gt;val=val;</div><div class="line">	&#125;<span class="keyword">else</span> <span class="keyword">if</span>(root-&gt;val&gt;val)&#123;</div><div class="line">		root-&gt;rchild=buildMirrorTree(root-&gt;rchild,val);</div><div class="line">	&#125;<span class="keyword">else</span></div><div class="line">		root-&gt;lchild=buildMirrorTree(root-&gt;lchild,val);</div><div class="line">	<span class="keyword">return</span> root;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">preTraverse</span><span class="params">(node *root,<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; &amp;v)</span></span>&#123;</div><div class="line">	v.push_back(root-&gt;val);</div><div class="line">	<span class="keyword">if</span>(root-&gt;lchild!=<span class="literal">NULL</span>)preTraverse(root-&gt;lchild,v);</div><div class="line">	<span class="keyword">if</span>(root-&gt;rchild!=<span class="literal">NULL</span>)preTraverse(root-&gt;rchild,v);</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">postTraverse</span><span class="params">(node *root,<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; &amp;v)</span></span>&#123;</div><div class="line">	<span class="keyword">if</span>(root-&gt;lchild!=<span class="literal">NULL</span>)postTraverse(root-&gt;lchild,v);</div><div class="line">	<span class="keyword">if</span>(root-&gt;rchild!=<span class="literal">NULL</span>)postTraverse(root-&gt;rchild,v);</div><div class="line">	v.push_back(root-&gt;val);</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</div><div class="line">	<span class="keyword">int</span> n,tmp;</div><div class="line">	<span class="built_in">cin</span>&gt;&gt;n;</div><div class="line">	node *root=<span class="literal">NULL</span>;</div><div class="line">	node *rootMirror=<span class="literal">NULL</span>;</div><div class="line">	<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; origin,pre,preMirror;</div><div class="line">	<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; post,postMirror;</div><div class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;n;++i)&#123;</div><div class="line">		<span class="built_in">cin</span>&gt;&gt;tmp;</div><div class="line">		origin.push_back(tmp);</div><div class="line">		root=buildTree(root,tmp);</div><div class="line">		rootMirror=buildMirrorTree(rootMirror,tmp);</div><div class="line">	&#125;</div><div class="line">	preTraverse(root,pre);</div><div class="line">	preTraverse(rootMirror,preMirror);</div><div class="line">	<span class="keyword">if</span>(pre==origin)&#123;</div><div class="line">		postTraverse(root,post);</div><div class="line">		<span class="built_in">cout</span>&lt;&lt;<span class="string">"YES"</span>&lt;&lt;<span class="built_in">endl</span>;</div><div class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;n;++i)&#123;</div><div class="line">			<span class="keyword">if</span>(i)<span class="built_in">cout</span>&lt;&lt;<span class="string">" "</span>;</div><div class="line">			<span class="built_in">cout</span>&lt;&lt;post[i];</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">	&#125;<span class="keyword">else</span>&#123;</div><div class="line">		<span class="keyword">if</span>(preMirror==origin)&#123;</div><div class="line">			postTraverse(rootMirror,post);</div><div class="line">			<span class="built_in">cout</span>&lt;&lt;<span class="string">"YES"</span>&lt;&lt;<span class="built_in">endl</span>;</div><div class="line">			<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;n;++i)&#123;</div><div class="line">				<span class="keyword">if</span>(i)<span class="built_in">cout</span>&lt;&lt;<span class="string">" "</span>;</div><div class="line">				<span class="built_in">cout</span>&lt;&lt;post[i];</div><div class="line">			&#125;</div><div class="line">			<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">		&#125;<span class="keyword">else</span></div><div class="line">			<span class="built_in">cout</span>&lt;&lt;<span class="string">"NO"</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> java.util.LinkedList;</div><div class="line"><span class="keyword">import</span> java.util.Scanner;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</div><div class="line">	<span class="keyword">public</span> <span class="keyword">static</span> LinkedList&lt;Integer&gt; pre=<span class="keyword">new</span> LinkedList&lt;&gt;();</div><div class="line">	<span class="keyword">public</span> <span class="keyword">static</span> LinkedList&lt;Integer&gt; post=<span class="keyword">new</span> LinkedList&lt;&gt;();</div><div class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> isMirror;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		Scanner in=<span class="keyword">new</span> Scanner(System.in);</div><div class="line">		<span class="keyword">int</span> n=in.nextInt();</div><div class="line">		isMirror=<span class="keyword">false</span>;</div><div class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;n;++i)</div><div class="line">			pre.add(in.nextInt());</div><div class="line">		getpost(<span class="number">0</span>,n-<span class="number">1</span>);</div><div class="line">		<span class="keyword">if</span>(post.size()!=n) &#123;</div><div class="line">			isMirror=<span class="keyword">true</span>;</div><div class="line">			post.clear();</div><div class="line">			getpost(<span class="number">0</span>,n-<span class="number">1</span>);</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">if</span>(post.size()==n) &#123;</div><div class="line">			System.out.printf(<span class="string">"YES\n%d"</span>, post.get(<span class="number">0</span>));</div><div class="line">			<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;n;++i)System.out.print(<span class="string">" "</span>+post.get(i));</div><div class="line">		&#125;<span class="keyword">else</span> System.out.print(<span class="string">"NO"</span>);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">getpost</span><span class="params">(<span class="keyword">int</span> root,<span class="keyword">int</span> tail)</span> </span>&#123;</div><div class="line">		<span class="keyword">if</span>(root&gt;tail)<span class="keyword">return</span>;</div><div class="line">		<span class="keyword">int</span> i=root+<span class="number">1</span>,j=tail;</div><div class="line">		<span class="keyword">if</span>(!isMirror) &#123;</div><div class="line">			<span class="keyword">while</span>(i&lt;=tail&amp;&amp;pre.get(root)&gt;pre.get(i))++i;</div><div class="line">			<span class="keyword">while</span>(j&gt;root&amp;&amp;pre.get(root)&lt;=pre.get(j))--j;</div><div class="line">		&#125;<span class="keyword">else</span> &#123;</div><div class="line">			<span class="keyword">while</span>(i&lt;=tail&amp;&amp;pre.get(root)&lt;=pre.get(i))++i;</div><div class="line">			<span class="keyword">while</span>(j&gt;root&amp;&amp;pre.get(root)&gt;pre.get(j))--j;</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">if</span>(i-j!=<span class="number">1</span>)<span class="keyword">return</span>;</div><div class="line">		getpost(root+<span class="number">1</span>,j);</div><div class="line">		getpost(i,tail);</div><div class="line">		post.addLast(pre.get(root));</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">BST</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">天梯赛</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/08/20/天梯赛/L2-004-这是二叉搜索树吗？/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/24/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/23/">23</a><a class="page-number" href="/page/24/">24</a><span class="page-number current">25</span><a class="page-number" href="/page/26/">26</a><a class="page-number" href="/page/27/">27</a><span class="space">&hellip;</span><a class="page-number" href="/page/61/">61</a><a class="extend next" rel="next" href="/page/26/">Next &raquo;</a>
@@ -1137,15 +1128,19 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">DP</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">BFS</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">二分法</a>
+                <a href="javascript:void(0)" class="js-tag color3">DP</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">贪心算法</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">01背包</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1161,15 +1156,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">贪心算法</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">01背包</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Java</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">二分法</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1197,6 +1188,26 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Android</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">SQL</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">递归</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">位</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">POJ</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">PAT甲级</a>
               </li>
              
@@ -1217,10 +1228,6 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">递归</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">逻辑</a>
               </li>
              
@@ -1233,22 +1240,6 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Android</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">SQL</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">位</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">POJ</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">C++</a>
               </li>
              
@@ -1257,15 +1248,15 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">天梯赛</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">排序</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">分治</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">天梯赛</a>
               </li>
              
               <li class="article-tag-list-item">
