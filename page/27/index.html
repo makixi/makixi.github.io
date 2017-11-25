@@ -162,6 +162,86 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-天梯赛/L2-002-链表去重" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/08/20/天梯赛/L2-002-链表去重/">L2-002.链表去重</a>
+    </h1>
+  
+
+        
+        <a href="/2017/08/20/天梯赛/L2-002-链表去重/" class="archive-article-date">
+  	<time datetime="2017-08-20T03:49:52.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-08-20</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>给定一个带整数键值的单链表L，本题要求你编写程序，删除那些键值的绝对值有重复的结点。即对任意键值K，只有键值或其绝对值等于K的第一个结点可以被保留。同时，所有被删除的结点必须被保存在另外一个链表中。例如：另L为21→-15→-15→-7→15，则你必须输出去重后的链表21→-15→-7、以及被删除的链表-15→15。</p>
+<p><strong>输入格式：</strong><br>输入第一行包含链表第一个结点的地址、以及结点个数N（&lt;= 105 的正整数）。结点地址是一个非负的5位整数，NULL指针用-1表示。<br>随后N行，每行按下列格式给出一个结点的信息：<br>Address Key Next<br>其中Address是结点的地址，Key是绝对值不超过104的整数，Next是下一个结点的地址。</p>
+<p><strong>输出格式：</strong><br>首先输出去重后的链表，然后输出被删除结点组成的链表。每个结点占一行，按输入的格式输出。</p>
+<p><strong>输入样例：</strong><br>00100 5<br>99999 -7 87654<br>23854 -15 00000<br>87654 15 -1<br>00000 -15 99999<br>00100 21 23854</p>
+<p><strong>输出样例：</strong><br>00100 21 23854<br>23854 -15 99999<br>99999 -7 -1<br>00000 -15 87654<br>87654 15 -1</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;vector&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;string&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cstring&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cmath&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;algorithm&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> maxn=<span class="number">100001</span>;</div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Node</span>&#123;</span></div><div class="line">	<span class="keyword">int</span> ad;</div><div class="line">	<span class="keyword">int</span> val;</div><div class="line">	<span class="keyword">int</span> nex;</div><div class="line">&#125;node[<span class="number">100001</span>];</div><div class="line"><span class="keyword">bool</span> vis[maxn]=&#123;<span class="literal">false</span>&#125;;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</div><div class="line">	<span class="keyword">int</span> fad,n,tmp;</div><div class="line">	<span class="built_in">cin</span>&gt;&gt;fad&gt;&gt;n;</div><div class="line">	<span class="built_in">vector</span>&lt;Node&gt; v1,v2;</div><div class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;n;++i)&#123;</div><div class="line">		<span class="built_in">scanf</span>(<span class="string">"%d"</span>,&amp;tmp);</div><div class="line">		<span class="built_in">scanf</span>(<span class="string">"%d %d"</span>,&amp;node[tmp].val,&amp;node[tmp].nex);</div><div class="line">		node[tmp].ad=tmp;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">while</span>(fad!=<span class="number">-1</span>)&#123;</div><div class="line">		<span class="keyword">if</span>(!vis[<span class="built_in">abs</span>(node[fad].val)])&#123;</div><div class="line">			vis[<span class="built_in">abs</span>(node[fad].val)]=<span class="literal">true</span>;</div><div class="line">			v1.push_back(node[fad]);</div><div class="line">		&#125;<span class="keyword">else</span></div><div class="line">			v2.push_back(node[fad]);</div><div class="line">		fad=node[fad].nex;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;v1.size();++i)</div><div class="line">		<span class="keyword">if</span>(i!=v1.size()<span class="number">-1</span>)</div><div class="line">			<span class="built_in">printf</span>(<span class="string">"%05d %d %05d\n"</span>,v1[i].ad,v1[i].val,v1[i+<span class="number">1</span>].ad);</div><div class="line">		<span class="keyword">else</span></div><div class="line">			<span class="built_in">printf</span>(<span class="string">"%05d %d -1\n"</span>,v1[i].ad,v1[i].val);</div><div class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;v2.size();++i)</div><div class="line">		<span class="keyword">if</span>(i!=v2.size()<span class="number">-1</span>)</div><div class="line">			<span class="built_in">printf</span>(<span class="string">"%05d %d %05d\n"</span>,v2[i].ad,v2[i].val,v2[i+<span class="number">1</span>].ad);</div><div class="line">		<span class="keyword">else</span></div><div class="line">			<span class="built_in">printf</span>(<span class="string">"%05d %d -1\n"</span>,v2[i].ad,v2[i].val);</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> java.util.Arrays;</div><div class="line"><span class="keyword">import</span> java.util.Scanner;</div><div class="line"><span class="keyword">import</span> java.util.Vector;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</div><div class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> maxn=<span class="number">1000001</span>;</div><div class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> vis[]=<span class="keyword">new</span> <span class="keyword">boolean</span>[maxn];</div><div class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> nex[]=<span class="keyword">new</span> <span class="keyword">int</span> [maxn];</div><div class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> val[]=<span class="keyword">new</span> <span class="keyword">int</span> [maxn];</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		Scanner in=<span class="keyword">new</span> Scanner(System.in);</div><div class="line">		<span class="keyword">int</span> fad=in.nextInt(),n=in.nextInt();</div><div class="line">		Vector&lt;Integer&gt; v1=<span class="keyword">new</span> Vector&lt;&gt;();</div><div class="line">		Vector&lt;Integer&gt; v2=<span class="keyword">new</span> Vector&lt;&gt;();</div><div class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;n;++i) &#123;</div><div class="line">			<span class="keyword">int</span> tmp=in.nextInt();</div><div class="line">			val[tmp]=in.nextInt();nex[tmp]=in.nextInt();</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">while</span>(fad!=-<span class="number">1</span>) &#123;</div><div class="line">			<span class="keyword">if</span>(!vis[Math.abs(val[fad])]) &#123;</div><div class="line">				vis[Math.abs(val[fad])]=<span class="keyword">true</span>;</div><div class="line">				v1.add(fad);</div><div class="line">			&#125;<span class="keyword">else</span> v2.add(fad);</div><div class="line">			fad=nex[fad];</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;v1.size();++i) &#123;</div><div class="line">			<span class="keyword">if</span>(i!=v1.size()-<span class="number">1</span>)System.out.printf(<span class="string">"%05d %d %05d\n"</span>, v1.get(i),val[v1.get(i)],v1.get(i+<span class="number">1</span>));</div><div class="line">			<span class="keyword">else</span> System.out.printf(<span class="string">"%05d %d -1\n"</span>, v1.get(i),val[v1.get(i)]);</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;v2.size();++i) &#123;</div><div class="line">			<span class="keyword">if</span>(i!=v2.size()-<span class="number">1</span>)System.out.printf(<span class="string">"%05d %d %05d\n"</span>, v2.get(i),val[v2.get(i)],v2.get(i+<span class="number">1</span>));</div><div class="line">			<span class="keyword">else</span> System.out.printf(<span class="string">"%05d %d -1\n"</span>, v2.get(i),val[v2.get(i)]);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">天梯赛</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/08/20/天梯赛/L2-002-链表去重/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-天梯赛/L2-001-紧急救援" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -900,90 +980,6 @@
 
 
   
-    <article id="post-HDOJ/HDOJ-1059-Dividing" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/08/19/HDOJ/HDOJ-1059-Dividing/">HDOJ 1059 Dividing(多重背包)</a>
-    </h1>
-  
-
-        
-        <a href="/2017/08/19/HDOJ/HDOJ-1059-Dividing/" class="archive-article-date">
-  	<time datetime="2017-08-19T03:43:35.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-08-19</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><strong>Problem Description</strong><br>Marsha and Bill own a collection of marbles. They want to split the collection among themselves so that both receive an equal share of the marbles. This would be easy if all the marbles had the same value, because then they could just split the collection in half. But unfortunately, some of the marbles are larger, or more beautiful than others. So, Marsha and Bill start by assigning a value, a natural number between one and six, to each marble. Now they want to divide the marbles so that each of them gets the same total value.<br>Unfortunately, they realize that it might be impossible to divide the marbles in this way (even if the total value of all marbles is even). For example, if there are one marble of value 1, one of value 3 and two of value 4, then they cannot be split into sets of equal value. So, they ask you to write a program that checks whether there is a fair partition of the marbles.</p>
-<p><strong>Input</strong><br>Each line in the input describes one collection of marbles to be divided. The lines consist of six non-negative integers n1, n2, …, n6, where ni is the number of marbles of value i. So, the example from above would be described by the input-line <code>1 0 1 2 0 0</code>. The maximum total number of marbles will be 20000.<br>The last line of the input file will be <code>0 0 0 0 0 0</code>; do not process this line.</p>
-<p><strong>Output</strong><br>For each colletcion, output <code>Collection #k:</code>, where k is the number of the test case, and then either <code>Can be divided.</code> or <code>Can&#39;t be divided.</code>.<br>Output a blank line after each test case.</p>
-<p><strong>Sample Input</strong><br>1 0 1 2 0 0<br>1 0 0 0 1 1<br>0 0 0 0 0 0</p>
-<p><strong>Sample Output</strong><br>Collection #1:<br>Can’t be divided.</p>
-<p>Collection #2:<br>Can be divided.</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;vector&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;algorithm&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cmath&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="function"><span class="keyword">const</span> <span class="keyword">double</span> <span class="title">eps</span><span class="params">(<span class="number">1e-8</span>)</span></span>;</div><div class="line"><span class="keyword">int</span> n;</div><div class="line"><span class="keyword">int</span> tmp;</div><div class="line"><span class="keyword">bool</span> f[<span class="number">60010</span>];</div><div class="line"><span class="keyword">int</span> all;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</div><div class="line">    <span class="keyword">int</span> t[<span class="number">7</span>];</div><div class="line">    <span class="keyword">int</span> cas = <span class="number">0</span>;</div><div class="line">    <span class="keyword">while</span>(~<span class="built_in">scanf</span>(<span class="string">"%d"</span>, t + <span class="number">1</span>))&#123;</div><div class="line">        cas++;</div><div class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">2</span>; i &lt;= <span class="number">6</span>; i++) <span class="built_in">scanf</span>(<span class="string">"%d"</span>, t + i);</div><div class="line">        <span class="keyword">if</span>(!t[<span class="number">1</span>] &amp;&amp;!t[<span class="number">2</span>] &amp;&amp; !t[<span class="number">3</span>] &amp;&amp; !t[<span class="number">4</span>] &amp;&amp; !t[<span class="number">5</span>] &amp;&amp; !t[<span class="number">6</span>])</div><div class="line">			<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">        <span class="built_in">memset</span>(f, <span class="number">0</span>, <span class="keyword">sizeof</span>(f));</div><div class="line">        f[<span class="number">0</span>] = <span class="literal">true</span>;</div><div class="line">        all = <span class="number">0</span>;</div><div class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= <span class="number">6</span>; i++)</div><div class="line">            all += i*t[i];</div><div class="line">        <span class="keyword">if</span>(all &amp; <span class="number">1</span>)&#123;</div><div class="line">            <span class="built_in">printf</span>(<span class="string">"Collection #%d:\nCan't be divided.\n\n"</span>, cas);</div><div class="line">            <span class="keyword">continue</span>;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= <span class="number">6</span>; i++)&#123;</div><div class="line">            <span class="keyword">int</span> k = <span class="number">1</span>;</div><div class="line">            <span class="keyword">while</span>(k &lt; t[i])&#123;</div><div class="line">                <span class="keyword">for</span>(<span class="keyword">int</span> j = (all &gt;&gt; <span class="number">1</span>); j &gt;= k*i; j--)</div><div class="line">                    f[j] = f[j] || f[j - k*i];</div><div class="line">                t[i] -= k;</div><div class="line">                k *= <span class="number">2</span>;</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> j = (all &gt;&gt; <span class="number">1</span>); j &gt;= t[i]*i; j--)</div><div class="line">                f[j] = f[j] || f[j - t[i]*i];</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">if</span>(f[all &gt;&gt; <span class="number">1</span>])</div><div class="line">            <span class="built_in">printf</span>(<span class="string">"Collection #%d:\nCan be divided.\n\n"</span>, cas);</div><div class="line">        <span class="keyword">else</span></div><div class="line">            <span class="built_in">printf</span>(<span class="string">"Collection #%d:\nCan't be divided.\n\n"</span>,cas);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">OJ</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">01背包</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/08/19/HDOJ/HDOJ-1059-Dividing/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/26/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/25/">25</a><a class="page-number" href="/page/26/">26</a><span class="page-number current">27</span><a class="page-number" href="/page/28/">28</a><a class="page-number" href="/page/29/">29</a><span class="space">&hellip;</span><a class="page-number" href="/page/62/">62</a><a class="extend next" rel="next" href="/page/28/">Next &raquo;</a>
@@ -1101,11 +1097,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">数学</a>
+                <a href="javascript:void(0)" class="js-tag color3">算法</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">算法</a>
+                <a href="javascript:void(0)" class="js-tag color3">数学</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1285,11 +1281,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">操作系统</a>
+                <a href="javascript:void(0)" class="js-tag color5">HTML</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">HTML</a>
+                <a href="javascript:void(0)" class="js-tag color5">操作系统</a>
               </li>
              
               <li class="article-tag-list-item">

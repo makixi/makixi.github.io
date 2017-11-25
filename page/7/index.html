@@ -162,6 +162,96 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-POJ/POJ-1475-Pushing-Boxes" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/10/03/POJ/POJ-1475-Pushing-Boxes/">POJ 1475 Pushing Boxes(A*+BFS)</a>
+    </h1>
+  
+
+        
+        <a href="/2017/10/03/POJ/POJ-1475-Pushing-Boxes/" class="archive-article-date">
+  	<time datetime="2017-10-03T05:56:56.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-10-03</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong>Description</strong><br>Imagine you are standing inside a two-dimensional maze composed of square cells which may or may not be filled with rock. You can move north, south, east or west one cell at a step. These moves are called walks.<br>One of the empty cells contains a box which can be moved to an adjacent free cell by standing next to the box and then moving in the direction of the box. Such a move is called a push. The box cannot be moved in any other way than by pushing, which means that if you push it into a corner you can never get it out of the corner again.<br>One of the empty cells is marked as the target cell. Your job is to bring the box to the target cell by a sequence of walks and pushes. As the box is very heavy, you would like to minimize the number of pushes. Can you write a program that will work out the best such sequence?<br><img src="https://github.com/makixi/makixi.github.io/raw/master/img/%E5%88%B7%E9%A2%98%E4%B8%93%E7%94%A8%E5%9B%BE/POJ1475.jpg" alt="POJ1475"></p>
+<p><strong>Input</strong><br>The input contains the descriptions of several mazes. Each maze description starts with a line containing two integers r and c (both &lt;= 20) representing the number of rows and columns of the maze.<br>Following this are r lines each containing c characters. Each character describes one cell of the maze. A cell full of rock is indicated by a <code>#</code> and an empty cell is represented by a <code>.</code>. Your starting position is symbolized by <code>S</code>, the starting position of the box by <code>B</code> and the target cell by <code>T</code>.<br>Input is terminated by two zeroes for r and c.</p>
+<p><strong>Output</strong><br>For each maze in the input, first print the number of the maze, as shown in the sample output. Then, if it is impossible to bring the box to the target cell, print ``Impossible.’’.<br>Otherwise, output a sequence that minimizes the number of pushes. If there is more than one such sequence, choose the one that minimizes the number of total moves (walks and pushes). If there is still more than one such sequence, any one is acceptable.<br>Print the sequence as a string of the characters N, S, E, W, n, s, e and w where uppercase letters stand for pushes, lowercase letters stand for walks and the different letters stand for the directions north, south, east and west.<br>Output a single blank line after each test case.</p>
+<p><strong>Sample Input</strong><br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">1 7</div><div class="line">SB....T</div><div class="line">1 7</div><div class="line">SB..<span class="comment">#.T</span></div><div class="line">7 11</div><div class="line"><span class="comment">###########</span></div><div class="line"><span class="comment">#T##......#</span></div><div class="line"><span class="comment">#.#.#..####</span></div><div class="line"><span class="comment">#....B....#</span></div><div class="line"><span class="comment">#.######..#</span></div><div class="line"><span class="comment">#.....S...#</span></div><div class="line"><span class="comment">###########</span></div><div class="line">8 4</div><div class="line">....</div><div class="line">.<span class="comment">##.</span></div><div class="line">.<span class="comment">#..</span></div><div class="line">.<span class="comment">#..</span></div><div class="line">.<span class="comment">#.B</span></div><div class="line">.<span class="comment">##S</span></div><div class="line">....</div><div class="line"><span class="comment">###T</span></div><div class="line">0 0</div></pre></td></tr></table></figure></p>
+<p><strong>Sample Output</strong><br>Maze #1<br>EEEEE</p>
+<p>Maze #2<br>Impossible.</p>
+<p>Maze #3<br>eennwwWWWWeeeeeesswwwwwwwnNN</p>
+<p>Maze #4<br>swwwnnnnnneeesssSSS</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;queue&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cstring&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;algorithm&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> inf = <span class="number">0x3f3f3f3f</span>;</div><div class="line"><span class="keyword">int</span> r, c;</div><div class="line"><span class="keyword">int</span> dx[] = &#123; <span class="number">-1</span>,<span class="number">1</span>,<span class="number">0</span>,<span class="number">0</span> &#125;;<span class="comment">//N S W E</span></div><div class="line"><span class="keyword">int</span> dy[] = &#123; <span class="number">0</span>,<span class="number">0</span>,<span class="number">-1</span>,<span class="number">1</span> &#125;;</div><div class="line"><span class="keyword">int</span> mark[<span class="number">22</span>][<span class="number">22</span>][<span class="number">22</span>][<span class="number">22</span>][<span class="number">2</span>];		<span class="comment">//记录这四个坐标 push以及walk的最小值</span></div><div class="line"><span class="keyword">int</span> fa[<span class="number">22</span>][<span class="number">22</span>][<span class="number">22</span>][<span class="number">22</span>][<span class="number">4</span>];	<span class="comment">//记录父节点的四个坐标 sx sy boxx boxy</span></div><div class="line"><span class="keyword">char</span> maze[<span class="number">22</span>][<span class="number">22</span>];</div><div class="line"><span class="keyword">bool</span> success;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">node</span> &#123;</span></div><div class="line">	<span class="keyword">int</span> x, y;</div><div class="line">&#125;s,b,t;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">state</span> &#123;</span></div><div class="line">	node s, b;</div><div class="line">	<span class="keyword">int</span> push, walk;</div><div class="line">	<span class="keyword">bool</span> <span class="keyword">operator</span> &lt; (<span class="keyword">const</span> state &amp;a)<span class="keyword">const</span> &#123;</div><div class="line">		<span class="keyword">if</span> (push != a.push)<span class="keyword">return</span> a.push &lt; push;</div><div class="line">		<span class="keyword">return</span> a.walk &lt; walk;</div><div class="line">	&#125;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">bool</span> <span class="title">judge</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y)</span> </span>&#123;</div><div class="line">	<span class="keyword">if</span> (x &lt;= <span class="number">0</span> || y &lt;= <span class="number">0</span> || x &gt; r || y &gt; c)<span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">	<span class="keyword">if</span> (maze[x][y] == <span class="string">'#'</span>)<span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">	<span class="keyword">return</span> <span class="literal">true</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">outputpath</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y, <span class="keyword">int</span> g)</span></span>&#123;</div><div class="line">	<span class="keyword">char</span> res[<span class="number">10000</span>];</div><div class="line">	<span class="keyword">int</span> x1 = x, y1 = y, x2 = t.x, y2 = t.y;<span class="comment">//我的位置和箱子的位置</span></div><div class="line">	<span class="keyword">int</span> j = g;</div><div class="line">	<span class="keyword">while</span> (j&gt;<span class="number">0</span>)&#123;</div><div class="line">		<span class="keyword">int</span> fx1, fx2, fy1, fy2;</div><div class="line">		<span class="keyword">char</span> tmp = <span class="string">'a'</span>;</div><div class="line">		fx1 = fa[x1][y1][x2][y2][<span class="number">0</span>]; fy1 = fa[x1][y1][x2][y2][<span class="number">1</span>];</div><div class="line">		fx2 = fa[x1][y1][x2][y2][<span class="number">2</span>]; fy2 = fa[x1][y1][x2][y2][<span class="number">3</span>];</div><div class="line">		<span class="keyword">if</span> (fx2 != x2 || fy2 != y2) tmp = <span class="string">'A'</span>;</div><div class="line">		<span class="keyword">if</span> (x1 - fx1 == <span class="number">-1</span>) res[j] = <span class="string">'N'</span> - <span class="string">'A'</span> + tmp;</div><div class="line">		<span class="keyword">if</span> (x1 - fx1 == <span class="number">1</span>) res[j] = <span class="string">'S'</span> - <span class="string">'A'</span> + tmp;</div><div class="line">		<span class="keyword">if</span> (y1 - fy1 == <span class="number">-1</span>) res[j] = <span class="string">'W'</span> - <span class="string">'A'</span> + tmp;</div><div class="line">		<span class="keyword">if</span> (y1 - fy1 == <span class="number">1</span>) res[j] = <span class="string">'E'</span> - <span class="string">'A'</span> + tmp;</div><div class="line">		j--; x1 = fx1, y1 = fy1, x2 = fx2, y2 = fy2;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= g; i++)<span class="built_in">printf</span>(<span class="string">"%c"</span>, res[i]);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">bool</span> <span class="title">best</span><span class="params">(state n)</span></span>&#123;</div><div class="line">	<span class="keyword">if</span> (mark[n.s.x][n.s.y][n.b.x][n.b.y][<span class="number">0</span>] != n.push)</div><div class="line">		<span class="keyword">return</span> n.push&lt;mark[n.s.x][n.s.y][n.b.x][n.b.y][<span class="number">0</span>];</div><div class="line">	<span class="keyword">return</span> n.walk&lt;mark[n.s.x][n.s.y][n.b.x][n.b.y][<span class="number">1</span>];</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">AStar</span><span class="params">()</span> </span>&#123;</div><div class="line">	priority_queue&lt;state&gt; q;</div><div class="line">	<span class="built_in">memset</span>(fa, <span class="number">0</span>, <span class="keyword">sizeof</span>(fa));</div><div class="line">	<span class="built_in">memset</span>(mark, <span class="number">0x7f</span>, <span class="keyword">sizeof</span>(mark));</div><div class="line">	state curr, nex;</div><div class="line">	curr.s = s; curr.b = b; curr.walk = <span class="number">0</span>; curr.push = <span class="number">0</span>;</div><div class="line">	q.push(curr);</div><div class="line">	<span class="keyword">while</span> (!q.empty()) &#123;</div><div class="line">		curr = q.top(); q.pop();</div><div class="line">		<span class="keyword">if</span> (curr.b.x == t.x&amp;&amp;curr.b.y == t.y) &#123;</div><div class="line">			success = <span class="literal">true</span>;</div><div class="line">			outputpath(curr.s.x, curr.s.y, curr.push + curr.walk);</div><div class="line">			<span class="keyword">return</span>;</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">4</span>; ++i) &#123;</div><div class="line">			<span class="keyword">int</span> nx = curr.s.x + dx[i];</div><div class="line">			<span class="keyword">int</span> ny = curr.s.y + dy[i];</div><div class="line">			<span class="keyword">if</span> (judge(nx, ny)) &#123;</div><div class="line">				nex.s.x = nx; nex.s.y = ny;</div><div class="line">				<span class="keyword">if</span> (curr.b.x == nx&amp;&amp;curr.b.y == ny) &#123;</div><div class="line">					<span class="keyword">if</span> (!judge(nx + dx[i], ny + dy[i]))<span class="keyword">continue</span>;</div><div class="line">					nex.b.x = nx + dx[i];</div><div class="line">					nex.b.y = ny + dy[i];</div><div class="line">					nex.push = curr.push + <span class="number">1</span>;</div><div class="line">					nex.walk = curr.walk;</div><div class="line">				&#125;</div><div class="line">				<span class="keyword">else</span> &#123;</div><div class="line">					nex.b.x = curr.b.x; nex.b.y = curr.b.y;</div><div class="line">					nex.push = curr.push; nex.walk = curr.walk + <span class="number">1</span>;</div><div class="line">				&#125;</div><div class="line">				<span class="keyword">if</span> (best(nex))&#123;</div><div class="line">					fa[nex.s.x][nex.s.y][nex.b.x][nex.b.y][<span class="number">0</span>] = curr.s.x;</div><div class="line">					fa[nex.s.x][nex.s.y][nex.b.x][nex.b.y][<span class="number">1</span>] = curr.s.y;</div><div class="line">					fa[nex.s.x][nex.s.y][nex.b.x][nex.b.y][<span class="number">2</span>] = curr.b.x;</div><div class="line">					fa[nex.s.x][nex.s.y][nex.b.x][nex.b.y][<span class="number">3</span>] = curr.b.y;</div><div class="line">					mark[nex.s.x][nex.s.y][nex.b.x][nex.b.y][<span class="number">0</span>] = nex.push;</div><div class="line">					mark[nex.s.x][nex.s.y][nex.b.x][nex.b.y][<span class="number">1</span>] = nex.walk;</div><div class="line">					q.push(nex);</div><div class="line">				&#125;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="keyword">int</span> cas = <span class="number">1</span>;</div><div class="line">	<span class="keyword">while</span> (<span class="built_in">cin</span> &gt;&gt; r &gt;&gt; c &amp;&amp; r &amp;&amp; c) &#123;</div><div class="line">		success = <span class="literal">false</span>;</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= r; ++i)</div><div class="line">			<span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">1</span>; j &lt;= c; ++j) &#123;</div><div class="line">				<span class="built_in">cin</span> &gt;&gt; maze[i][j];</div><div class="line">				<span class="keyword">if</span> (maze[i][j] == <span class="string">'S'</span>) s.x = i, s.y = j;</div><div class="line">				<span class="keyword">if</span> (maze[i][j] == <span class="string">'B'</span>) b.x = i, b.y = j;</div><div class="line">				<span class="keyword">if</span> (maze[i][j] == <span class="string">'T'</span>) t.x = i, t.y = j;</div><div class="line">			&#125;</div><div class="line">		<span class="built_in">printf</span>(<span class="string">"Maze #%d\n"</span>, cas++);</div><div class="line">		AStar();</div><div class="line">		<span class="keyword">if</span> (!success)<span class="built_in">printf</span>(<span class="string">"Impossible."</span>);</div><div class="line">		<span class="built_in">printf</span>(<span class="string">"\n\n"</span>);</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">OJ</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">BFS</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">A*</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/10/03/POJ/POJ-1475-Pushing-Boxes/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-数据结构/有关线段树的一切" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -896,89 +986,6 @@
 
 
   
-    <article id="post-POJ/POJ-2286-The-Rotation-Game" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/09/27/POJ/POJ-2286-The-Rotation-Game/">POJ 2286 The Rotation Game(迭代加深DFS)</a>
-    </h1>
-  
-
-        
-        <a href="/2017/09/27/POJ/POJ-2286-The-Rotation-Game/" class="archive-article-date">
-  	<time datetime="2017-09-27T03:25:11.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-09-27</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><strong>Description</strong><br>The rotation game uses a # shaped board, which can hold 24 pieces of square blocks (see Fig.1). The blocks are marked with symbols 1, 2 and 3, with exactly 8 pieces of each kind.<br>Initially, the blocks are placed on the board randomly. Your task is to move the blocks so that the eight blocks placed in the center square have the same symbol marked. There is only one type of valid move, which is to rotate one of the four lines, each consisting of seven blocks. That is, six blocks in the line are moved towards the head by one block and the head block is moved to the end of the line. The eight possible moves are marked with capital letters A to H. Figure 1 illustrates two consecutive moves, move A and move C from some initial configuration.</p>
-<p><strong>Input</strong><br>The input consists of no more than 30 test cases. Each test case has only one line that contains 24 numbers, which are the symbols of the blocks in the initial configuration. The rows of blocks are listed from top to bottom. For each row the blocks are listed from left to right. The numbers are separated by spaces. For example, the first test case in the sample input corresponds to the initial configuration in Fig.1. There are no blank lines between cases. There is a line containing a single `0’ after the last test case that ends the input.</p>
-<p><strong>Output</strong><br>For each test case, you must output two lines. The first line contains all the moves needed to reach the final configuration. Each move is a letter, ranging from <code>A&#39; to</code>H’, and there should not be any spaces between the letters in the line. If no moves are needed, output `No moves needed’ instead. In the second line, you must output the symbol of the blocks in the center square after these moves. If there are several possible solutions, you must output the one that uses the least number of moves. If there is still more than one possible solution, you must output the solution that is smallest in dictionary order for the letters of the moves. There is no need to output blank lines between cases.</p>
-<p><strong>Sample Input</strong><br>1 1 1 1 3 2 3 2 3 1 3 2 2 3 1 2 2 2 3 1 2 1 3 3<br>1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 3 3 3 3 3 3 3 3<br>0</p>
-<p><strong>Sample Output</strong><br>AC<br>2<br>DDHH<br>2</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cstdio&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;algorithm&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="keyword">int</span> a[<span class="number">24</span>];</div><div class="line"><span class="keyword">int</span> ind;</div><div class="line"><span class="keyword">int</span> res[<span class="number">110</span>];</div><div class="line"><span class="keyword">int</span> center[<span class="number">8</span>]=&#123;<span class="number">6</span>,<span class="number">7</span>,<span class="number">8</span>,<span class="number">11</span>,<span class="number">12</span>,<span class="number">15</span>,<span class="number">16</span>,<span class="number">17</span>&#125;;</div><div class="line"><span class="keyword">int</span> rev[<span class="number">8</span>] = &#123; <span class="number">5</span>,<span class="number">4</span>,<span class="number">7</span>,<span class="number">6</span>,<span class="number">1</span>,<span class="number">0</span>,<span class="number">3</span>,<span class="number">2</span> &#125;;</div><div class="line"><span class="keyword">int</span> pos[<span class="number">8</span>][<span class="number">7</span>] = &#123; <span class="number">0</span>,<span class="number">2</span>,<span class="number">6</span>,<span class="number">11</span>,<span class="number">15</span>,<span class="number">20</span>,<span class="number">22</span>,</div><div class="line">				<span class="number">1</span>,<span class="number">3</span>,<span class="number">8</span>,<span class="number">12</span>,<span class="number">17</span>,<span class="number">21</span>,<span class="number">23</span>,</div><div class="line">				<span class="number">10</span>,<span class="number">9</span>,<span class="number">8</span>,<span class="number">7</span>,<span class="number">6</span>,<span class="number">5</span>,<span class="number">4</span>,</div><div class="line">				<span class="number">19</span>,<span class="number">18</span>,<span class="number">17</span>,<span class="number">16</span>,<span class="number">15</span>,<span class="number">14</span>,<span class="number">13</span>,</div><div class="line">				<span class="number">23</span>,<span class="number">21</span>,<span class="number">17</span>,<span class="number">12</span>,<span class="number">8</span>,<span class="number">3</span>,<span class="number">1</span>,</div><div class="line">				<span class="number">22</span>,<span class="number">20</span>,<span class="number">15</span>,<span class="number">11</span>,<span class="number">6</span>,<span class="number">2</span>,<span class="number">0</span>,</div><div class="line">				<span class="number">13</span>,<span class="number">14</span>,<span class="number">15</span>,<span class="number">16</span>,<span class="number">17</span>,<span class="number">18</span>,<span class="number">19</span>,</div><div class="line">				<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>,<span class="number">7</span>,<span class="number">8</span>,<span class="number">9</span>,<span class="number">10</span> &#125;;</div><div class="line"><span class="function"><span class="keyword">bool</span> <span class="title">isSame</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="keyword">int</span> pri = a[<span class="number">6</span>];</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">7</span>; i &lt;= <span class="number">8</span>; ++i)<span class="keyword">if</span> (a[i] != pri)<span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">11</span>; i &lt;= <span class="number">12</span>; ++i)<span class="keyword">if</span> (a[i] != pri)<span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">15</span>; i &lt;= <span class="number">17</span>; ++i)<span class="keyword">if</span> (a[i] != pri)<span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">	<span class="keyword">return</span> <span class="literal">true</span>;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">f</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="keyword">int</span> most = <span class="number">100</span>;</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= <span class="number">3</span>; i++) &#123;</div><div class="line">		<span class="keyword">int</span> y = <span class="number">0</span>;</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j&lt;<span class="number">8</span>; j++)<span class="keyword">if</span> (a[center[j]] != i)y++;</div><div class="line">		most = min(most, y);</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> most;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">change</span><span class="params">(<span class="keyword">int</span> n)</span> </span>&#123;</div><div class="line">	<span class="keyword">int</span> pri = a[pos[n][<span class="number">0</span>]];</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">6</span>; ++i)</div><div class="line">		a[pos[n][i]] = a[pos[n][i + <span class="number">1</span>]];</div><div class="line">	a[pos[n][<span class="number">6</span>]] = pri;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">dfs</span><span class="params">(<span class="keyword">int</span> depth)</span> </span>&#123;</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">8</span>; ++i) &#123;</div><div class="line">		change(i);</div><div class="line">		<span class="keyword">int</span> m = f();</div><div class="line">		<span class="keyword">if</span> (m==<span class="number">0</span>) &#123;</div><div class="line">			res[depth] = i;</div><div class="line">			<span class="keyword">return</span> <span class="number">1</span>;</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">if</span> (depth+m &lt; ind) &#123;</div><div class="line">			res[depth] = i;</div><div class="line">			<span class="keyword">if</span> (dfs(depth + <span class="number">1</span>))<span class="keyword">return</span> <span class="number">1</span>;</div><div class="line">		&#125;</div><div class="line">		change(rev[i]);</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="keyword">while</span> (<span class="built_in">cin</span> &gt;&gt; a[<span class="number">0</span>] &amp;&amp; a[<span class="number">0</span>]) &#123;</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; <span class="number">24</span>; ++i)<span class="built_in">scanf</span>(<span class="string">"%d"</span>, &amp;a[i]);</div><div class="line">		<span class="keyword">if</span> (f()==<span class="number">0</span>) &#123;</div><div class="line">			<span class="built_in">puts</span>(<span class="string">"No moves needed"</span>);</div><div class="line">			<span class="built_in">printf</span>(<span class="string">"%d\n"</span>, a[<span class="number">17</span>]);</div><div class="line">			<span class="keyword">continue</span>;</div><div class="line">		&#125;</div><div class="line">		ind = <span class="number">0</span>;</div><div class="line">		<span class="keyword">while</span> (!dfs(<span class="number">0</span>))++ind;</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; ind; ++i)<span class="built_in">printf</span>(<span class="string">"%c"</span>, res[i] + <span class="string">'A'</span>);</div><div class="line">		<span class="built_in">puts</span>(<span class="string">""</span>);</div><div class="line">		<span class="built_in">printf</span>(<span class="string">"%d\n"</span>, a[<span class="number">15</span>]);</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">OJ</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">DFS</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/09/27/POJ/POJ-2286-The-Rotation-Game/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/6/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/">8</a><a class="page-number" href="/page/9/">9</a><span class="space">&hellip;</span><a class="page-number" href="/page/62/">62</a><a class="extend next" rel="next" href="/page/8/">Next &raquo;</a>
@@ -1096,11 +1103,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">数学</a>
+                <a href="javascript:void(0)" class="js-tag color3">算法</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">算法</a>
+                <a href="javascript:void(0)" class="js-tag color3">数学</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1280,11 +1287,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">操作系统</a>
+                <a href="javascript:void(0)" class="js-tag color5">HTML</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">HTML</a>
+                <a href="javascript:void(0)" class="js-tag color5">操作系统</a>
               </li>
              
               <li class="article-tag-list-item">

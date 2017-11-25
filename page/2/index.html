@@ -162,6 +162,90 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-POJ/POJ-3159-Candies" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/11/04/POJ/POJ-3159-Candies/">POJ 3159 Candies(SPFA)</a>
+    </h1>
+  
+
+        
+        <a href="/2017/11/04/POJ/POJ-3159-Candies/" class="archive-article-date">
+  	<time datetime="2017-11-04T04:00:52.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-11-04</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong>Description</strong><br>During the kindergarten days, flymouse was the monitor of his class. Occasionally the head-teacher brought the kids of flymouse’s class a large bag of candies and had flymouse distribute them. All the kids loved candies very much and often compared the numbers of candies they got with others. A kid A could had the idea that though it might be the case that another kid B was better than him in some aspect and therefore had a reason for deserving more candies than he did, he should never get a certain number of candies fewer than B did no matter how many candies he actually got, otherwise he would feel dissatisfied and go to the head-teacher to complain about flymouse’s biased distribution.<br>snoopy shared class with flymouse at that time. flymouse always compared the number of his candies with that of snoopy’s. He wanted to make the difference between the numbers as large as possible while keeping every kid satisfied. Now he had just got another bag of candies from the head-teacher, what was the largest difference he could make out of it?</p>
+<p><strong>Input</strong><br>The input contains a single test cases. The test cases starts with a line with two integers N and M not exceeding 30 000 and 150 000 respectively. N is the number of kids in the class and the kids were numbered 1 through N. snoopy and flymouse were always numbered 1 and N. Then follow M lines each holding three integers A, B and c in order, meaning that kid A believed that kid B should never get over c candies more than he did.</p>
+<p><strong>Output</strong><br>Output one line with only the largest difference desired. The difference is guaranteed to be finite.</p>
+<p><strong>Sample Input</strong><br>2 2<br>1 2 5<br>2 1 4</p>
+<p><strong>Sample Output</strong><br>5</p>
+<p><strong>Hint</strong><br>32-bit signed integer type is capable of doing all arithmetic.</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;algorithm&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;queue&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cstring&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> maxm=<span class="number">150000</span>+<span class="number">10</span>;</div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> maxn=<span class="number">30000</span>+<span class="number">10</span>;</div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> inf=<span class="number">0x3f3f3f3f</span>;</div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Edge</span>&#123;</span></div><div class="line">	<span class="keyword">int</span> to;</div><div class="line">	<span class="keyword">int</span> w;</div><div class="line">	<span class="keyword">int</span> nextEdge;</div><div class="line">	Edge()&#123;&#125;</div><div class="line">	Edge(<span class="keyword">int</span> tt,<span class="keyword">int</span> ww):to(tt),w(ww)&#123;&#125;</div><div class="line">	<span class="keyword">bool</span> <span class="keyword">operator</span> &lt; (<span class="keyword">const</span> Edge &amp;a)<span class="keyword">const</span>&#123;</div><div class="line">		<span class="keyword">return</span> w&gt;a.w;</div><div class="line">	&#125;</div><div class="line">&#125;e[maxm];</div><div class="line"><span class="keyword">int</span> head[maxn],tot;</div><div class="line"><span class="keyword">int</span> dis[maxn];</div><div class="line"><span class="keyword">bool</span> vis[maxn];</div><div class="line"><span class="keyword">int</span> n;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span> u,<span class="keyword">int</span> v,<span class="keyword">int</span> w)</span></span>&#123;</div><div class="line">	e[tot].to=v;</div><div class="line">	e[tot].w=w;</div><div class="line">	e[tot].nextEdge=head[u];</div><div class="line">	head[u]=tot++;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">spfa</span><span class="params">(<span class="keyword">int</span> des)</span></span>&#123;</div><div class="line">	<span class="built_in">memset</span>(dis,inf,<span class="keyword">sizeof</span>(dis));</div><div class="line">	dis[<span class="number">1</span>]=<span class="number">0</span>;</div><div class="line">	priority_queue&lt;Edge&gt; q;</div><div class="line">	q.push(Edge(<span class="number">1</span>,<span class="number">0</span>));<span class="comment">//to and weight</span></div><div class="line">	<span class="keyword">while</span>(!q.empty())&#123;</div><div class="line">		Edge u=q.top();q.pop();</div><div class="line">		<span class="keyword">if</span>(vis[u.to])<span class="keyword">continue</span>;</div><div class="line">		vis[u.to]=<span class="literal">true</span>;</div><div class="line">		<span class="keyword">if</span>(u.to==n)<span class="keyword">break</span>;</div><div class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i=head[u.to];i!=<span class="number">-1</span>;i=e[i].nextEdge)&#123;</div><div class="line">			<span class="keyword">int</span> v=e[i].to;</div><div class="line">			<span class="keyword">int</span> w=e[i].w;</div><div class="line">			<span class="keyword">if</span>(dis[v]&gt;dis[u.to]+w)&#123;</div><div class="line">				dis[v]=dis[u.to]+w;</div><div class="line">				q.push(Edge(v,dis[v]));</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> dis[n];</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</div><div class="line">	<span class="built_in">memset</span>(head,<span class="number">-1</span>,<span class="keyword">sizeof</span>(head));</div><div class="line">	<span class="keyword">int</span> m;</div><div class="line">	<span class="built_in">scanf</span>(<span class="string">"%d%d"</span>,&amp;n,&amp;m);</div><div class="line">	<span class="keyword">while</span>(m--)&#123;</div><div class="line">		<span class="keyword">int</span> u,v,w;</div><div class="line">		<span class="built_in">scanf</span>(<span class="string">"%d%d%d"</span>,&amp;u,&amp;v,&amp;w);</div><div class="line">		add(u,v,w);</div><div class="line">	&#125;</div><div class="line">	<span class="built_in">cout</span>&lt;&lt;spfa(n)&lt;&lt;<span class="string">"\n"</span>;</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">OJ</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">最短路</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/11/04/POJ/POJ-3159-Candies/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-POJ/POJ-2135-Farm-Tour" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -995,85 +1079,6 @@
 
 
   
-    <article id="post-HDOJ/HDOJ-2222-Keywords-Search" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/10/29/HDOJ/HDOJ-2222-Keywords-Search/">HDOJ 2222 Keywords Search(AC自动机)</a>
-    </h1>
-  
-
-        
-        <a href="/2017/10/29/HDOJ/HDOJ-2222-Keywords-Search/" class="archive-article-date">
-  	<time datetime="2017-10-29T07:06:02.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-10-29</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><strong>Problem Description</strong><br>In the modern time, Search engine came into the life of everybody like Google, Baidu, etc.<br>Wiskey also wants to bring this feature to his image retrieval system.<br>Every image have a long description, when users type some keywords to find the image, the system will match the keywords with description of image and show the image which the most keywords be matched.<br>To simplify the problem, giving you a description of image, and some keywords, you should tell me how many keywords will be match.</p>
-<p><strong>Input</strong><br>First line will contain one integer means how many cases will follow by.<br>Each case will contain two integers N means the number of keywords and N keywords follow. (N &lt;= 10000)<br>Each keyword will only contains characters ‘a’-‘z’, and the length will be not longer than 50.<br>The last line is the description, and the length will be not longer than 1000000.</p>
-<p><strong>Output</strong><br>Print how many keywords are contained in the description.</p>
-<p><strong>Sample Input</strong><br>1<br>5<br>she<br>he<br>say<br>shr<br>her<br>yasherhs</p>
-<p><strong>Sample Output</strong><br>3</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;bits/stdc++.h&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> maxn = <span class="number">1e7</span> + <span class="number">5</span>;</div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> MAX = <span class="number">10000000</span>;</div><div class="line"><span class="keyword">int</span> cnt;</div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">node</span>&#123;</span></div><div class="line">    node *next[<span class="number">26</span>];</div><div class="line">    node *fail;</div><div class="line">    <span class="keyword">int</span> sum;</div><div class="line">&#125;;</div><div class="line">node *root;</div><div class="line"><span class="keyword">char</span> key[<span class="number">70</span>];</div><div class="line">node *q[MAX];</div><div class="line"><span class="keyword">int</span> head,tail;</div><div class="line">node *newnode;</div><div class="line"><span class="keyword">char</span> pattern[maxn];</div><div class="line"><span class="keyword">int</span> N;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">Insert</span><span class="params">(<span class="keyword">char</span> *s)</span></span>&#123;</div><div class="line">    node *p = root;</div><div class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; s[i]; i++)&#123;</div><div class="line">        <span class="keyword">int</span> x = s[i] - <span class="string">'a'</span>;</div><div class="line">        <span class="keyword">if</span>(p-&gt;next[x] == <span class="literal">NULL</span>)&#123;</div><div class="line">            newnode=(struct node *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(struct node));</div><div class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;<span class="number">26</span>;j++) newnode-&gt;next[j] = <span class="number">0</span>;</div><div class="line">            newnode-&gt;sum = <span class="number">0</span>;newnode-&gt;fail = <span class="number">0</span>;</div><div class="line">            p-&gt;next[x]=newnode;</div><div class="line">        &#125;</div><div class="line">        p = p-&gt;next[x];</div><div class="line">    &#125;</div><div class="line">    p-&gt;sum++;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">build_fail_pointer</span><span class="params">()</span></span>&#123;</div><div class="line">    head = <span class="number">0</span>;</div><div class="line">    tail = <span class="number">1</span>;</div><div class="line">    q[head] = root;</div><div class="line">    node *p;</div><div class="line">    node *temp;</div><div class="line">    <span class="keyword">while</span>(head &lt; tail)&#123;</div><div class="line">        temp = q[head++];</div><div class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt;= <span class="number">25</span>; i++)</div><div class="line">            <span class="keyword">if</span>(temp-&gt;next[i])&#123;</div><div class="line">                <span class="keyword">if</span>(temp == root)temp-&gt;next[i]-&gt;fail = root;</div><div class="line">                <span class="keyword">else</span>&#123;</div><div class="line">                    p = temp-&gt;fail;</div><div class="line">                    <span class="keyword">while</span>(p)&#123;</div><div class="line">                        <span class="keyword">if</span>(p-&gt;next[i])&#123;</div><div class="line">                            temp-&gt;next[i]-&gt;fail = p-&gt;next[i];</div><div class="line">                            <span class="keyword">break</span>;</div><div class="line">                        &#125;</div><div class="line">                        p = p-&gt;fail;</div><div class="line">                    &#125;</div><div class="line">                    <span class="keyword">if</span>(p == <span class="literal">NULL</span>) temp-&gt;next[i]-&gt;fail = root;</div><div class="line">                &#125;</div><div class="line">                q[tail++] = temp-&gt;next[i];</div><div class="line">            &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">ac_automation</span><span class="params">(<span class="keyword">char</span> *ch)</span></span>&#123;</div><div class="line">    node *p = root;</div><div class="line">    <span class="keyword">int</span> len = <span class="built_in">strlen</span>(ch);</div><div class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; len; i++)&#123;</div><div class="line">        <span class="keyword">int</span> x = ch[i] - <span class="string">'a'</span>;</div><div class="line">        <span class="keyword">while</span>(!p-&gt;next[x] &amp;&amp; p != root) p = p-&gt;fail;</div><div class="line">        p = p-&gt;next[x];</div><div class="line">        <span class="keyword">if</span>(!p) p = root;</div><div class="line">        node *temp = p;</div><div class="line">        <span class="keyword">while</span>(temp != root)&#123;</div><div class="line">           <span class="keyword">if</span>(temp-&gt;sum &gt;= <span class="number">0</span>)&#123;</div><div class="line">               cnt += temp-&gt;sum;</div><div class="line">               temp-&gt;sum = <span class="number">-1</span>;</div><div class="line">           &#125;</div><div class="line">           <span class="keyword">else</span> <span class="keyword">break</span>;</div><div class="line">           temp = temp-&gt;fail;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</div><div class="line">    <span class="keyword">int</span> T;</div><div class="line">    <span class="built_in">scanf</span>(<span class="string">"%d"</span>,&amp;T);</div><div class="line">    <span class="keyword">while</span>(T--)&#123;</div><div class="line">        root=(struct node *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(struct node));</div><div class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;<span class="number">26</span>;j++) root-&gt;next[j] = <span class="number">0</span>;</div><div class="line">        root-&gt;fail = <span class="number">0</span>;</div><div class="line">        root-&gt;sum = <span class="number">0</span>;</div><div class="line">        <span class="built_in">scanf</span>(<span class="string">"%d"</span>,&amp;N);</div><div class="line">        getchar();</div><div class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= N; i++)&#123;</div><div class="line">            gets(key);</div><div class="line">            Insert(key);</div><div class="line">        &#125;</div><div class="line">        gets(pattern);</div><div class="line">        cnt = <span class="number">0</span>;</div><div class="line">        build_fail_pointer();</div><div class="line">        ac_automation(pattern);</div><div class="line">        <span class="built_in">printf</span>(<span class="string">"%d\n"</span>,cnt);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">OJ</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/10/29/HDOJ/HDOJ-2222-Keywords-Search/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/62/">62</a><a class="extend next" rel="next" href="/page/3/">Next &raquo;</a>
@@ -1191,11 +1196,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">数学</a>
+                <a href="javascript:void(0)" class="js-tag color3">算法</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">算法</a>
+                <a href="javascript:void(0)" class="js-tag color3">数学</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1375,11 +1380,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">操作系统</a>
+                <a href="javascript:void(0)" class="js-tag color5">HTML</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">HTML</a>
+                <a href="javascript:void(0)" class="js-tag color5">操作系统</a>
               </li>
              
               <li class="article-tag-list-item">
