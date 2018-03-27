@@ -162,85 +162,6 @@
           <div id="js-content" class="content-ll">
             
   
-    <article id="post-HDOJ/HDOJ-1152-Brownie-Points-I" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/09/05/HDOJ/HDOJ-1152-Brownie-Points-I/">HDOJ 1152 Brownie Points I(模拟)</a>
-    </h1>
-  
-
-        
-        <a href="/2017/09/05/HDOJ/HDOJ-1152-Brownie-Points-I/" class="archive-article-date">
-  	<time datetime="2017-09-05T06:04:41.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-09-05</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><strong>Problem Description</strong><br>Stan and Ollie play the game of Odd Brownie Points. Some brownie points are located in the plane, at integer coordinates. Stan plays first and places a vertical line in the plane. The line must go through a brownie point and may cross many (with the same x-coordinate). Then Ollie places a horizontal line that must cross a brownie point already crossed by the vertical line.<br>Those lines divide the plane into four quadrants. The quadrant containing points with arbitrarily large positive coordinates is the top-right quadrant.<br>The players score according to the number of brownie points in the quadrants. If a brownie point is crossed by a line, it doesn’t count. Stan gets a point for each (uncrossed) brownie point in the top-right and bottom-left quadrants. Ollie gets a point for each (uncrossed) brownie point in the top-left and bottom-right quadrants.<br>Your task is to compute the scores of Stan and Ollie given the point through which they draw their lines.</p>
-<p><strong>Input</strong><br>Input contains a number of test cases. The data of each test case appear on a sequence of input lines. The first line of each test case contains a positive odd integer 1 &lt; n &lt; 200000 which is the number of brownie points. Each of the following n lines contains two integers, the horizontal (x) and vertical (y) coordinates of a brownie point. No two brownie points occupy the same place. The input ends with a line containing 0 (instead of the n of a test).</p>
-<p><strong>Output</strong><br>For each test case of input, print a line with two numbers separated by a single space. The first number is Stan’s score, the second is the score of Ollie when their lines cross the point whose coordinates are given at the center of the input sequence of points for this case.</p>
-<p><strong>Sample Input</strong><br>11<br>3 2<br>3 3<br>3 4<br>3 6<br>2 -2<br>1 -3<br>0 0<br>-3 -3<br>-3 -2<br>-3 -4<br>3 -7<br>0</p>
-<p><strong>Sample Output</strong><br>6 3</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cstdio&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;queue&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;functional&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;algorithm&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stack&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;string&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cstring&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;vector&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;map&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;set&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iomanip&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> PI acos(-1.0)</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> R (20000.0/PI)</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> eps 11e-9</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> lowbit(i) ((i)&amp;(-i))</span></div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> inf = <span class="number">0x3f3f3f3f</span>;</div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> maxn = <span class="number">200000</span>+<span class="number">10</span>;</div><div class="line"><span class="keyword">int</span> dx[] = &#123; <span class="number">0</span>,<span class="number">0</span>,<span class="number">1</span>,<span class="number">-1</span> &#125;;</div><div class="line"><span class="keyword">int</span> dy[] = &#123; <span class="number">1</span>,<span class="number">-1</span>,<span class="number">0</span>,<span class="number">0</span> &#125;;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">node</span> &#123;</span></div><div class="line">	<span class="keyword">int</span> x, y;</div><div class="line">&#125;dot[maxn];</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="keyword">int</span> n;</div><div class="line">	<span class="keyword">while</span> (<span class="built_in">cin</span> &gt;&gt; n&amp;&amp;n) &#123;</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; ++i) <span class="built_in">cin</span> &gt;&gt; dot[i].x &gt;&gt; dot[i].y;</div><div class="line">		node mid = dot[(n - <span class="number">1</span>) / <span class="number">2</span>];</div><div class="line">		<span class="keyword">int</span> l = <span class="number">0</span>, r = <span class="number">0</span>;</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; ++i) &#123;</div><div class="line">			<span class="keyword">if</span> (dot[i].x &lt; mid.x&amp;&amp;dot[i].y &lt; mid.y)++l;</div><div class="line">			<span class="keyword">if</span> (dot[i].x &gt; mid.x&amp;&amp;dot[i].y &gt; mid.y)++l;</div><div class="line">			<span class="keyword">if</span> (dot[i].x &lt; mid.x&amp;&amp;dot[i].y &gt; mid.y)++r;</div><div class="line">			<span class="keyword">if</span> (dot[i].x &gt; mid.x&amp;&amp;dot[i].y &lt; mid.y)++r;</div><div class="line">		&#125;</div><div class="line">		<span class="built_in">printf</span>(<span class="string">"%d %d\n"</span>, l, r);</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">OJ</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/09/05/HDOJ/HDOJ-1152-Brownie-Points-I/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
     <article id="post-POJ/OpenJudge-Pots" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -963,6 +884,85 @@
 
 
   
+    <article id="post-HDOJ/HDOJ-1144-Prerequisites" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/09/04/HDOJ/HDOJ-1144-Prerequisites/">HDOJ 1144 Prerequisites?(水)</a>
+    </h1>
+  
+
+        
+        <a href="/2017/09/04/HDOJ/HDOJ-1144-Prerequisites/" class="archive-article-date">
+  	<time datetime="2017-09-03T23:22:41.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-09-04</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong>Problem Description</strong><br>Freddie the frosh has chosen to take k courses. To meet the degree requirements, he must take courses from each of several categories. Can you assure Freddie that he will graduate, based on his course selection?</p>
+<p><strong>Input</strong><br>Input consists of several test cases. For each case, the first line of input contains 1 ≤ k ≤ 100, the number of courses Freddie has chosen, and 0 ≤ m ≤ 100, the number of categories. One or more lines follow containing k 4-digit integers follow; each is the number of a course selected by Freddie. Each category is represented by a line containing 1 ≤ c ≤ 100, the number of courses in the category, 0 ≤ r ≤ c, the minimum number of courses from the category that must be taken, and the c course numbers in the category. Each course number is a 4-digit integer. The same course may fulfil several category requirements. Freddie’s selections, and the course numbers in any particular category, are distinct. A line containing 0 follows the last test case.</p>
+<p><strong>Output</strong><br>For each test case, output a line containing “yes” if Freddie’s course selection meets the degree requirements; otherwise output “no.”</p>
+<p><strong>Sample Input</strong><br>3 2<br>0123 9876 2222<br>2 1 8888 2222<br>3 2 9876 2222 7654<br>3 2<br>0123 9876 2222<br>2 2 8888 2222<br>3 2 7654 9876 2222<br>0</p>
+<p><strong>Sample Output</strong><br>yes<br>no</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;queue&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;functional&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;algorithm&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stack&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;string&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cstring&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;vector&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;map&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;set&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> PI acos(-1.0)</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> R (20000.0/PI)</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> eps 11e-9</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> lowbit(i) ((i)&amp;(-i))</span></div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> inf = <span class="number">0x3f3f3f3f</span>;</div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> maxn = <span class="number">31</span>;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="keyword">int</span> k, m, cnt, tmp;</div><div class="line">	<span class="keyword">while</span> (<span class="built_in">cin</span> &gt;&gt; k&amp;&amp;k) &#123;</div><div class="line">		<span class="built_in">cin</span> &gt;&gt; m;</div><div class="line">		cnt = <span class="number">0</span>;</div><div class="line">		<span class="built_in">map</span>&lt;<span class="keyword">int</span>, <span class="keyword">bool</span>&gt; mark;</div><div class="line">		<span class="keyword">while</span> (k--) &#123;</div><div class="line">			<span class="built_in">cin</span> &gt;&gt; tmp;</div><div class="line">			mark[tmp] = <span class="literal">true</span>;</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; m; ++i) &#123;</div><div class="line">			<span class="keyword">int</span> n, l, sum = <span class="number">0</span>;</div><div class="line">			<span class="built_in">cin</span> &gt;&gt; n &gt;&gt; l;</div><div class="line">			<span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; n; ++j) &#123;</div><div class="line">				<span class="built_in">cin</span> &gt;&gt; tmp;</div><div class="line">				<span class="keyword">if</span> (mark[tmp])++sum;</div><div class="line">			&#125;</div><div class="line">			<span class="keyword">if</span> (sum &gt;= l)++cnt;</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">if</span> (cnt == m)<span class="built_in">cout</span> &lt;&lt; <span class="string">"yes"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">		<span class="keyword">else</span> <span class="built_in">cout</span> &lt;&lt; <span class="string">"no"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">OJ</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/09/04/HDOJ/HDOJ-1144-Prerequisites/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/13/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><a class="page-number" href="/page/13/">13</a><span class="page-number current">14</span><a class="page-number" href="/page/15/">15</a><a class="page-number" href="/page/16/">16</a><span class="space">&hellip;</span><a class="page-number" href="/page/60/">60</a><a class="extend next" rel="next" href="/page/15/">Next &raquo;</a>
@@ -977,7 +977,7 @@
   <div class="outer">
     <div id="footer-info">
     	<div class="footer-left">
-    		&copy; 2017 Lynesy Chen
+    		&copy; 2018 Lynesy Chen
     	</div>
       	<div class="footer-right">
       		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
@@ -1080,6 +1080,18 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Android</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">SQL</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Java</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">PAT甲级</a>
               </li>
              
@@ -1108,6 +1120,10 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Hash</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">DP</a>
               </li>
              
@@ -1116,11 +1132,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">AVL</a>
+                <a href="javascript:void(0)" class="js-tag color5">贪心算法</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">贪心算法</a>
+                <a href="javascript:void(0)" class="js-tag color4">AVL</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1140,23 +1156,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">天梯赛</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">C++练手题</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">算法</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Hash</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">DBFS</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">A*</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1164,19 +1168,19 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Java</a>
+                <a href="javascript:void(0)" class="js-tag color4">C++</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">枚举</a>
+                <a href="javascript:void(0)" class="js-tag color3">算法</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">组合数学</a>
+                <a href="javascript:void(0)" class="js-tag color3">排序</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">字典树</a>
+                <a href="javascript:void(0)" class="js-tag color3">分治</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1184,23 +1188,7 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">博弈论</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Android</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">SQL</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">C++</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+                <a href="javascript:void(0)" class="js-tag color3">枚举</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1220,15 +1208,15 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">A*</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Tarjan</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">Alpha–Beta</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">POJ</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">树状数组</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1240,7 +1228,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Tarjan</a>
+                <a href="javascript:void(0)" class="js-tag color4">POJ</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">树状数组</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1252,15 +1244,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">天梯赛</a>
+                <a href="javascript:void(0)" class="js-tag color4">错题集</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">排序</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">分治</a>
+                <a href="javascript:void(0)" class="js-tag color3">js</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1268,7 +1256,7 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">错题集</a>
+                <a href="javascript:void(0)" class="js-tag color5">组合数学</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1276,7 +1264,15 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">js</a>
+                <a href="javascript:void(0)" class="js-tag color5">DBFS</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">字典树</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">博弈论</a>
               </li>
              
               <li class="article-tag-list-item">
